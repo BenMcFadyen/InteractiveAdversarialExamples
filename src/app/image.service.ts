@@ -3,7 +3,15 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ImageService {
+export class ImageService 
+{
 
-  constructor() { }
+	constructor() 
+	{
+	}
+
+	test() 
+	{
+		return console.log('tested');
+	}  
 }

@@ -1,0 +1,41 @@
+body, html 
+{
+    height: 100%;
+    margin: 0 auto;
+}
+
+body 
+{
+    font-family: 'Calibri';
+    font-size: 32px;
+}
+
+a 
+{
+    text-decoration: none;
+    
+}
+
+.container 
+{
+    width: 80%;
+    margin: 0 auto;
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 30% auto;    
+}
+
+
+a
+{
+	color: white;
+}
+
+
+
+section 
+{
+    width: 80%;
+    margin: 0 auto;
+    padding: 2em;
+}
