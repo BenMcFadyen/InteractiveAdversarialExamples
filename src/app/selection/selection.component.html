@@ -1,7 +1,23 @@
 <html>
 <body>
-	<p>
-  		selection works
-	</p>
+
+	<div class = container>
+		<div class = "modelSelection">
+			<!--<select [(ngModel)]="selectedModel">
+			   <option value="" disabled selected>select a model</option>
+			   <option *ngFor="let model of models" [value]="model.name">{{model.name}}</option> 
+			 </select>		!-->
+		</div>
+
+
+		<div class = epsilon>
+
+			<p> Epsilon: {{epsilon}} </p>
+			<input (change)="updateTest($event.target.value)" class="form-control" placeholder="1">
+		</div>
+
+
+		<button (click) = "onPredictButtonPress(selectedModel)"> Predict </button>
+	</div>
 </body>
 </html>

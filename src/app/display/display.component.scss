@@ -3,3 +3,27 @@ html, body {
     border-color: red;
 }
 
+
+.predictionsDiv
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+	border-style: solid;
+	border-color: black;	
+	margin: 25px;
+	//max-width: 80%;
+}
+
+
+
+
+table
+{
+
+	border-style: solid;
+	border-color: orange;
+	margin: 25px;
+}
