@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModelService} from '../model.service';
 
 @Component({
   selector: 'app-selection',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectionComponent implements OnInit {
 
-  constructor() { }
+  constructor(private model: ModelService) { }
 
-  ngOnInit() {
+  ngOnInit() 
+  {
+
+  //	this.model.loadModelFromFile
   }
+
+
+
+
 
 }
