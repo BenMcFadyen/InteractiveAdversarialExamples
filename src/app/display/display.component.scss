@@ -19,8 +19,25 @@ html, body {
 
 
 
+.prediction
+{
+	border-style: solid;
+	border-color: green;
 
-table
+	th
+	{
+	  text-align: center;
+	}
+
+	td
+	{
+	  text-align: right;
+	}
+
+}
+
+
+.allPredictions
 {
 
 	border-style: solid;
