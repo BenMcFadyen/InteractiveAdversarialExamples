@@ -1,0 +1,21 @@
+.homeContainer 
+{
+  display: flex;
+  min-height: 80vh;
+  flex-direction: row;
+
+}
+
+.selection 
+{
+  flex: 1;
+  width:30%;
+}
+
+
+.display 
+{
+  flex: -1;
+  width:70%;
+
+}
