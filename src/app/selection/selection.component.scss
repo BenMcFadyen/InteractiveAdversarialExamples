@@ -8,13 +8,25 @@ html, body {
 	display: inline;
 }
 
-.modelSelection > *
+
+
+.fileSelection > *
 {
 	font-size: 28px;
+	margin-left: 20px;
+}
+
+.modelSelection > *
+{
+	margin-top: 50px;
+	font-size: 28px;
+	margin-left: 20px;
+
 }
 
 
-.epsilon > *
+.epsilonSelection > *
 {
 	font-size: 28px;
+	margin-left: 20px;	
 }
