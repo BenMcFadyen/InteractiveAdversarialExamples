@@ -1,7 +1,7 @@
 .homeContainer 
 {
   display: flex;
-  min-height: 80vh;
+  min-height: 75vh;
   flex-direction: row;
 
 }
@@ -9,13 +9,13 @@
 .selection 
 {
   flex: 1;
-  width:30%;
+  width:20%;
 }
 
 
 .display 
 {
   flex: -1;
-  width:70%;
+  width:80%;
 
 }
