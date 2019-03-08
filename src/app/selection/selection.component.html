@@ -1,6 +1,5 @@
 <html>
 <body>
-
 	<div class = container>
 		<div class = "modelSelection">
 			<select [(ngModel)]="selectedModel">
@@ -10,12 +9,9 @@
 		<button (click) = "onPredictButtonPress(selectedModel)"> Predict </button>
 		</div>
 
-
-
-
 		<div class = epsilon>
 			<p> Epsilon: {{epsilon}} </p>
-			<input (change)="updateTest($event.target.value)" class="form-control" placeholder="1">
+			<input (change)="onEpsilonChange($event.target.value)" class="form-control" placeholder="1">
 		</div>		
 	</div>
 </body>

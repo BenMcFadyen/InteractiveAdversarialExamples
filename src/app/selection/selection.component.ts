@@ -9,6 +9,7 @@ import { ModelData } from '../ModelData';
 })
 export class SelectionComponent implements OnInit 
 {
+	epsilon: number = 1;
 
   	constructor(private modelService: ModelService) 
   	{ 
@@ -18,7 +19,15 @@ export class SelectionComponent implements OnInit
 	ngOnInit() 
 	{
 		this.modelService.loadAllModels()
+	}
 
-		//this.modelService.allModels();
+
+	async onEpsilonChange(value)
+	{
+		// TODO: Should max epsilon value be 100?
+		if(value > 100)
+			value = 100
+
+		this.epsilon = value
 	}
 }
