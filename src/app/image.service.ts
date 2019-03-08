@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 })
 export class ImageService 
 {
-
 	constructor() 
 	{
+		
 	}
 
 	test() 

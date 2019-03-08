@@ -8,16 +8,13 @@ import { ModelService} from '../model.service';
 })
 export class SelectionComponent implements OnInit {
 
-  constructor(private model: ModelService) { }
+  	constructor(private modelService: ModelService) 
+  	{ 
 
-  ngOnInit() 
-  {
+  	}
 
-  //	this.model.loadModelFromFile
-  }
-
-
-
-
-
+	ngOnInit() 
+	{
+		this.modelService.loadAllModels()
+	}
 }

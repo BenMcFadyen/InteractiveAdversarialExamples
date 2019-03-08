@@ -9,12 +9,12 @@ export class ModelData
 	imgWidth:number;
 	imgChannels:number;
 
-	constructor(name, model, imgHeight, imgWidth, imgChannels)
+	constructor(name, imgHeight, imgWidth, imgChannels)
 	{
 		this.name = name;
-		this.model = model;
+		//this.model = model;
 		this.imgHeight = imgHeight;
 		this.imgWidth = imgWidth;	
 		this.imgChannels = imgChannels;
-	}	
+	}
 }
