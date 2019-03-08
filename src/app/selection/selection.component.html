@@ -2,10 +2,10 @@
 <body>
 	<div class = container>
 
-
+		<img id = "fileSelectImg" [src]="imgURL" height="299" width="299" (load)="onIMGLoad()">
 		<div class = "fileSelection">
 
-			<input type='file' (change)="onFileSelect($event)">
+			<input type='file' (change)="onSelectFile($event)">
 
 		</div>
 
@@ -16,14 +16,14 @@
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
 
-			<button (click) = "onPredictButtonClick(selectedModel)"> Predict </button>
+			<button (click) = "onPredictButtonClick(trest)"> Predict </button>
 
 		</div>
 
 		<div class = epsilonSelection>
 
 			<p> Epsilon: {{epsilon}} </p>
-			<input (change)="onEpsilonChange($event.target.value)" class="form-control" placeholder="1">
+			<input  class="epsilonInput"(change)="onEpsilonChange($event.target.value)" placeholder="1">
 
 		</div>		
 

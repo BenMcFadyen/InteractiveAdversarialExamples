@@ -9,6 +9,11 @@ html, body {
 }
 
 
+img
+{
+	margin-top:25px;
+}
+
 
 .fileSelection > *
 {
@@ -25,8 +30,15 @@ html, body {
 }
 
 
+
+.epsilonInput
+{
+	width:100px;
+}
+
 .epsilonSelection > *
 {
 	font-size: 28px;
 	margin-left: 20px;	
+
 }

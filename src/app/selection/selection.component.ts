@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModelService } from '../model.service';
+import { ImageService } from '../image.service';
+
 import { ModelData } from '../ModelData';
 
 @Component({
@@ -9,11 +11,11 @@ import { ModelData } from '../ModelData';
 })
 export class SelectionComponent implements OnInit 
 {
-	imgURL: string
-	epsilon: number = 1;
+	imgURL: string = 'assets/images/cat299.jpg'
+	epsilon: number = 1
 	selectedModel: string
 
-  	constructor(private modelService: ModelService) 
+  	constructor(private modelService: ModelService, private imageService: ImageService) 
   	{ 
 
   	}
@@ -22,8 +24,6 @@ export class SelectionComponent implements OnInit
 	{
 		this.modelService.loadAllModels()
 	}
-
-
 
 	onSelectFile(event) 
 	{ 	
@@ -47,6 +47,13 @@ export class SelectionComponent implements OnInit
 
 		console.log("Predicting: "  + selectedModelName)
 
+
+
+		// figure out what model is to be executed
+		// check an image has been loaded/selected?		
+		// figure our what image size is needed
+		// resize/recanvas the image? //do this when uploaded?
+
 	}
 
 
@@ -57,5 +64,21 @@ export class SelectionComponent implements OnInit
 			value = 100
 
 		this.epsilon = value
+	}
+
+	
+	onIMGLoad()
+	{
+		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
+
+		this.imageService.drawIMGToCanvas(img, 'canvasOriginal', 299, 299)
+		this.imageService.drawIMGToCanvas(img, 'canvasDifference', 299, 299)
+		this.imageService.drawIMGToCanvas(img, 'canvasAdversarial', 299, 299)
+
+
+		this.imageService.drawIMGToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
+		this.imageService.drawIMGToCanvas(img, 'canvasDifference_TableTest', 299, 299)
+		this.imageService.drawIMGToCanvas(img, 'canvasAdversarial_TableTest', 299, 299)
+
 	}
 }

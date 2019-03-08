@@ -8,7 +8,8 @@
 
 	<div class = "original">
 		<p> original</p>
-        <img src="assets/images/cat299.jpg">
+
+		<canvas id = "canvasOriginal" width="299" height = "299"> </canvas>
 
         <table class = "prediction">
 			<thead>
@@ -33,7 +34,7 @@
 
 	<div class = "difference">
 		<p> Difference</p>
-        <img src="assets/images/cat299.jpg">
+		<canvas id = "canvasDifference" width="299" height = "299"> </canvas>
         <table class = "prediction">
 			<thead>
 				<tr>
@@ -55,7 +56,7 @@
 
 	<div class = "adversarial">
 		<p> adversarial</p>
-        <img src="assets/images/cat299.jpg">
+		<canvas id = "canvasAdversarial" width="299" height = "299"> </canvas>
         <table class = "prediction">
 			<thead>
 				<tr>
@@ -91,9 +92,9 @@
 	</thead>
 
 		<tr>
-            <td><img src="assets/images/cat299.jpg"></td>
-            <td><img src="assets/images/cat299.jpg"></td>
-            <td><img src="assets/images/cat299.jpg"></td>
+			<canvas id = "canvasOriginal_TableTest" width="299" height="299"> </canvas>
+			<canvas id = "canvasDifference_TableTest" width="299" height="299"> </canvas>
+			<canvas id = "canvasAdversarial_TableTest" width="299" height="299"> </canvas>
 		</tr>
 
 		<tr>
