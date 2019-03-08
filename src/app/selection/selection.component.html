@@ -1,18 +1,32 @@
 <html>
 <body>
 	<div class = container>
+
+
+		<div class = "fileSelection">
+
+			<input type='file' (change)="onFileSelect($event)">
+
+		</div>
+
 		<div class = "modelSelection">
+
 			<select [(ngModel)]="selectedModel">
 				<option value="" disabled selected>select a model</option>
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
-		<button (click) = "onPredictButtonPress(selectedModel)"> Predict </button>
+
+			<button (click) = "onPredictButtonClick(selectedModel)"> Predict </button>
+
 		</div>
 
-		<div class = epsilon>
+		<div class = epsilonSelection>
+
 			<p> Epsilon: {{epsilon}} </p>
 			<input (change)="onEpsilonChange($event.target.value)" class="form-control" placeholder="1">
+
 		</div>		
+
 	</div>
 </body>
 </html>
