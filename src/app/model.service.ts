@@ -145,7 +145,6 @@ export class ModelService
 	}
 
 
-
 	/**
 	* Decode the output of a model into a Prediction[] (Classname, Confidence)
 	* @returns Prediction[]
@@ -162,7 +161,7 @@ export class ModelService
 		if(selectedModel.name == 'MobileNet')
 		{
 			for(var i = 0; i < modelOutput.length; i++)
-				predictions[i] = (new Prediction(modelOutput[i].className, modelOutput[i].probability))
+				predictions[i] = (new Prediction(modelOutput[i].className, this.formatNumber(modelOutput[i].probability)))
 		
 			return predictions
 		}
@@ -182,7 +181,7 @@ export class ModelService
 		// Create the array in format: {ClassName, confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
 		{
-			predictions[i] = (new Prediction(classLabels[i], modelOutputArray[i]))
+			predictions[i] = (new Prediction(classLabels[i],  this.formatNumber(modelOutputArray[i])))
 		}
 
 		// Sort predictions DSC by confidence
@@ -198,6 +197,11 @@ export class ModelService
 		predictions = predictions.slice(0, topX)
 
 		return predictions
+	}
+
+	formatNumber(num)
+	{
+		return num.toFixed(2);
 	}
 
 }
