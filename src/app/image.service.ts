@@ -71,11 +71,8 @@ export class ImageService
 	{
 		// Convert the canvas pixels to a Tensor of the matching shape
 		let tensor = tf.fromPixels(canvas, reqNumberChannels)
-
 		var reshapedTensor = tf.reshape(tensor, [1, canvas.height, canvas.width, reqNumberChannels])
 		reshapedTensor = tf.cast(reshapedTensor, 'float32')
-
-		console.log(reshapedTensor)
 		return reshapedTensor
 	}
 }

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ModelData } from './ModelData';
 import { ImageService } from './image.service';
+import { Prediction } from './Prediction';
 import * as tf from '@tensorflow/tfjs';
 import * as mobilenet from '@tensorflow-models/mobilenet';
+import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_classes';
 
 
 @Injectable({
@@ -10,8 +12,8 @@ import * as mobilenet from '@tensorflow-models/mobilenet';
 })
 export class ModelService 
 {
-	MNIST = new ModelData('MNIST', 				28, 28, 1)
-	MobileNet = new ModelData('MobileNet',		224, 224, 3)
+	MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
+	MobileNet = new ModelData('MobileNet',	224, 224, 3, IMAGENET_CLASSES)
 	//ResNet50 = new ModelData('ResNet50',			224, 224, 3)
 	//InceptionV3 = new ModelData('InceptionV3',	299, 299, 3)
 	//Xception = new ModelData('Xception',			299, 299, 3)
@@ -85,48 +87,117 @@ export class ModelService
 	}
 
 
-	tryPredict(modelName:string, originalCanvas:HTMLCanvasElement)
+
+	getModelDataObjectFromName(modelName:string)
 	{
 		for(var i = 0; i < this.allModels.length; i++)
 		{
 			if(this.allModels[i].name != modelName)
 				continue
 
-			var selectedModel = this.allModels[i]
-
-			if(!selectedModel.loaded)
-			{
-				console.error(selectedModel.name + " has not been loaded")
-				return
-			}
-
-			try 
-			{
-				console.log("Predicting: " + selectedModel.name)
-
-				var resizedCanvas = this.imageService.getResizedCanvasFromExisting(originalCanvas,
-																					selectedModel.imgHeight,
-																					selectedModel.imgWidth)
-
-				let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, selectedModel.imgChannels);
-
-				if(modelName == 'MobileNet')
-				{
-					return selectedModel.model.classify(tensor) as any
-				}
-				else
-				{
-					return selectedModel.model.predict(tensor) as any
-				}
-			}
-			catch(e) 
-			{
-			  console.error("Error predicting: " + selectedModel.name + ", " + e)
-			  return
-			}		
+			return this.allModels[i]
 		}
 
 		console.error("Could not find model: " + modelName)
-
+		return null
 	}
+
+
+	async tryPredict(modelName:string, originalCanvas:HTMLCanvasElement)
+	{
+		var selectedModel = this.getModelDataObjectFromName(modelName)
+		if(selectedModel == null)
+			return
+
+		if(!selectedModel.loaded)
+		{
+			console.error(selectedModel.name + " has not been loaded")
+			return
+		}
+
+		try 
+		{
+			console.log("Predicting: " + selectedModel.name)
+
+			var resizedCanvas = this.imageService.getResizedCanvasFromExisting(originalCanvas,
+																				selectedModel.imgHeight,
+																				selectedModel.imgWidth)
+
+			let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, selectedModel.imgChannels)
+
+			if(modelName == 'MobileNet')
+			{
+				var output = await selectedModel.model.classify(tensor) as any
+				return output
+
+			}
+			else
+			{
+				var output = await selectedModel.model.predict(tensor) as any
+				return output
+			}
+		}
+		catch(e) 
+		{
+		  console.error("Error predicting: " + selectedModel.name + ", " + e)
+		  return
+		}		
+	}
+
+
+
+	/**
+	* Decode the output of a model into a Prediction[] (Classname, Confidence)
+	* @returns Prediction[]
+	*/
+	decodeOutput(modelName:string, modelOutput, topX: number): Prediction[]
+	{
+		let predictions = new Array<Prediction>()
+
+		var selectedModel = this.getModelDataObjectFromName(modelName)
+		if(selectedModel == null)
+			return
+
+		// MobileNet(web) predictions are already decoded
+		if(selectedModel.name == 'MobileNet')
+		{
+			for(var i = 0; i < modelOutput.length; i++)
+				predictions[i] = (new Prediction(modelOutput[i].className, modelOutput[i].probability))
+		
+			return predictions
+		}
+
+		var classLabels = selectedModel.classLabels;
+		let modelOutputArray = Array.from(modelOutput.dataSync())
+
+		console.log("Model Output:")
+		console.log(modelOutputArray)
+
+		if(classLabels.length != modelOutputArray.length)
+		{
+			console.error("Error: size of classLabel array does not match modelOutput" + classLabels.length + "!= " + modelOutput.length)			
+			return null 
+		}
+
+		// Create the array in format: {ClassName, confidence}
+		for(var i = 0; i < modelOutputArray.length; i++)
+		{
+			predictions[i] = (new Prediction(classLabels[i], modelOutputArray[i]))
+		}
+
+		// Sort predictions DSC by confidence
+		predictions = predictions.sort(function(a,b)
+		{
+			return a.confidence < b.confidence?1:a.confidence >b.confidence?-1:0
+		})
+
+		// ensure that topX is not greater than the size of the predictions
+		if(topX >= predictions.length)
+			return predictions
+
+		predictions = predictions.slice(0, topX)
+
+		return predictions
+	}
+
 }

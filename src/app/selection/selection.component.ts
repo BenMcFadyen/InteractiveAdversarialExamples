@@ -52,9 +52,14 @@ export class SelectionComponent implements OnInit
 		}
 
 		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
-		
-		var modelOutput = this.modelService.tryPredict(selectedModelName, originalCanvas)
-		console.log("Model Output: " + modelOutput)
+
+		this.modelService.tryPredict(selectedModelName, originalCanvas).then(modelOutput =>
+		{
+			let predictions = this.modelService.decodeOutput(selectedModelName, modelOutput, 5)
+			console.log('Top X predictions: ')
+			console.log(predictions)
+	
+		})
 
 	}
 
