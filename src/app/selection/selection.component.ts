@@ -45,14 +45,16 @@ export class SelectionComponent implements OnInit
 	{
 		var selectedModelName = this.selectedModel
 
-		console.log("Predicting: "  + selectedModelName)
+		if(this.imgURL == null)
+		{
+			console.error("No image selected");
+			return;
+		}
 
-
-
-		// figure out what model is to be executed
-		// check an image has been loaded/selected?		
-		// figure our what image size is needed
-		// resize/recanvas the image? //do this when uploaded?
+		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
+		
+		var modelOutput = this.modelService.tryPredict(selectedModelName, originalCanvas)
+		console.log("Model Output: " + modelOutput)
 
 	}
 
@@ -71,14 +73,14 @@ export class SelectionComponent implements OnInit
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
-		this.imageService.drawIMGToCanvas(img, 'canvasOriginal', 299, 299)
-		this.imageService.drawIMGToCanvas(img, 'canvasDifference', 299, 299)
-		this.imageService.drawIMGToCanvas(img, 'canvasAdversarial', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasOriginal', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasAdversarial', 299, 299)
 
 
-		this.imageService.drawIMGToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
-		this.imageService.drawIMGToCanvas(img, 'canvasDifference_TableTest', 299, 299)
-		this.imageService.drawIMGToCanvas(img, 'canvasAdversarial_TableTest', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasDifference_TableTest', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasAdversarial_TableTest', 299, 299)
 
 	}
 }

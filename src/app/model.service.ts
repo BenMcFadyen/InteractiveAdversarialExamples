@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ModelData } from './ModelData';
+import { ImageService } from './image.service';
 import * as tf from '@tensorflow/tfjs';
 import * as mobilenet from '@tensorflow-models/mobilenet';
 
@@ -24,11 +25,10 @@ export class ModelService
 		// this.Xception
 	]
 
-	constructor()
+	constructor(private imageService: ImageService)
 	{
 
 	}
-
 
 	loadAllModels()
 	{
@@ -84,4 +84,49 @@ export class ModelService
 		}				
 	}
 
+
+	tryPredict(modelName:string, originalCanvas:HTMLCanvasElement)
+	{
+		for(var i = 0; i < this.allModels.length; i++)
+		{
+			if(this.allModels[i].name != modelName)
+				continue
+
+			var selectedModel = this.allModels[i]
+
+			if(!selectedModel.loaded)
+			{
+				console.error(selectedModel.name + " has not been loaded")
+				return
+			}
+
+			try 
+			{
+				console.log("Predicting: " + selectedModel.name)
+
+				var resizedCanvas = this.imageService.getResizedCanvasFromExisting(originalCanvas,
+																					selectedModel.imgHeight,
+																					selectedModel.imgWidth)
+
+				let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, selectedModel.imgChannels);
+
+				if(modelName == 'MobileNet')
+				{
+					return selectedModel.model.classify(tensor) as any
+				}
+				else
+				{
+					return selectedModel.model.predict(tensor) as any
+				}
+			}
+			catch(e) 
+			{
+			  console.error("Error predicting: " + selectedModel.name + ", " + e)
+			  return
+			}		
+		}
+
+		console.error("Could not find model: " + modelName)
+
+	}
 }
