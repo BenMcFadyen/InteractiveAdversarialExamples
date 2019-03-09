@@ -21,12 +21,9 @@ export class DisplayComponent implements OnInit
 
 	ngOnInit() 
 	{
-		this.transferService.currentPredictions.subscribe(predictions => 
-		{
-			this.originalPredictions = predictions[0]
-			this.differencePredictions = predictions[1]
-			this.adversarialPredictions = predictions[2]
-		})
+		this.transferService.currentoriginalPredictions.subscribe(originalPredictions => this.originalPredictions = originalPredictions)
+		this.transferService.currentdifferencePredictions.subscribe(differencePredictions => this.differencePredictions = differencePredictions)
+		this.transferService.currentadversarialPredictionsSource.subscribe(adversarialPredictions => this.adversarialPredictions = adversarialPredictions)
 	}
 
 

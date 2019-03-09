@@ -7,9 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class TransferService 
 {
-
-
-
  	private originalPredictions: Prediction[] = [new Prediction('A', 'B'),
 										 		 new Prediction('C', 'D'),
 										 		 new Prediction('E', 'F')]

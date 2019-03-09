@@ -69,7 +69,7 @@ export class SelectionComponent implements OnInit
 		{
 			let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
 
-			this.transferService.setPredictions(new Array(predictions, predictions, predictions))
+			this.transferService.setOriginalPredictions(predictions)
 
 			console.log('Top X predictions: ')
 			console.log(predictions)
@@ -79,15 +79,22 @@ export class SelectionComponent implements OnInit
 
 			this.advService.genAdvExample(selectedModel, predictions[0].className, canvasOriginal, this.epsilon).then(perturbedImgTensor => 
 			{
-				//TODO: re-classification MUST be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
+						
 				this.imageService.drawTensorToCanvas('canvasAdversarial', perturbedImgTensor, 299, 299)		
+
+				//TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
+				// Currently it is being done with the re-sized canvas
+				this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
+				{
+					let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
+					this.transferService.setAdversarialPredictions(predictions)							
+				})	
 			})
 
 
 		})
 
 	}
-
 
 	onEpsilonChange(value)
 	{
