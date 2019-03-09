@@ -4,7 +4,7 @@ html, body {
 }
 
 
-.predictionsDiv
+.flexPredictions
 {
 	display: flex;
 	flex-direction: row;
@@ -19,7 +19,7 @@ html, body {
 
 
 
-.prediction
+.predictions
 {
 	border-style: solid;
 	border-color: green;
@@ -37,7 +37,7 @@ html, body {
 }
 
 
-.allPredictions
+.tablePredictions
 {
 
 	border-style: solid;

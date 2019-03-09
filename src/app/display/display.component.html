@@ -4,75 +4,60 @@
 
 
 
-<div class = "predictionsDiv">
+<div class = "flexPredictions">
 
 	<div class = "original">
 		<p> original</p>
 
 		<canvas id = "canvasOriginal" width="299" height = "299"> </canvas>
 
-        <table class = "prediction">
+        <table class = "predictions originalPredictions">
 			<thead>
 				<tr>
 					<th>Class Label</th>
 					<th>Confidence</th>
 				</tr>
-				<tr>
-					<td>	
-						<p> 1. prediction...</p>
-						<p> 2. prediction...</p>
-					</td>		
-					<td>	
-						<p> xx%</p>
-						<p> xx%</p>
-					</td>									
 			</thead>
+			<tr *ngFor="let originalPrediction of originalPredictions">
+				<td>{{ originalPrediction.className }}</td>
+				<td>{{ originalPrediction.confidence }}</td>
+			</tr>					
 		</table>
-
-
 	</div>
 
+
+
 	<div class = "difference">
-		<p> Difference</p>
+		<p> difference</p>
 		<canvas id = "canvasDifference" width="299" height = "299"> </canvas>
-        <table class = "prediction">
+        <table class = "predictions differencePredictions">
 			<thead>
 				<tr>
 					<th>Class Label</th>
 					<th>Confidence</th>
 				</tr>
-				<tr>
-					<td>	
-						<p> 1. prediction...</p>
-						<p> 2. prediction...</p>
-					</td>		
-					<td>	
-						<p> xx%</p>
-						<p> xx%</p>
-					</td>									
 			</thead>
-		</table>	
+			<tr *ngFor="let differencePrediction of differencePredictions">
+				<td>{{ differencePrediction.className }}</td>
+				<td>{{ differencePrediction.confidence }}</td>
+			</tr>					
+		</table>
 	</div>
 
 	<div class = "adversarial">
 		<p> adversarial</p>
 		<canvas id = "canvasAdversarial" width="299" height = "299"> </canvas>
-        <table class = "prediction">
+        <table class = "predictions adversarialPredictions">
 			<thead>
 				<tr>
 					<th>Class Label</th>
 					<th>Confidence</th>
 				</tr>
-				<tr>
-					<td>	
-						<p> 1. prediction...</p>
-						<p> 2. prediction...</p>
-					</td>		
-					<td>	
-						<p> xx%</p>
-						<p> xx%</p>
-					</td>									
 			</thead>
+			<tr *ngFor="let adversarialPrediction of adversarialPredictions">
+				<td>{{ adversarialPrediction.className }}</td>
+				<td>{{ adversarialPrediction.confidence }}</td>
+			</tr>					
 		</table>
 	</div>		
 
@@ -81,8 +66,7 @@
 
 
 
-
-<table class = "allPredictions">
+<table class = "tablePredictions">
 	<thead>
 		<tr>
 			<th>Original</th>
@@ -99,62 +83,50 @@
 
 		<tr>
 			<td>	
-		        <table class = "prediction">
+		        <table class = "predictions originalPredictions">
 					<thead>
 						<tr>
 							<th>Class Label</th>
 							<th>Confidence</th>
 						</tr>
-						<tr>
-							<td>	
-								<p> 1. prediction...</p>
-								<p> 2. prediction...</p>
-							</td>		
-							<td>	
-								<p> xx%</p>
-								<p> xx%</p>
-							</td>									
 					</thead>
+					<tr *ngFor="let originalPrediction of originalPredictions">
+						<td>{{ originalPrediction.className }}</td>
+						<td>{{ originalPrediction.confidence }}</td>
+					</tr>					
 				</table>
 			</td>
+
 			<td>	
-		        <table class = "prediction">
+		        <table class = "predictions differencePredictions">
 					<thead>
 						<tr>
 							<th>Class Label</th>
 							<th>Confidence</th>
 						</tr>
-						<tr>
-							<td>	
-								<p> 1. prediction...</p>
-								<p> 2. prediction...</p>
-							</td>		
-							<td>	
-								<p> xx%</p>
-								<p> xx%</p>
-							</td>									
 					</thead>
+					<tr *ngFor="let differencePrediction of differencePredictions">
+						<td>{{ differencePrediction.className }}</td>
+						<td>{{ differencePrediction.confidence }}</td>
+					</tr>					
 				</table>
 			</td>
+
 			<td>	
-		        <table class = "prediction">
+		        <table class = "predictions adversarialPredictions">
 					<thead>
 						<tr>
 							<th>Class Label</th>
 							<th>Confidence</th>
 						</tr>
-						<tr>
-							<td>	
-								<p> 1. prediction...</p>
-								<p> 2. prediction...</p>
-							</td>		
-							<td>	
-								<p> xx%</p>
-								<p> xx%</p>
-							</td>									
 					</thead>
-				</table>	
+					<tr *ngFor="let adversarialPrediction of adversarialPredictions">
+						<td>{{ adversarialPrediction.className }}</td>
+						<td>{{ adversarialPrediction.confidence }}</td>
+					</tr>					
+				</table>
 			</td>
+
 		</tr>
 </table>
 
