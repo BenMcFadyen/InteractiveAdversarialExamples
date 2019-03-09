@@ -75,4 +75,27 @@ export class ImageService
 		reshapedTensor = tf.cast(reshapedTensor, 'float32')
 		return reshapedTensor
 	}
+
+	drawTensorToCanvas(canvasID: string, tensorImg, desiredCanvasHeight:number, desiredCanvasWidth:number)
+	{
+		var canvas = <HTMLCanvasElement> document.getElementById(canvasID);
+		var context = canvas.getContext("2d");
+
+		let tensorIMGHeight = tensorImg.shape[0];
+		let tensorIMGWidth = tensorImg.shape[1];
+
+		// draw the tensor to the canvas, with the dimensions of the given tensor
+		canvas.height = tensorIMGHeight;
+		canvas.width = tensorIMGWidth;	
+		let imgArray = Uint8ClampedArray.from(tensorImg.dataSync());
+		let imgData = context.createImageData(tensorIMGHeight, tensorIMGWidth);
+		imgData.data.set(imgArray);
+		context.putImageData(imgData, 0, 0);			
+
+		// if the desired canvas height/shape is different, resize it 
+		// Note: resizing the image here will affect the adversarial perturbations
+		//  	 this image should only be used for display
+		if((tensorIMGHeight != desiredCanvasHeight) || (tensorIMGWidth != desiredCanvasWidth))
+			this.resizeExistingCanvas(canvasID, desiredCanvasHeight, desiredCanvasWidth)
+	}
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModelService } from '../model.service';
 import { ImageService } from '../image.service';
+import { AdvService } from '../adv.service';
+
 import { TransferService } from '../transfer.service';
 
 import { ModelData } from '../ModelData';
@@ -13,13 +15,14 @@ import { ModelData } from '../ModelData';
 export class SelectionComponent implements OnInit 
 {
 	imgURL: string = 'assets/images/cat299.jpg'
-	epsilon: number = 1
+	epsilon: number = 25
 	selectedModel: string
 
   	constructor(
 		private modelService: ModelService,
   		private imageService: ImageService,
-  		private transferService: TransferService) 
+  		private transferService: TransferService,
+  		private advService: AdvService) 
   	{ 
 
   	}
@@ -57,15 +60,30 @@ export class SelectionComponent implements OnInit
 
 		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
 
-		this.modelService.tryPredict(selectedModelName, originalCanvas).then(modelOutput =>
+
+		var selectedModel = this.modelService.getModelDataObjectFromName(selectedModelName)
+		if(selectedModel == null)
+			return
+
+		this.modelService.tryPredict(selectedModel, originalCanvas).then(modelOutput =>
 		{
-			let predictions = this.modelService.decodeOutput(selectedModelName, modelOutput, 5)
+			let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
 
 			this.transferService.setPredictions(new Array(predictions, predictions, predictions))
 
 			console.log('Top X predictions: ')
 			console.log(predictions)
-	
+
+			var canvasOriginal = <HTMLCanvasElement> document.getElementById('canvasOriginal')
+			var canvasAdversarial = <HTMLCanvasElement> document.getElementById('canvasAdversarial')
+
+			this.advService.genAdvExample(selectedModel, predictions[0].className, canvasOriginal, this.epsilon).then(perturbedImgTensor => 
+			{
+				//TODO: re-classification MUST be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
+				this.imageService.drawTensorToCanvas('canvasAdversarial', perturbedImgTensor, 299, 299)		
+			})
+
+
 		})
 
 	}

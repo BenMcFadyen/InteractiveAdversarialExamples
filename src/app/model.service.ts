@@ -103,43 +103,40 @@ export class ModelService
 	}
 
 
-	async tryPredict(modelName:string, originalCanvas:HTMLCanvasElement)
+	async tryPredict(model:ModelData, originalCanvas:HTMLCanvasElement)
 	{
-		var selectedModel = this.getModelDataObjectFromName(modelName)
-		if(selectedModel == null)
-			return
-
-		if(!selectedModel.loaded)
+	
+		if(!model.loaded)
 		{
-			console.error(selectedModel.name + " has not been loaded")
+			console.error(model.name + " has not been loaded")
 			return
 		}
 
 		try 
 		{
-			console.log("Predicting: " + selectedModel.name)
+			console.log("Predicting: " + model.name)
 
 			var resizedCanvas = this.imageService.getResizedCanvasFromExisting(originalCanvas,
-																				selectedModel.imgHeight,
-																				selectedModel.imgWidth)
+																				model.imgHeight,
+																				model.imgWidth)
 
-			let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, selectedModel.imgChannels)
+			let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, model.imgChannels)
 
-			if(modelName == 'MobileNet')
+			if(model.name == 'MobileNet')
 			{
-				var output = await selectedModel.model.classify(tensor) as any
+				var output = await model.model.classify(tensor) as any
 				return output
 
 			}
 			else
 			{
-				var output = await selectedModel.model.predict(tensor) as any
+				var output = await model.model.predict(tensor) as any
 				return output
 			}
 		}
 		catch(e) 
 		{
-		  console.error("Error predicting: " + selectedModel.name + ", " + e)
+		  console.error("Error predicting: " + model.name + ", " + e)
 		  return
 		}		
 	}
@@ -149,16 +146,13 @@ export class ModelService
 	* Decode the output of a model into a Prediction[] (Classname, Confidence)
 	* @returns Prediction[]
 	*/
-	decodeOutput(modelName:string, modelOutput, topX: number): Prediction[]
+	decodeOutput(model:ModelData, modelOutput, topX: number): Prediction[]
 	{
 		let predictions = new Array<Prediction>()
 
-		var selectedModel = this.getModelDataObjectFromName(modelName)
-		if(selectedModel == null)
-			return
 
 		// MobileNet(web) predictions are already decoded
-		if(selectedModel.name == 'MobileNet')
+		if(model.name == 'MobileNet')
 		{
 			for(var i = 0; i < modelOutput.length; i++)
 				predictions[i] = (new Prediction(modelOutput[i].className, this.formatNumber(modelOutput[i].probability)))
@@ -166,7 +160,7 @@ export class ModelService
 			return predictions
 		}
 
-		var classLabels = selectedModel.classLabels;
+		var classLabels = model.classLabels;
 		let modelOutputArray = Array.from(modelOutput.dataSync())
 
 		console.log("Model Output:")
