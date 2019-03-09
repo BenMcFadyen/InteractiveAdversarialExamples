@@ -1,11 +1,11 @@
 export class Prediction 
 {
 	className:string;
-	probability: number;
+	confidence: number;
 
-	constructor(className, probability)
+	constructor(className, confidence)
 	{
 		this.className = className;
-		this.probability = probability;
+		this.confidence = confidence;
 	}	
 }
