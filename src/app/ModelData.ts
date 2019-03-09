@@ -8,13 +8,14 @@ export class ModelData
 	imgHeight:number;
 	imgWidth:number;
 	imgChannels:number;
+	classLabels:Array<any>;
 
-	constructor(name, imgHeight, imgWidth, imgChannels)
+	constructor(name, imgHeight, imgWidth, imgChannels, classLabels)
 	{
 		this.name = name;
-		//this.model = model;
 		this.imgHeight = imgHeight;
 		this.imgWidth = imgWidth;	
 		this.imgChannels = imgChannels;
+		this.classLabels = classLabels;
 	}
 }
