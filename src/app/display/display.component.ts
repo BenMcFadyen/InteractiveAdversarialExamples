@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../Prediction';
+import { TransferService } from '../transfer.service';
 
 @Component({
   selector: 'app-display',
@@ -9,18 +10,25 @@ import { Prediction } from '../Prediction';
 export class DisplayComponent implements OnInit
 {
 
- 	originalPredictions: Prediction[] = [new Prediction('test', 'test2')]
+ 	originalPredictions: Prediction[]
  	differencePredictions: Prediction[]
  	adversarialPredictions: Prediction[]
 
-	constructor() 
+	constructor(private transferService: TransferService) 
 	{
 		
 	}
 
 	ngOnInit() 
 	{
-
+		this.transferService.currentPredictions.subscribe(predictions => 
+		{
+			this.originalPredictions = predictions[0]
+			this.differencePredictions = predictions[1]
+			this.adversarialPredictions = predictions[2]
+		})
 	}
+
+
 
 }

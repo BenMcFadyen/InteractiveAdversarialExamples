@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModelService } from '../model.service';
 import { ImageService } from '../image.service';
+import { TransferService } from '../transfer.service';
 
 import { ModelData } from '../ModelData';
 
@@ -15,7 +16,10 @@ export class SelectionComponent implements OnInit
 	epsilon: number = 1
 	selectedModel: string
 
-  	constructor(private modelService: ModelService, private imageService: ImageService) 
+  	constructor(
+		private modelService: ModelService,
+  		private imageService: ImageService,
+  		private transferService: TransferService) 
   	{ 
 
   	}
@@ -56,6 +60,9 @@ export class SelectionComponent implements OnInit
 		this.modelService.tryPredict(selectedModelName, originalCanvas).then(modelOutput =>
 		{
 			let predictions = this.modelService.decodeOutput(selectedModelName, modelOutput, 5)
+
+			this.transferService.setPredictions(new Array(predictions, predictions, predictions))
+
 			console.log('Top X predictions: ')
 			console.log(predictions)
 	
