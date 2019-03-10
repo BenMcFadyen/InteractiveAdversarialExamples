@@ -12,7 +12,6 @@
 		<div class = "modelSelection">
 
 			<select [(ngModel)]="selectedModel">
-				<option value="" disabled selected>select a model</option>
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
 
@@ -26,6 +25,16 @@
 			<input  class="epsilonInput"(change)="onEpsilonChange($event.target.value)" placeholder="1">
 
 		</div>	
+
+
+		<div class = "imageNetClassSelection">
+
+			<p> Target Class: {{targetClass}} </p>
+
+			<select [(ngModel)]="targetClass">
+				<option *ngFor="let class of imageNet" [value]="class">{{class}}</option> 
+			</select>
+		</div>
 
 
 
