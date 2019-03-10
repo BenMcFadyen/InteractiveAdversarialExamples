@@ -47,7 +47,7 @@ export class SelectionComponent implements OnInit
 		}
 	}
 
-	onPredictButtonClick(modelSelection)
+	onPredictButtonClick()
 	{
 		var selectedModelName = this.selectedModel
 
@@ -57,8 +57,14 @@ export class SelectionComponent implements OnInit
 			return;
 		}
 
-		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
+		this.generateClassify(selectedModelName)		
+	}
 
+
+
+	generateClassify(selectedModelName: string)
+	{
+		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
 
 		var selectedModel = this.modelService.getModelDataObjectFromName(selectedModelName)
 		if(selectedModel == null)
@@ -117,6 +123,7 @@ export class SelectionComponent implements OnInit
 		})
 	}
 
+
 	onEpsilonChange(value)
 	{
 		// TODO: Should max epsilon value be 100?
@@ -124,6 +131,8 @@ export class SelectionComponent implements OnInit
 			value = 100
 
 		this.epsilon = value
+
+		this.generateClassify(this.selectedModel)		
 	}
 
 	
