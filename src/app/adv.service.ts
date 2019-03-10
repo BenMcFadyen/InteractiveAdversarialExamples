@@ -26,20 +26,14 @@ export class AdvService
 	}
 
 	/**
-	*
-	*
-	*/ 
-	async genAdvExample(modelObject: ModelData, orginalPrediction: string, canvas: HTMLCanvasElement, epsilon)
+	* TODO
+	* @return {tf.Tensor} perturbed img tensor
+	*/
+	async genAdvPerturbation(modelObject: ModelData, orginalPrediction: string, img3, img4, epsilon = 0.025)
 	{
 		var model = modelObject.model
 
 		let tbuffer = tf.buffer([1000]) // create a one dimensional tf.buffer of length 1000
-
-	    // 4-channel img with alpha
-	    const img4 = tf.image.resizeBilinear(tf.fromPixels(canvas, 4), [227, 227])
-
-	    // 3-channel img for concat
-	    const img3 = tf.image.resizeBilinear(tf.fromPixels(canvas, 3), [227, 227])
 
 		var imagenet = IMAGENET_CLASSES
 
@@ -53,47 +47,79 @@ export class AdvService
 			}
 		})
 
-		
   		const oglabel = tbuffer.toTensor()
-	    const xtoy = x => { return model.infer(x.toFloat(), 'conv_preds').flatten()}
+
+	    // x_to_y - A Rank 1 tensor (Vector) of size 1000 - Contains the raw prediction results 
+		// infer: Computes the logits (or the embedding) for the provided image. //prediction?	    
+	    const xtoy = x => { return model.infer(x.toFloat(), 'conv_preds').flatten()} 
+
+		// y_loss - Rank 0 tensor (Scalar) - Contains the top 1 prediction %
+		// SoftmaxCrossEntropy: Normalises numbers into a probability distribition that sums to 1
 	    const yloss = (gt, x) => tf.losses.softmaxCrossEntropy(gt, xtoy(x))
+
+	    // TODO: are these functions  neccesarry due to the way in which the tf.gradients function works?
 	    var loss_func = function(x) { return yloss(oglabel, x)}
 	    let _grad_func = function () { return loss_func(img3)}
 
-	    var _im = tf.environment.ENV.engine.gradients(_grad_func, [img3])
-	    let im_gradients = _im.grads[0];
+		/**
+		* Returns gradients of `f` with respect to each of the `xs`. The gradients
+		* returned are of the same length as `xs`, but some might be null if `f` was
+		* not a function of that `x`. It also takes optional dy to multiply the
+		* gradient, which defaults to `1`.
+		*/		    
+	    var _im = tf.environment.ENV.engine.gradients(_grad_func, [img3]) 	// var g = tf.grads(_grad_func);
+	    let im_gradients = _im.grads[0]	  									// let test = g([img3])		
 
-	    var perturbedImgTensor = await this.generate_adv_xs(img4, im_gradients, epsilon).then(async perturbedImgTensor => 
-		{
-			console.log("Generated adversarial example with: eps = " + epsilon)
-			return perturbedImgTensor			
-		})
+		var perturbations = this.scaleGradient(im_gradients, epsilon)
 
-		return perturbedImgTensor;
+		return perturbations
 	}
 
-
-	async generate_adv_xs(img4channel, grads, eps)
+	/**
+	* TODO..
+	* @param {epsilon} determines the amount of perturbation applied
+	* @return {tf.Tensor} perturbed img tensor
+	*/
+	async combineImgAndPerturbation(img4, perturbation)
 	{
-		let perturbations = this.scale_grad(grads, eps)
-		const zeroes = new Uint8Array(51529)
+		const zeroes = new Uint8Array(51529).fill(0)
 
 		// concat the all-zeros alpha channel with 3-channel gradients from tf.gradients()
-		let alpha_channel = tf.tensor3d(zeroes, [227, 227, 1])  // [0, 0,... 0, 0] (227)
-		let expanded_grad = tf.concat([perturbations, alpha_channel], 2) // 227,227,4   
-		let perturbed_img = tf.add(tf.cast(img4channel,'float32'), expanded_grad)
-		// perturbed_img.print()
-		return perturbed_img
+		let alphaChannel = tf.tensor3d(zeroes, [227, 227, 1])  // [0, 0,... 0, 0] (227)
+		let perturbationWithAlpha = tf.concat([perturbation, alphaChannel], 2) // 227,227,4   
+		let perturbedImg = tf.add(tf.cast(img4,'float32'), perturbationWithAlpha)
+			
+		return perturbedImg
 	}
 
-	scale_grad(grad, eps) 
+	/**
+	* TODO..
+	* @param {epsilon} determines the amount of perturbation applied
+	* @return {tf.Tensor} perturbed img tensor
+	*/
+	applyAlphaChannel(tensorIMG)
 	{
-		const grad_data = grad.dataSync()
-		const normalized_grad = grad_data.map(item => 
+		const empty255 = new Uint8Array(51529).fill(255)
+		let alphaChannel = tf.tensor3d(empty255, [227, 227, 1])
+		let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], 2)
+		return tensorWithAlpha
+	}
+
+
+	/**
+	* TODO..
+	* @param {epsilon} determines the amount of perturbation applied
+	* @return {tf.Tensor} perturbed img tensor
+	*/
+	scaleGradient(gradient, epsilon) 
+	{
+		const gradientData = gradient.dataSync()
+
+		const normalizedGradient = gradientData.map(x => 
 		{
-			return eps * Math.sign(item)
+			return epsilon * Math.sign(x)
 		})
 
-		return tf.tensor(normalized_grad).reshapeAs(grad)
+		return tf.tensor(normalizedGradient).reshapeAs(gradient)
 	}	
 }

@@ -26,6 +26,4 @@ export class DisplayComponent implements OnInit
 		this.transferService.currentadversarialPredictionsSource.subscribe(adversarialPredictions => this.adversarialPredictions = adversarialPredictions)
 	}
 
-
-
 }

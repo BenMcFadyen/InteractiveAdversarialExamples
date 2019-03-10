@@ -97,5 +97,6 @@ export class ImageService
 		//  	 this image should only be used for display
 		if((tensorIMGHeight != desiredCanvasHeight) || (tensorIMGWidth != desiredCanvasWidth))
 			this.resizeExistingCanvas(canvasID, desiredCanvasHeight, desiredCanvasWidth)
+		
 	}
 }

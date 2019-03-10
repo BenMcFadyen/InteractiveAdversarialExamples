@@ -48,7 +48,6 @@ export class ModelService
 			return
 		}
 
-
 		if(model.name == 'MobileNet')
 		{
 			model.model = await mobilenet.load()
@@ -105,7 +104,6 @@ export class ModelService
 
 	async tryPredict(model:ModelData, originalCanvas:HTMLCanvasElement)
 	{
-	
 		if(!model.loaded)
 		{
 			console.error(model.name + " has not been loaded")
