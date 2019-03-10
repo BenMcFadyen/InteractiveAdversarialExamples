@@ -5,6 +5,9 @@
 /tmp
 /out-tsc
 
+#template
+src/documentationTemplate.txt
+
 # dependencies
 /node_modules
 

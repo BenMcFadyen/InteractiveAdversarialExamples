@@ -14,7 +14,7 @@ import * as tf from '@tensorflow/tfjs';
 export class SelectionComponent implements OnInit 
 {
 	imgURL: string = 'assets/images/cat299.jpg'
-	epsilon: number = 100
+	epsilon: number = 0.025
 	selectedModel: string
 
   	constructor(
@@ -80,6 +80,7 @@ export class SelectionComponent implements OnInit
 			console.log(predictions)
 
 			var canvasOriginal = <HTMLCanvasElement> document.getElementById('canvasOriginal')
+			var canvasDifference = <HTMLCanvasElement> document.getElementById('canvasDifference')			
 			var canvasAdversarial = <HTMLCanvasElement> document.getElementById('canvasAdversarial')
 
 			//TODO WHY 227
@@ -100,7 +101,7 @@ export class SelectionComponent implements OnInit
 				this.imageService.drawTensorToCanvas('canvasDifference', drawPerturbation, 299, 299)		
 
 				// get prediction for the raw perturbation
-				this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
+				this.modelService.tryPredict(selectedModel, canvasDifference).then(modelOutput =>
 				{
 					let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
 					this.transferService.setDifferencePredictions(predictions)							

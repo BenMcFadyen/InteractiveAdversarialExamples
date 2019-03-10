@@ -9,11 +9,13 @@ html, body {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	align-content: center;
+
 	justify-content: space-around;
 
+	height: 100%;
 	border-style: solid;
 	border-color: purple;	
-	margin: 25px;
 	//max-width: 80%;
 }
 
@@ -39,7 +41,7 @@ html, body {
 
 .tablePredictions
 {
-
+	display: none;
 	border-style: solid;
 	border-color: orange;
 	margin: 25px;
