@@ -21,11 +21,19 @@ export class SelectionComponent implements OnInit
 
 	imageNet: string[]
 
-  	constructor(
-		private modelService: ModelService,
-  		private imageService: ImageService,
-  		private transferService: TransferService,
-  		private advService: AdvService) 
+	attackMethods: string[] = 
+	[
+	'FGSM',
+	'T-FGSM'
+	]
+
+	selectedAttackMethod: string
+
+
+  	constructor(private modelService: ModelService,
+		  		private imageService: ImageService,
+		  		private transferService: TransferService,
+		  		private advService: AdvService) 
   	{ 
 
   	}
@@ -73,13 +81,17 @@ export class SelectionComponent implements OnInit
 			return;
 		}
 
-		this.generateClassify(selectedModelName)		
+		this.applyAttackMethod()		
 	}
 
 
 
-	generateClassify(selectedModelName: string)
+	applyAttackMethod()
 	{
+
+		var selectedModelName = this.selectedModel
+		var selectedAttackMethod = this.selectedAttackMethod
+
 		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
 
 		var selectedModel = this.modelService.getModelDataObjectFromName(selectedModelName)
@@ -106,12 +118,29 @@ export class SelectionComponent implements OnInit
 		    const img4 = tf.image.resizeBilinear(tf.fromPixels(canvasOriginal, 4), [227, 227])		
 
 
-		    if(this.targetClass == null)
-		    	return console.error('No target class selected for T-FGSM attack')
 
-		    //TargetedFGSM Attempt
+
+		    switch(selectedAttackMethod)
+		    {
+			  case 'FGSM':
+			    
+			    var attackFunctionResult = this.advService.genAdvPerturbation(selectedModel, predictions[0].className, img3, img4, this.epsilon);
+			    break;
+
+			  case 'T-FGSM':
+
+  			    if(this.targetClass == null)
+		    		return console.error('T-FGSM selected, but no target class selected')
+
+    			var attackFunctionResult = this.advService.genAdvPerturbationFGSMTargeted(selectedModel, this.targetClass, img3, img4, this.epsilon);
+			    break;
+
+			  default:
+			    return console.error('No attack method selected')
+			}
+
 			// Generate the raw adversarial perturbation
-			this.advService.genAdvPerturbationFGSMTargeted(selectedModel, this.targetClass, img3, img4, this.epsilon).then(perturbation => 
+			attackFunctionResult.then(perturbation => 
 			{	
 				// Apply an alpha layer to the raw perturbation, to allow it to be seen
 				// TODO: this will need to be scaled at low epsilon values, or it will not be noticable
@@ -142,43 +171,6 @@ export class SelectionComponent implements OnInit
 				})
 			})
 
-
-
-
-
-
-			
-			// // Generate the raw adversarial perturbation
-			// this.advService.genAdvPerturbation(selectedModel, predictions[0].className, img3, img4, this.epsilon).then(perturbation => 
-			// {	
-			// 	// Apply an alpha layer to the raw perturbation, to allow it to be seen
-			// 	// TODO: this will need to be scaled at low epsilon values, or it will not be noticable
-			// 	var drawPerturbation = this.advService.applyAlphaChannel(perturbation)
-
-			// 	// draw the raw perturbation to the canvas: BEFORE it is combined with the original image to generate the full adversarial example
-			// 	this.imageService.drawTensorToCanvas('canvasDifference', drawPerturbation, 299, 299)		
-
-			// 	// get prediction for the raw perturbation
-			// 	this.modelService.tryPredict(selectedModel, canvasDifference).then(modelOutput =>
-			// 	{
-			// 		let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
-			// 		this.transferService.setDifferencePredictions(predictions)							
-			// 	})	
-
-			// 	// combine the original image and the perturbation
-			// 	this.advService.combineImgAndPerturbation(img4, perturbation).then(perturbedImgTensor => 
-			// 	{
-			// 		this.imageService.drawTensorToCanvas('canvasAdversarial', perturbedImgTensor, 299, 299)		
-
-			// 		// TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
-			// 		// Currently it is being done with the re-sized canvas
-			// 		this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
-			// 		{
-			// 			let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
-			// 			this.transferService.setAdversarialPredictions(predictions)							
-			// 		})	
-			// 	})
-			// })
 		})
 	}
 
@@ -191,7 +183,7 @@ export class SelectionComponent implements OnInit
 
 		this.epsilon = value
 
-		this.generateClassify(this.selectedModel)		
+		this.applyAttackMethod()		
 	}
 
 	

@@ -1,6 +1,13 @@
-html, body {
+html, body 
+{
     border-style: solid;
     border-color: red;
+
+	p
+	{
+		font-size: 32px;	
+		font-weight: bold;
+	}
 }
 
 

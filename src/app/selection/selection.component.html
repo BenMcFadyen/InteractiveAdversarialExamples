@@ -19,18 +19,23 @@
 
 		</div>
 
-		<div class = epsilonSelection>
+		<div class = "epsilonSelection">
 
 			<p> Epsilon: {{epsilon}} </p>
 			<input  class="epsilonInput"(change)="onEpsilonChange($event.target.value)" placeholder="1">
 
-		</div>	
+		</div> 
+
+		<div class = "attackMethodSelection">
+			<p> Attack Method: </p>
+			<select [(ngModel)]="selectedAttackMethod">
+				<option *ngFor="let attackMethod of attackMethods" [value]="attackMethod">{{attackMethod}}</option> 
+			</select>
+		</div> 
 
 
 		<div class = "imageNetClassSelection">
-
 			<p> Target Class: {{targetClass}} </p>
-
 			<select [(ngModel)]="targetClass">
 				<option *ngFor="let class of imageNet" [value]="class">{{class}}</option> 
 			</select>
