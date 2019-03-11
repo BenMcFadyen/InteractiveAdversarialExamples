@@ -122,7 +122,7 @@ export class ModelService
 
 			if(model.name == 'MobileNet')
 			{
-				var output = await model.model.classify(tensor) as any
+				var output = await model.model.classify(tensor,5) as any
 				return output
 
 			}

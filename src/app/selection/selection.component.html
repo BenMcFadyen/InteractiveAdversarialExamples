@@ -15,7 +15,7 @@
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
 
-			<button (click) = "onPredictButtonClick(trest)"> Predict </button>
+			<button (click) = "onPredictButtonClick()"> Predict </button>
 
 		</div>
 
@@ -36,6 +36,9 @@
 
 		<div class = "imageNetClassSelection">
 			<p> Target Class: {{targetClass}} </p>
+
+			<button (click) = "onRandomClick()"> Random </button>
+
 			<select [(ngModel)]="targetClass">
 				<option *ngFor="let class of imageNet" [value]="class">{{class}}</option> 
 			</select>

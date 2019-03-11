@@ -118,61 +118,44 @@ export class SelectionComponent implements OnInit
 		    const img4 = tf.image.resizeBilinear(tf.fromPixels(canvasOriginal, 4), [227, 227])		
 
 
-
-
 		    switch(selectedAttackMethod)
 		    {
 			  case 'FGSM':
 			    
-			    var attackFunctionResult = this.advService.genAdvPerturbation(selectedModel, predictions[0].className, img3, img4, this.epsilon);
+			    var attackMethodFunctionResult = this.advService.FGSM(selectedModel.model, predictions[0].className, img3, img4, this.epsilon);
 			    break;
 
 			  case 'T-FGSM':
 
-  			    if(this.targetClass == null)
+  			    if(this.targetClass == null) //TODO, select a random class?
 		    		return console.error('T-FGSM selected, but no target class selected')
 
-    			var attackFunctionResult = this.advService.genAdvPerturbationFGSMTargeted(selectedModel, this.targetClass, img3, img4, this.epsilon);
+    			var attackMethodFunctionResult = this.advService.Targeted_FGSM(selectedModel.model, this.targetClass, img3, img4, this.epsilon);
+
 			    break;
 
 			  default:
 			    return console.error('No attack method selected')
 			}
 
+
 			// Generate the raw adversarial perturbation
-			attackFunctionResult.then(perturbation => 
+			attackMethodFunctionResult.then(adversarialImgTensor => 
 			{	
-				// Apply an alpha layer to the raw perturbation, to allow it to be seen
-				// TODO: this will need to be scaled at low epsilon values, or it will not be noticable
-				var drawPerturbation = this.advService.applyAlphaChannel(perturbation)
+				this.imageService.drawTensorToCanvas('canvasAdversarial', adversarialImgTensor, 500, 500)		
 
-				// draw the raw perturbation to the canvas: BEFORE it is combined with the original image to generate the full adversarial example
-				this.imageService.drawTensorToCanvas('canvasDifference', drawPerturbation, 299, 299)		
-
-				// get prediction for the raw perturbation
-				this.modelService.tryPredict(selectedModel, canvasDifference).then(modelOutput =>
+				// TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
+				// Currently it is being done with the re-sized canvas
+				this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
 				{
 					let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
-					this.transferService.setDifferencePredictions(predictions)							
+					this.transferService.setAdversarialPredictions(predictions)							
 				})	
-
-				// combine the original image and the perturbation
-				this.advService.combineImgAndPerturbation(img4, perturbation).then(perturbedImgTensor => 
-				{
-					this.imageService.drawTensorToCanvas('canvasAdversarial', perturbedImgTensor, 299, 299)		
-
-					// TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
-					// Currently it is being done with the re-sized canvas
-					this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
-					{
-						let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
-						this.transferService.setAdversarialPredictions(predictions)							
-					})	
-				})
+							
 			})
-
 		})
 	}
+
 
 
 	onEpsilonChange(value)
@@ -186,14 +169,21 @@ export class SelectionComponent implements OnInit
 		this.applyAttackMethod()		
 	}
 
+
+	onRandomClick()
+	{
+
+		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
+		this.targetClass = IMAGENET_CLASSES[randomNumber] 
+	}
 	
 	onIMGLoad()
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
-		this.imageService.drawImageToCanvas(img, 'canvasOriginal', 299, 299)
-		this.imageService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
-		this.imageService.drawImageToCanvas(img, 'canvasAdversarial', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasOriginal', 500, 500)
+		//this.imageService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
+		this.imageService.drawImageToCanvas(img, 'canvasAdversarial', 500, 500)
 
 
 		//this.imageService.drawImageToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
