@@ -14,7 +14,7 @@ export class ModelService
 {
 	MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
 	MobileNet = new ModelData('MobileNet',	224, 224, 3, IMAGENET_CLASSES)
-	//ResNet50 = new ModelData('ResNet50',			224, 224, 3)
+	//ResNet50 = new ModelData('ResNet50',			224, 224, 3, IMAGENET_CLASSES)
 	//InceptionV3 = new ModelData('InceptionV3',	299, 299, 3)
 	//Xception = new ModelData('Xception',			299, 299, 3)
 
@@ -22,7 +22,7 @@ export class ModelService
 	[
 		this.MNIST,
 		this.MobileNet,
-		// this.ResNet50,
+		//this.ResNet50,
 		// this.InceptionV3,
 		// this.Xception
 	]
@@ -35,9 +35,7 @@ export class ModelService
 	loadAllModels()
 	{
 		for(var i = 0; i < this.allModels.length; i++)
-		{
 			this.loadModel(this.allModels[i])
-		}
 	}
 
 	async loadModel(model:ModelData)
@@ -61,7 +59,6 @@ export class ModelService
 			model.model = loadedModel
 			model.loaded = true
 		})
-
 	}
 
 	/**
@@ -84,8 +81,6 @@ export class ModelService
 			return
 		}				
 	}
-
-
 
 	getModelDataObjectFromName(modelName:string)
 	{
@@ -147,7 +142,6 @@ export class ModelService
 	decodeOutput(model:ModelData, modelOutput, topX: number): Prediction[]
 	{
 		let predictions = new Array<Prediction>()
-
 
 		// MobileNet(web) predictions are already decoded
 		if(model.name == 'MobileNet')

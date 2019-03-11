@@ -127,8 +127,11 @@ export class SelectionComponent implements OnInit
 
 			  case 'T-FGSM':
 
-  			    if(this.targetClass == null) //TODO, select a random class?
-		    		return console.error('T-FGSM selected, but no target class selected')
+  			    if(this.targetClass == null)
+  			    {
+					this.targetClass = this.selectRandomImageNetClass()
+		    		console.log('T-FGSM selected, but no target class selected, selecting random class...')
+  			    }
 
     			var attackMethodFunctionResult = this.advService.Targeted_FGSM(selectedModel.model, this.targetClass, img3, img4, this.epsilon);
 
@@ -138,14 +141,13 @@ export class SelectionComponent implements OnInit
 			    return console.error('No attack method selected')
 			}
 
-
-			// Generate the raw adversarial perturbation
+			// Generate the adversarial image
 			attackMethodFunctionResult.then(adversarialImgTensor => 
 			{	
 				this.imageService.drawTensorToCanvas('canvasAdversarial', adversarialImgTensor, 500, 500)		
 
 				// TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
-				// Currently it is being done with the re-sized canvas
+				// Currently it is being done with the re-sized canvas??
 				this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
 				{
 					let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
@@ -172,9 +174,15 @@ export class SelectionComponent implements OnInit
 
 	onRandomClick()
 	{
+		this.targetClass = this.selectRandomImageNetClass()
+		this.applyAttackMethod()
+	}
 
+
+	selectRandomImageNetClass()
+	{
 		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
-		this.targetClass = IMAGENET_CLASSES[randomNumber] 
+		return IMAGENET_CLASSES[randomNumber] 
 	}
 	
 	onIMGLoad()
@@ -184,7 +192,6 @@ export class SelectionComponent implements OnInit
 		this.imageService.drawImageToCanvas(img, 'canvasOriginal', 500, 500)
 		//this.imageService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
 		this.imageService.drawImageToCanvas(img, 'canvasAdversarial', 500, 500)
-
 
 		//this.imageService.drawImageToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
 		//this.imageService.drawImageToCanvas(img, 'canvasDifference_TableTest', 299, 299)
