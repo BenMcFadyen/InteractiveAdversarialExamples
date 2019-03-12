@@ -15,7 +15,7 @@
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
 
-			<button (click) = "onPredictButtonClick()"> Predict </button>
+			<button [disabled]="!allModelsLoaded" (click) = "onPredictButtonClick()"> Predict </button>
 
 		</div>
 

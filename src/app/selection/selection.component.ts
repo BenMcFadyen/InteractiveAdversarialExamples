@@ -16,8 +16,8 @@ export class SelectionComponent implements OnInit
 {
 	imgURL: string = 'assets/images/cat299.jpg'
 	epsilon: number = 5
-	selectedModel: string
-	targetClass: string
+	selectedModel: string = 'MobileNet'
+	targetClass: string 
 
 	imageNet: string[]
 
@@ -27,8 +27,9 @@ export class SelectionComponent implements OnInit
 	'T-FGSM'
 	]
 
-	selectedAttackMethod: string
+	selectedAttackMethod: string = 'FGSM'
 
+	allModelsLoaded: boolean;
 
   	constructor(private modelService: ModelService,
 		  		private imageService: ImageService,
@@ -40,8 +41,13 @@ export class SelectionComponent implements OnInit
 
 	ngOnInit() 
 	{
-		this.modelService.loadAllModels()
 		this.parseIMAGENET()
+
+		this.modelService.loadAllModels().then(()=>
+		{
+			this.allModelsLoaded = true;
+			//console.log('All models loaded')
+		})
 	}
 
 
@@ -104,8 +110,8 @@ export class SelectionComponent implements OnInit
 
 			this.transferService.setOriginalPredictions(predictions)
 
-			console.log('Top X predictions: ')
-			console.log(predictions)
+			// console.log('Top X predictions: ')
+			// console.log(predictions)
 
 			var canvasOriginal = <HTMLCanvasElement> document.getElementById('canvasOriginal')
 			var canvasDifference = <HTMLCanvasElement> document.getElementById('canvasDifference')			
