@@ -32,40 +32,31 @@ export class AdvService
 	*/
 	private async singleStepAttack(model: tf.Model, targetClass: string, img3, img4, epsilon = 1)
 	{
-		let tbuffer = tf.buffer([1000]) // create a one dimensional tf.buffer of length 1000
-
-		var imagenet = IMAGENET_CLASSES
+		let tbuffer = tf.buffer([1000]) // create a one dimensional tf.buffer of length 1000 
+		var labelClasses = IMAGENET_CLASSES //TODO: Add modularity here
 
 		// Sets the ID of the targetClass in buffer to a value of 1
-		Object.keys(imagenet).forEach(function(key) 
+		Object.keys(labelClasses).forEach(function(key) 
 		{
-			if (imagenet[key].valueOf() == targetClass.valueOf()) 
+			if (labelClasses[key].valueOf() == targetClass.valueOf()) 
 				tbuffer.set(1, parseInt(key));
 		})
 
-  		const targetLabel = tbuffer.toTensor()
+  		const oneHotLabels = tbuffer.toTensor()
 
-	    // x_to_y - A Rank 1 tensor (Vector) of size 1000 - Contains the raw prediction results 
-		// infer: Computes the logits (or the embedding) for the provided image. //prediction?	    
-	    const xtoy = x => { return model.infer(x.toFloat(), 'conv_preds').flatten()} 
 
-		// y_loss - Rank 0 tensor (Scalar) - Contains the top 1 prediction %
-		// SoftmaxCrossEntropy: Normalises numbers into a probability distribition that sums to 1
-	    const yloss = (gt, x) => tf.losses.softmaxCrossEntropy(gt, xtoy(x))
+  		const getModelLogits = x => model.infer(x.toFloat(), 'conv_preds').as1D()
 
-	    // TODO: are these functions necessary due to the way in which the tf.gradients function works?
-	    var lossFunction = function(x) { return yloss(targetLabel, x)}
-	    let gradientFunction = function () { return lossFunction(img3)}
+	    const lossFunction = x => tf.losses.softmaxCrossEntropy(oneHotLabels, getModelLogits(x))
 
-		/**
-		* Returns gradients of `f` with respect to each of the `xs`. The gradients
-		* returned are of the same length as `xs`, but some might be null if `f` was
-		* not a function of that `x`. It also takes optional dy to multiply the
-		* gradient, which defaults to `1`.
-		*/		    
-	    var imgGradients = tf.environment.ENV.engine.gradients(gradientFunction, [img3]) 	// var g = tf.grads(_grad_func); let test = g([img3])		
+	    const gradientFunction = tf.grad(lossFunction)
+
+	    var gradient = gradientFunction(img3)
+
+
+	    console.log(img3)
 	   	  									
-		var perturbation = this.scaleGradient(imgGradients.grads[0], epsilon)
+		var perturbation = this.scaleGradient(gradient, epsilon)
 
 		return perturbation
 	}
@@ -107,11 +98,8 @@ export class AdvService
 	*/
 	private async combineImgAndPerturbation(img4, perturbation, combineMethod:CombineMethod)
 	{
-		const zeroes = new Uint8Array(51529).fill(0)
-
-		// concat the all-zeros alpha channel with 3-channel gradients from tf.gradients()
-		let alphaChannel = tf.tensor3d(zeroes, [227, 227, 1])  // [0, 0,... 0, 0] (227)
-		let perturbationWithAlpha = tf.concat([perturbation, alphaChannel], 2) // 227,227,4   
+		// apply alpha layer to the perturbation
+		let perturbationWithAlpha = this.applyAlphaChannel(perturbation)
 
 		if(combineMethod == CombineMethod.Add)
 			return tf.add(tf.cast(img4,'float32'), perturbationWithAlpha)
@@ -121,15 +109,17 @@ export class AdvService
 	}
 
 	/**
-	* TODO..
+	* TODO: Assumes Rank3 img tensor, Add modularity here
 	* @param {epsilon} determines the amount of perturbation applied
 	* @return {tf.Tensor} perturbed img tensor
 	*/
-	private applyAlphaChannel(tensorIMG)
+	private applyAlphaChannel(tensorIMG, numberToFillWith:number = 0)
 	{
-		const empty255 = new Uint8Array(51529).fill(255)
-		let alphaChannel = tf.tensor3d(empty255, [227, 227, 1])
-		let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], 2)
+		var arraySize = tensorIMG.shape[0] * tensorIMG.shape[1] //TODO: Assumes Rank3 img tensor
+		const filler = new Uint8Array(arraySize).fill(numberToFillWith)
+		// concat the all-zeros alpha channel with 3-channel gradients from tf.gradients()		
+		let alphaChannel = tf.tensor3d(filler, [tensorIMG.shape[0], tensorIMG.shape[1], 1])// [0, 0,... 0, 0] (227)
+		let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], 2) // 227,227,4   
 		return tensorWithAlpha
 	}
 
