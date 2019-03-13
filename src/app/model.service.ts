@@ -32,10 +32,10 @@ export class ModelService
 
 	}
 
-	loadAllModels()
+	async loadAllModels()
 	{
 		for(var i = 0; i < this.allModels.length; i++)
-			this.loadModel(this.allModels[i])
+			await this.loadModel(this.allModels[i])
 	}
 
 	async loadModel(model:ModelData)
