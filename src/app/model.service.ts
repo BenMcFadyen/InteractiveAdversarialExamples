@@ -3,7 +3,6 @@ import { ModelData } from './ModelData';
 import { ImageService } from './image.service';
 import { Prediction } from './Prediction';
 import * as tf from '@tensorflow/tfjs';
-import * as mobilenet from '@tensorflow-models/mobilenet';
 import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_classes';
 
 
@@ -12,74 +11,78 @@ import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_class
 })
 export class ModelService 
 {
-	MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
-	MobileNet = new ModelData('MobileNet',	224, 224, 3, IMAGENET_CLASSES)
-	//ResNet50 = new ModelData('ResNet50',			224, 224, 3, IMAGENET_CLASSES)
-	//InceptionV3 = new ModelData('InceptionV3',	299, 299, 3)
-	//Xception = new ModelData('Xception',			299, 299, 3)
+	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
+	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES)
+	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES)
+	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES)
+	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES)
+	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES)
+	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES)
+
+
 
 	allModels : ModelData[] = 
 	[
-		this.MNIST,
-		this.MobileNet,
-		//this.ResNet50,
-		// this.InceptionV3,
-		// this.Xception
+		//this.MNIST,
+		// this.MobileNet,
+		// this.DenseNet121,
+		// this.ResNet50,
+		// this.InceptionV3,	
+		 this.Xception,
+		// this.MobileNetV2,			
 	]
 
-	constructor(private imageService: ImageService)
-	{
+	constructor(private imageService: ImageService){}
 
-	}
 
 	async loadAllModels()
 	{
-		for(var i = 0; i < this.allModels.length; i++)
-			await this.loadModel(this.allModels[i])
+
+
+		//TODO: See if models can be loaded and predicted in parallel (save time)
+	 	await Promise.all(this.allModels.map(async (currentModel) =>
+		{
+		 	currentModel.model = await this.loadModelFromFile(currentModel)
+			currentModel.loaded = true
+
+	 		//console.log("Model Loaded, starting prediction")
+			tf.tidy(()=>
+			{
+				currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
+			})
+	 		//console.log("Prediction done")
+		}))
 	}
 
-	async loadModel(model:ModelData)
-	{
-		if(model.loaded)
-		{
-			console.error("Error: " + model.name + " has already been loaded")
-			return
-		}
-
-		if(model.name == 'MobileNet')
-		{
-			model.model = await mobilenet.load()
-			model.loaded = true
-			console.log('MobileNet(web) Loaded')
-			return
-		}
-
-		this.loadModelFromFile(model.name, '/assets/models/').then(loadedModel => 
-		{
-			model.model = loadedModel
-			model.loaded = true
-		})
-	}
 
 	/**
 	* Load a tf.model from given file path
-	* @returns loaded tf.model
 	*/
-	async loadModelFromFile(modelName:string, assetFilePath:string,)
+	async loadModelFromFile(modelObject:ModelData)
 	{
-		let model:tf.Model
+		let model = modelObject.model
+
+		if(modelObject.loaded)
+		{
+			console.error("Error: " + model.name + " has already been loaded")
+			return null
+		}	
 
 		try 
 		{
-			model = await tf.loadModel(assetFilePath + modelName + '/model.json')
-			console.log('Successfully loaded: ' + modelName)
-			return model
+			//console.log('Start loading: ' + modelObject.name)			
+
+			return await tf.loadModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
+			{
+				console.log('Successfully loaded: ' + modelObject.name)
+				return loadedModel
+			})
 		}
 		catch(e) 
 		{
-			console.error("Error loading model: " + modelName + " : " + e)
-			return
-		}				
+			console.error("Error loading model: " + modelObject.name + " : " + e)
+			return null
+		}	
 	}
 
 	getModelDataObjectFromName(modelName:string)
@@ -115,17 +118,28 @@ export class ModelService
 
 			let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, model.imgChannels)
 
-			if(model.name == 'MobileNet')
-			{
-				var output = await model.model.classify(tensor,5) as any
-				return output
+	
+			// console.log('before norm')
+			// console.log(tensor)
+			// console.log(tensor.dataSync())
 
-			}
-			else
-			{
-				var output = await model.model.predict(tensor) as any
-				return output
-			}
+      	  	let normalizationOffset = tf.scalar(127.5);
+            var normalized = tensor.toFloat().sub(normalizationOffset).div(normalizationOffset);
+            var resized = normalized;
+            var alignCorners = true;
+            //resized = tf.image.resizeBilinear(normalized, [224, 224], alignCorners);
+            var batched = resized.reshape([1, model.imgHeight, model.imgWidth, 3]);
+
+
+			// console.log('after norm')
+			// console.log(batched)
+			// console.log(batched.dataSync())
+
+            this.imageService.drawTensorToCanvas('canvasAdversarial', batched, model.imgHeight, model.imgWidth)
+
+			var output = await model.model.predict(batched) as any
+			return output
+			
 		}
 		catch(e) 
 		{
@@ -143,26 +157,11 @@ export class ModelService
 	{
 		let predictions = new Array<Prediction>()
 
-		// MobileNet(web) predictions are already decoded
-		if(model.name == 'MobileNet')
-		{
-			for(var i = 0; i < modelOutput.length; i++)
-				predictions[i] = (new Prediction(modelOutput[i].className, this.formatNumber(modelOutput[i].probability)))
-		
-			return predictions
-		}
-
 		var classLabels = model.classLabels;
 		let modelOutputArray = Array.from(modelOutput.dataSync())
 
-		console.log("Model Output:")
-		console.log(modelOutputArray)
-
-		if(classLabels.length != modelOutputArray.length)
-		{
-			console.error("Error: size of classLabel array does not match modelOutput" + classLabels.length + "!= " + modelOutput.length)			
-			return null 
-		}
+		// console.log("Model Output:")
+		// console.log(modelOutputArray)
 
 		// Create the array in format: {ClassName, confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
