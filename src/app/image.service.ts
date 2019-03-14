@@ -76,13 +76,24 @@ export class ImageService
 		return reshapedTensor
 	}
 
-	drawTensorToCanvas(canvasID: string, tensorImg, desiredCanvasHeight:number, desiredCanvasWidth:number)
+	drawTensorToCanvas(canvasID: string, tensorImg: tf.Tensor, desiredCanvasHeight:number, desiredCanvasWidth:number)
 	{
 		var canvas = <HTMLCanvasElement> document.getElementById(canvasID);
 		var context = canvas.getContext("2d");
 
+		if(tensorImg.shape.length < 3)
+			return console.error("Cannot draw tensor to canvas: incorrect shape")
+
+		if(tensorImg.shape.length == 4)
+			tensorImg = tf.reshape(tensorImg, [tensorImg.shape[1], tensorImg.shape[2], tensorImg.shape[3]])
+
 		let tensorIMGHeight = tensorImg.shape[0];
 		let tensorIMGWidth = tensorImg.shape[1];
+
+
+		// console.log('Attempting to draw tensor:')
+		// console.log(tensorImg)
+		// console.log(tensorImg.dataSync())
 
 		// draw the tensor to the canvas, with the dimensions of the given tensor
 		canvas.height = tensorIMGHeight;
