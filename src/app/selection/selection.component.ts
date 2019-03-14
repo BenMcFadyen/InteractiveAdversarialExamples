@@ -16,8 +16,11 @@ export class SelectionComponent implements OnInit
 {
 	imgURL: string = 'assets/images/cat299.jpg'
 	epsilon: number = 5
-	selectedModel: string = 'MobileNet'
+	selectedModel: string = 'Xception'
 	targetClass: string 
+
+	numBytes:number
+	numTensors:number
 
 	imageNet: string[]
 
@@ -43,13 +46,27 @@ export class SelectionComponent implements OnInit
 	{
 		this.parseIMAGENET()
 
+		setInterval(()=> { this.updateMemory() }, 1 * 1000);
+
+
+		var t0 = performance.now();
+
 		this.modelService.loadAllModels().then(()=>
 		{
 			this.allModelsLoaded = true;
-			//console.log('All models loaded')
+			var t1 = performance.now();
+			console.log("All models Loaded in: " + ((t1 - t0)/1000).toFixed(3) + " (ms).")
+
 		})
 	}
 
+
+	updateMemory()
+	{
+		let mem = tf.memory()
+		this.numBytes = Math.round((mem.numBytes / 1000000))
+		this.numTensors = mem.numTensors
+	}
 
 	parseIMAGENET()
 	{
@@ -110,6 +127,8 @@ export class SelectionComponent implements OnInit
 
 			this.transferService.setOriginalPredictions(predictions)
 
+
+			return 
 			// console.log('Top X predictions: ')
 			// console.log(predictions)
 
