@@ -13,7 +13,7 @@ export class ModelData
 
 	constructor(name:string, imgHeight:number, 
 				imgWidth:number, imgChannels:number, 
-				classLabels:Array<any>, normaliseImage:boolean = true)
+				classLabels, normaliseImage:boolean = true)
 	{
 		this.name = name;
 		this.imgHeight = imgHeight;
