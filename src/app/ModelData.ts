@@ -9,13 +9,17 @@ export class ModelData
 	imgWidth:number;
 	imgChannels:number;
 	classLabels:Array<any>;
+	normaliseImage:boolean
 
-	constructor(name, imgHeight, imgWidth, imgChannels, classLabels)
+	constructor(name:string, imgHeight:number, 
+				imgWidth:number, imgChannels:number, 
+				classLabels:Array<any>, normaliseImage:boolean = true)
 	{
 		this.name = name;
 		this.imgHeight = imgHeight;
 		this.imgWidth = imgWidth;	
 		this.imgChannels = imgChannels;
 		this.classLabels = classLabels;
+		this.normaliseImage = normaliseImage;
 	}
 }
