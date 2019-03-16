@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "@tensorflow-models/mobilenet": "^0.2.2",
-    "@tensorflow/tfjs": "^0.13.0",
+    "@tensorflow/tfjs": "^0.13.5",
     "core-js": "^2.5.4",
     "file-system": "^2.2.2",
     "fs": "0.0.1-security",
