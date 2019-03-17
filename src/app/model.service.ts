@@ -3,8 +3,7 @@ import { ModelData } from './ModelData';
 import { ImageService } from './image.service';
 import { Prediction } from './Prediction';
 import * as tf from '@tensorflow/tfjs';
-import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_classes';
-
+import {IMAGENET_CLASSES} from './ImageNetClasses';
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +11,23 @@ import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_class
 export class ModelService 
 {
 	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
-	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES)
-	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES)
-	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES)
-	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES)
-	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES)
-	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES)
-
+	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES, false, 'conv_preds', true) //do not apply softmax, batch = true
+	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, true, null, true, false) //do not normalise input for ResNet50
+	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES, true, null, true)
+	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES, true, null, true)
+	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
+	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
 
 
 	allModels : ModelData[] = 
 	[
-		//this.MNIST,
-		// this.MobileNet,
-		// this.DenseNet121,
-		// this.ResNet50,
+		// this.MNIST,
+		this.MobileNet,
+		//this.DenseNet121,
+		this.ResNet50,
 		// this.InceptionV3,	
-		 this.Xception,
-		// this.MobileNetV2,			
+		// this.Xception,
+		 this.MobileNetV2,			
 	]
 
 	constructor(private imageService: ImageService){}
@@ -37,13 +35,14 @@ export class ModelService
 
 	async loadAllModels()
 	{
-
-
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	await Promise.all(this.allModels.map(async (currentModel) =>
 		{
 		 	currentModel.model = await this.loadModelFromFile(currentModel)
 			currentModel.loaded = true
+
+			// console.log(currentModel.model)
+			// console.log(currentModel.name + " layers: " + currentModel.model.layers.length)
 
 	 		//console.log("Model Loaded, starting prediction")
 			tf.tidy(()=>
@@ -51,6 +50,8 @@ export class ModelService
 				currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
 			})
 	 		//console.log("Prediction done")
+
+	 		//TODO: Add a timer for each specific model load/prediction
 		}))
 	}
 
@@ -71,7 +72,6 @@ export class ModelService
 		try 
 		{
 			//console.log('Start loading: ' + modelObject.name)			
-
 			return await tf.loadModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
 			{
 				console.log('Successfully loaded: ' + modelObject.name)
@@ -100,7 +100,7 @@ export class ModelService
 	}
 
 
-	async tryPredict(model:ModelData, originalCanvas:HTMLCanvasElement)
+	tryPredict(model:ModelData, originalCanvasObjectorString:HTMLCanvasElement | string, tensor:tf.Tensor)
 	{
 		if(!model.loaded)
 		{
@@ -110,35 +110,20 @@ export class ModelService
 
 		try 
 		{
-			console.log("Predicting: " + model.name)
+			return tf.tidy(()=>
+			{
+				tensor = tensor || this.imageService.getTensorFromCanvas(originalCanvasObjectorString, model.imgChannels, model.imgHeight, model.imgWidth, model.batchInput)	 //TODO BATCH?		
 
-			var resizedCanvas = this.imageService.getResizedCanvasFromExisting(originalCanvas,
-																				model.imgHeight,
-																				model.imgWidth)
+				if(model.normaliseImage)
+					tensor = this.imageService.normaliseIMGTensor(tensor)
+		
+				let modelOutput = model.model.predict(tensor).flatten() as any
 
-			let tensor = this.imageService.getTensorFromCanvas(resizedCanvas, model.imgChannels)
+				if(!model.applySoftMax) //simply return if softmax does not need to be applied
+					return modelOutput
 
-	
-			// console.log('before norm')
-			// console.log(tensor)
-			// console.log(tensor.dataSync())
-
-      	  	let normalizationOffset = tf.scalar(127.5);
-            var normalized = tensor.toFloat().sub(normalizationOffset).div(normalizationOffset);
-            var resized = normalized;
-            var alignCorners = true;
-            //resized = tf.image.resizeBilinear(normalized, [224, 224], alignCorners);
-            var batched = resized.reshape([1, model.imgHeight, model.imgWidth, 3]);
-
-
-			// console.log('after norm')
-			// console.log(batched)
-			// console.log(batched.dataSync())
-
-            this.imageService.drawTensorToCanvas('canvasAdversarial', batched, model.imgHeight, model.imgWidth)
-
-			var output = await model.model.predict(batched) as any
-			return output
+				return tf.softmax(modelOutput) //else apply softmax and return
+			})
 			
 		}
 		catch(e) 
@@ -156,24 +141,20 @@ export class ModelService
 	decodeOutput(model:ModelData, modelOutput, topX: number): Prediction[]
 	{
 		let predictions = new Array<Prediction>()
-
-		var classLabels = model.classLabels;
 		let modelOutputArray = Array.from(modelOutput.dataSync())
 
 		// console.log("Model Output:")
 		// console.log(modelOutputArray)
 
-		// Create the array in format: {ClassName, confidence}
+		// Create the array in format: {ClassName, Confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
 		{
-			predictions[i] = (new Prediction(classLabels[i],  this.formatNumber(modelOutputArray[i])))
+			predictions[i] = (new Prediction(model.classLabels[i],  this.formatNumber(modelOutputArray[i])))
 		}
 
 		// Sort predictions DSC by confidence
-		predictions = predictions.sort(function(a,b)
-		{
-			return a.confidence < b.confidence?1:a.confidence >b.confidence?-1:0
-		})
+		predictions = predictions.sort((a,b) => a.confidence < b.confidence?1:a.confidence >b.confidence?-1:0)
+	
 
 		// ensure that topX is not greater than the size of the predictions
 		if(topX >= predictions.length)
@@ -184,9 +165,10 @@ export class ModelService
 		return predictions
 	}
 
-	formatNumber(num)
+
+	formatNumber(num):number 
 	{
-		return num.toFixed(2);
+		return Math.round(num * 100) / 100
 	}
 
 }
