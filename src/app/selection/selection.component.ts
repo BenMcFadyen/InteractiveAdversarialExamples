@@ -5,7 +5,9 @@ import { AdvService } from '../adv.service';
 import { TransferService } from '../transfer.service';
 import { ModelData } from '../ModelData';
 import * as tf from '@tensorflow/tfjs';
-import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_classes';
+import {IMAGENET_CLASSES} from '../ImageNetClasses';
+import * as mobilenet from '@tensorflow-models/mobilenet';
+import { Prediction } from '../Prediction';
 
 @Component({
   selector: 'app-selection',
@@ -14,10 +16,10 @@ import {IMAGENET_CLASSES} from '@tensorflow-models/mobilenet/dist/imagenet_class
 })
 export class SelectionComponent implements OnInit 
 {
-	imgURL: string = 'assets/images/cat299.jpg'
+	imgURL: string = 'assets/images/lion.jpg'
 	epsilon: number = 5
-	selectedModel: string = 'Xception'
-	targetClass: string 
+	selectedModel: string = 'MobileNet'
+	targetClass: string = 'hen'
 
 	numBytes:number
 	numTensors:number
@@ -30,17 +32,17 @@ export class SelectionComponent implements OnInit
 	'T-FGSM'
 	]
 
-	selectedAttackMethod: string = 'FGSM'
+	selectedAttackMethod: string = 'T-FGSM'
 
 	allModelsLoaded: boolean;
 
   	constructor(private modelService: ModelService,
-		  		private imageService: ImageService,
+		  		private imgService: ImageService,
 		  		private transferService: TransferService,
-		  		private advService: AdvService) 
-  	{ 
+		  		private advService: AdvService)
+	{
 
-  	}
+	}
 
 	ngOnInit() 
 	{
@@ -55,7 +57,7 @@ export class SelectionComponent implements OnInit
 		{
 			this.allModelsLoaded = true;
 			var t1 = performance.now();
-			console.log("All models Loaded in: " + ((t1 - t0)/1000).toFixed(3) + " (ms).")
+			console.log("All models Loaded (and warmed) in: " + ((t1 - t0)/1000).toFixed(3) + " (ms).")
 
 		})
 	}
@@ -104,83 +106,86 @@ export class SelectionComponent implements OnInit
 			return;
 		}
 
-		this.applyAttackMethod()		
+
+		this.applyCurrentlySelectedAttackMethod()		
 	}
 
 
-
-	applyAttackMethod()
+	//TODO: split this function up, too big
+	applyCurrentlySelectedAttackMethod()
 	{
 
 		var selectedModelName = this.selectedModel
 		var selectedAttackMethod = this.selectedAttackMethod
 
-		var originalCanvas = <HTMLCanvasElement> document.getElementById('canvasOriginal')
+		var canvasOriginal = 'canvasOriginal'
+		var canvasDifference = 'canvasDifference'		
+		var canvasAdversarial = 'canvasAdversarial'
+
+		let canvasSize = 500
+		let tensorSize = 224
 
 		var selectedModel = this.modelService.getModelDataObjectFromName(selectedModelName)
 		if(selectedModel == null)
 			return
 
-		this.modelService.tryPredict(selectedModel, originalCanvas).then(modelOutput =>
+		let topX = 5
+		let desiredCanvasImgSize = 500
+
+		var t0 = performance.now();
+
+		// Get and set the classification results of the original image
+		let modelOutput = this.modelService.tryPredict(selectedModel, canvasOriginal, undefined)
+		let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, topX)
+		this.transferService.setOriginalPredictions(predictions)
+
+		var t1 = performance.now();
+		console.log("Prediction complete in:" + ((t1 - t0)/1000).toFixed(3) + " (ms).")
+
+		let topPrediction = predictions[0]
+		
+		const img3 = <tf.Tensor3D> this.imgService.getTensorFromCanvas(canvasOriginal, 3, selectedModel.imgHeight, selectedModel.imgWidth, selectedModel.batchInput)
+		const img4 = <tf.Tensor4D> this.imgService.getTensorFromCanvas(canvasOriginal, 4, selectedModel.imgHeight, selectedModel.imgWidth, selectedModel.batchInput)	
+
+	    if(!this.attackMethods.includes(selectedAttackMethod))
+	    	return console.error('Attack method' + selectedAttackMethod + ' is not valid')
+	    
+		if(selectedAttackMethod == 'T-FGSM' && this.targetClass==null)
 		{
-			let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
+			this.targetClass = this.selectRandomImageNetClass()
+			console.log('T-FGSM selected, but no target class selected, random class selected.')
+		}		    
 
-			this.transferService.setOriginalPredictions(predictions)
+		switch(selectedAttackMethod)
+	    {
+			case 'FGSM':
+				var attackMethodFunctionResult = this.advService.FGSM(selectedModel, selectedModel.classLabels, topPrediction.className, img3, img4, this.epsilon);
+				break;
+
+			case 'T-FGSM':
+				var attackMethodFunctionResult = this.advService.Targeted_FGSM(selectedModel, selectedModel.classLabels, this.targetClass, img3, img4, this.epsilon);
+				break;
+		}
+
+		// Get and set the classification results of this adversarial image, once the attackMethod has completed
+		attackMethodFunctionResult.then(async (adversarialImgTensor) => 
+		{	
+
+			this.imgService.drawTensorToCanvas(canvasAdversarial, adversarialImgTensor, 224, 224)	
+
+			let adversarialModelOutput = this.modelService.tryPredict(selectedModel, canvasAdversarial, undefined)
+
+			let predictions = this.modelService.decodeOutput(selectedModel, adversarialModelOutput, topX)
+			this.transferService.setAdversarialPredictions(predictions)		
 
 
-			return 
-			// console.log('Top X predictions: ')
-			// console.log(predictions)
-
-			var canvasOriginal = <HTMLCanvasElement> document.getElementById('canvasOriginal')
-			var canvasDifference = <HTMLCanvasElement> document.getElementById('canvasDifference')			
-			var canvasAdversarial = <HTMLCanvasElement> document.getElementById('canvasAdversarial')
-
-			//TODO WHY 227
-		    // 3-channel img for concat
-		    const img3 = tf.image.resizeBilinear(tf.fromPixels(canvasOriginal, 3), [227, 227])
-		    // 4-channel img with alpha
-		    const img4 = tf.image.resizeBilinear(tf.fromPixels(canvasOriginal, 4), [227, 227])		
+			this.imgService.drawTensorToCanvas(canvasAdversarial, adversarialImgTensor, 500, 500)		
 
 
-		    switch(selectedAttackMethod)
-		    {
-			  case 'FGSM':
-			    
-			    var attackMethodFunctionResult = this.advService.FGSM(selectedModel.model, predictions[0].className, img3, img4, this.epsilon);
-			    break;
-
-			  case 'T-FGSM':
-
-  			    if(this.targetClass == null)
-  			    {
-					this.targetClass = this.selectRandomImageNetClass()
-		    		console.log('T-FGSM selected, but no target class selected, selecting random class...')
-  			    }
-
-    			var attackMethodFunctionResult = this.advService.Targeted_FGSM(selectedModel.model, this.targetClass, img3, img4, this.epsilon);
-
-			    break;
-
-			  default:
-			    return console.error('No attack method selected')
-			}
-
-			// Generate the adversarial image
-			attackMethodFunctionResult.then(adversarialImgTensor => 
-			{	
-				this.imageService.drawTensorToCanvas('canvasAdversarial', adversarialImgTensor, 500, 500)		
-
-				// TODO: re-classification SHOULD be done with the raw peturbedIMGTensor, re-sizing for canvas will break things?
-				// Currently it is being done with the re-sized canvas??
-				this.modelService.tryPredict(selectedModel, canvasAdversarial).then(modelOutput =>
-				{
-					let predictions = this.modelService.decodeOutput(selectedModel, modelOutput, 5)
-					this.transferService.setAdversarialPredictions(predictions)							
-				})	
-							
-			})
-		})
+			var t2 = performance.now();
+			console.log("Adversarial image generation complete in:" + ((t2 - t1)/1000).toFixed(3) + " (ms).")
+				
+		})	
 	}
 
 
@@ -193,14 +198,14 @@ export class SelectionComponent implements OnInit
 
 		this.epsilon = value
 
-		this.applyAttackMethod()		
+		this.applyCurrentlySelectedAttackMethod()		
 	}
 
 
 	onRandomClick()
 	{
 		this.targetClass = this.selectRandomImageNetClass()
-		this.applyAttackMethod()
+		this.applyCurrentlySelectedAttackMethod()
 	}
 
 
@@ -214,13 +219,13 @@ export class SelectionComponent implements OnInit
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
-		this.imageService.drawImageToCanvas(img, 'canvasOriginal', 500, 500)
-		//this.imageService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
-		this.imageService.drawImageToCanvas(img, 'canvasAdversarial', 500, 500)
+		this.imgService.drawImageToCanvas(img, 'canvasOriginal', 500, 500)
+		//this.imgService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
+		this.imgService.drawImageToCanvas(img, 'canvasAdversarial', 500, 500)
 
-		//this.imageService.drawImageToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
-		//this.imageService.drawImageToCanvas(img, 'canvasDifference_TableTest', 299, 299)
-		//this.imageService.drawImageToCanvas(img, 'canvasAdversarial_TableTest', 299, 299)
+		//this.imgService.drawImageToCanvas(img, 'canvasOriginal_TableTest', 299, 299)
+		//this.imgService.drawImageToCanvas(img, 'canvasDifference_TableTest', 299, 299)
+		//this.imgService.drawImageToCanvas(img, 'canvasAdversarial_TableTest', 299, 299)
 
 	}
 }
