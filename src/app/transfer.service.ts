@@ -7,17 +7,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class TransferService 
 {
- 	private originalPredictions: Prediction[] = [new Prediction('A', 'B'),
-										 		 new Prediction('C', 'D'),
-										 		 new Prediction('E', 'F')]
+ 	private originalPredictions: Prediction[] = [new Prediction('A', 1),
+										 		 new Prediction('C', 2),
+										 		 new Prediction('E', 3)]
 
- 	private differencePredictions: Prediction[] = [new Prediction('1', '2'),
-										 		   new Prediction('3', '4'),
-										 		   new Prediction('5', '6')] 	
+ 	private differencePredictions: Prediction[] = [new Prediction('1',2),
+										 		   new Prediction('3', 4),
+										 		   new Prediction('5', 6)] 	
 
- 	private adversarialPredictions: Prediction[] = [new Prediction('7', '8'),
-											 		new Prediction('9', '10'),
-											 		new Prediction('11', '12')]
+ 	private adversarialPredictions: Prediction[] = [new Prediction('7', 8),
+											 		new Prediction('9', 10),
+											 		new Prediction('11', 12)]
 
 
 	private originalPredictionsSource = new BehaviorSubject(this.originalPredictions);
