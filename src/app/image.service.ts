@@ -25,89 +25,128 @@ export class ImageService
 	}
 
 	/**
- 	* @returns a resized HTMLCanvasElement of the original canvasID
+	* Normalise a tensor from pixel values between [0-255] to [-1,1]
 	*/
-	getResizedCanvasFromExisting(canvas:HTMLCanvasElement, desiredCanvasHeight:number = 299, desiredCanvasWidth:number = 299)
+	normaliseIMGTensor(tensor: tf.Tensor)
 	{
-		var resizedCanvas = <HTMLCanvasElement> document.createElement('canvas')
-		resizedCanvas.id = 'resizedCanvas'
-		resizedCanvas.height = desiredCanvasHeight
-		resizedCanvas.width = desiredCanvasWidth
+		return tf.tidy(()=>
+		{
+	  	  	let normalisationOffset = tf.scalar(127.5);
+	        var normalised = tensor.toFloat().sub(normalisationOffset).div(normalisationOffset);
 
-		var context = resizedCanvas.getContext("2d")
-		context.drawImage(canvas, 0, 0, desiredCanvasHeight, desiredCanvasWidth)		
-		return resizedCanvas
-	}
-
-	/*
-		resizes an existing canvas, from itself
-	*/
-	resizeExistingCanvas(canvasID:string, desiredCanvasHeight:number = 299, desiredCanvasWidth:number = 299)
-	{	
-		/*
-		* create a temporary canvas element
-		* re-draw the existing canvas to this element (at the desired resize)
-		* re-draw this to the original canvas	
-		*/
-
-		var canvas = <HTMLCanvasElement> document.getElementById(canvasID)
-		var tempCanvas = this.getResizedCanvasFromExisting(canvas, desiredCanvasHeight, desiredCanvasWidth)
-
-		canvas.height = desiredCanvasHeight
-		canvas.width = desiredCanvasWidth
-		var context = canvas.getContext("2d")	
-		context.drawImage(tempCanvas, 0, 0, desiredCanvasHeight, desiredCanvasWidth)
-
-		// cleanup the temporary canvas
-		tempCanvas.remove()	
+	        return normalised
+        })
 	}	
 
+	drawTensorToCanvas(canvasIDorObject:string | HTMLCanvasElement, tensor:tf.Tensor3D | tf.Tensor4D, height: number = null, width:number = null )
+	{
+		let canvas = this.getCanvasObject(canvasIDorObject)
+		let context = canvas.getContext('2d');
+		let alignCorners = false
+
+		tf.tidy(()=>
+		{
+			if(tensor.shape.length == 4)
+				tensor = <tf.Tensor3D> tf.reshape(tensor, [tensor.shape[1], tensor.shape[2], tensor.shape[3]])
+
+			// if desired canvas height is not specified, draw to the given tensors shape
+			if(height == null || width == null)
+			{
+				height = tensor.shape[0]
+				width = tensor.shape[1]
+			}
+
+			// set the size of the canvas to the desired (or the tensor)
+			canvas.height = height
+			canvas.width = width
+
+			// check if the tensor needs to be resized before drawing to the canvas
+			if(height != tensor.shape[0] || width != tensor.shape[1])
+			{
+				canvas.height = height
+				canvas.width = width
+			    tensor = tf.image.resizeBilinear(tensor, [height, width], alignCorners)
+			}
+
+			let imgArray = Uint8ClampedArray.from(tensor.dataSync())
+			let imgData = context.createImageData(height, width)
+			imgData.data.set(imgArray)
+			context.putImageData(imgData, 0, 0)
+		})
+	}
+
+	/* Returns a tensor of the given canvas
+	*  Defaults to 4 channels and the given canvas height/width
+	*/
+	getTensorFromCanvas(canvasIDorObject:string | HTMLCanvasElement, numChannels:number = 4, height:number = null, width:number = null, batch:boolean=false)
+	{
+		let canvas = this.getCanvasObject(canvasIDorObject)
+		let alignCorners = false
+
+		if(height == null || width == null)
+		{
+			height = canvas.height
+			width = canvas.width
+		}
+
+		return tf.tidy(()=>
+		{
+			let tensor = tf.fromPixels(canvas, numChannels)
+
+			if(height != canvas.height || width != canvas.width)
+			{
+			    tensor = tf.image.resizeBilinear(tensor, [height, width], alignCorners) //DO NOT ALIGN CORNERS FOR ADVERSARIAL IMAGE CLASSIFICATION
+			}
+
+			if(batch)
+			{
+				let batchedTensor = <tf.Tensor4D> tf.reshape(tensor, [1, height, width, numChannels])
+				return tf.cast(batchedTensor, 'float32')	
+			}
+
+			return tf.cast(tensor, 'float32')	
+		})
+
+	}
 
 	/**
-	* Grabs image data from given canvas, returns tf.tensor
-	* @returns reshaped tf.tensor object
+	* Applys an alpha layer to a Tensor of rank 3 or 4
+	* @param {epsilon} determines the amount of perturbation applied
+	* @return {tf.Tensor} perturbed img tensor
 	*/
-    getTensorFromCanvas(canvas: HTMLCanvasElement, reqNumberChannels: number)
-	{
-		// Convert the canvas pixels to a Tensor of the matching shape
-		let tensor = tf.fromPixels(canvas, reqNumberChannels)
-		var reshapedTensor = tf.reshape(tensor, [1, canvas.height, canvas.width, reqNumberChannels])
-		reshapedTensor = tf.cast(reshapedTensor, 'float32')
-		return reshapedTensor
+	applyAlphaChannelToTensor(tensorIMG:tf.Tensor3D | tf.Tensor4D, alphaValue:number = 0)
+	{		
+		return tf.tidy(()=>
+		{
+		 	let imgHeight = tensorIMG.shape[0]
+			let imgWidth = tensorIMG.shape[1]
+			let tensorShape = [imgHeight, imgWidth, 1]
+			let concatAxis = 2
+
+			if(tensorIMG.shape.length == 4)
+			{
+			 	imgHeight = tensorIMG.shape[1]
+				imgWidth = tensorIMG.shape[2]
+				tensorShape = [1, imgHeight, imgWidth, 1]
+				concatAxis = 3				
+			}
+			var arraySize = imgHeight * imgWidth 
+			const filler = new Uint8Array(arraySize).fill(alphaValue)
+			let alphaChannel = tf.tensor(filler, tensorShape)
+			let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], concatAxis)
+
+			return tensorWithAlpha
+		})
 	}
 
-	drawTensorToCanvas(canvasID: string, tensorImg: tf.Tensor, desiredCanvasHeight:number, desiredCanvasWidth:number)
+	/* Returns the canvas object if string is given
+	*/
+	getCanvasObject(canvas:string | HTMLCanvasElement) :HTMLCanvasElement
 	{
-		var canvas = <HTMLCanvasElement> document.getElementById(canvasID);
-		var context = canvas.getContext("2d");
-
-		if(tensorImg.shape.length < 3)
-			return console.error("Cannot draw tensor to canvas: incorrect shape")
-
-		if(tensorImg.shape.length == 4)
-			tensorImg = tf.reshape(tensorImg, [tensorImg.shape[1], tensorImg.shape[2], tensorImg.shape[3]])
-
-		let tensorIMGHeight = tensorImg.shape[0];
-		let tensorIMGWidth = tensorImg.shape[1];
-
-
-		// console.log('Attempting to draw tensor:')
-		// console.log(tensorImg)
-		// console.log(tensorImg.dataSync())
-
-		// draw the tensor to the canvas, with the dimensions of the given tensor
-		canvas.height = tensorIMGHeight;
-		canvas.width = tensorIMGWidth;	
-		let imgArray = Uint8ClampedArray.from(tensorImg.dataSync());
-		let imgData = context.createImageData(tensorIMGHeight, tensorIMGWidth);
-		imgData.data.set(imgArray);
-		context.putImageData(imgData, 0, 0);			
-
-		// if the desired canvas height/shape is different, resize it 
-		// Note: resizing the image here will affect the adversarial perturbations
-		//  	 this image should only be used for display
-		if((tensorIMGHeight != desiredCanvasHeight) || (tensorIMGWidth != desiredCanvasWidth))
-			this.resizeExistingCanvas(canvasID, desiredCanvasHeight, desiredCanvasWidth)
+		if(typeof(canvas) == 'string')
+	 		canvas = <HTMLCanvasElement> document.getElementById(canvas) 
 		
+		return <HTMLCanvasElement> canvas
 	}
+
 }
