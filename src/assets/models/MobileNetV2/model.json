@@ -7217,7 +7217,6 @@
               },
               "dtype": "float32",
               "kernel_constraint": null,
-              "activation": "softmax",
               "use_bias": true,
               "activity_regularizer": null,
               "name": "Logits",

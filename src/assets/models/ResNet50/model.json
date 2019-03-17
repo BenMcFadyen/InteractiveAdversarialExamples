@@ -9837,7 +9837,6 @@
             "config": {
               "bias_constraint": null,
               "kernel_regularizer": null,
-              "activation": "softmax",
               "bias_initializer": {
                 "config": {
                   "dtype": "float32"
