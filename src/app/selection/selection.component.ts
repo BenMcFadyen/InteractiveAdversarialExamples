@@ -7,6 +7,7 @@ import { ModelData } from '../ModelData';
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from '../ImageNetClasses';
 import * as mobilenet from '@tensorflow-models/mobilenet';
+import { ModelPrediction } from '../ModelPrediction';
 import { Prediction } from '../Prediction';
 
 @Component({
@@ -30,6 +31,9 @@ export class SelectionComponent implements OnInit
 	numTensors:number
 
 	imageNet: string[]
+
+	canvasSize:number = 350
+	differenceCanvasSize:number = 224
 
 	adversarialImageGenerated: boolean
 
@@ -92,7 +96,6 @@ export class SelectionComponent implements OnInit
 	/** generate an adversarial example using the given model and attack method, for the given source canvas, then draw it to the given target canvas */
 	async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
 	{
-		let desiredCanvasImgSize = 500
 		let t0 = performance.now()
 
 		const img3 = <tf.Tensor3D> this.imgService.getTensorFromCanvas(sourceCanvas, 3, modelObject.imgHeight, modelObject.imgWidth, modelObject.batchInput)
@@ -112,7 +115,7 @@ export class SelectionComponent implements OnInit
 		// Draw the adversarial image to the canvas
 		return await attackMethodFunctionResult.then(adversarialImgTensor => 
 		{	
-			this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, 500, 500) //TODO OG MODEL OUTPUT HERE? ARE WE AFFECT TENSOR
+			this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize) //TODO OG MODEL OUTPUT HERE? ARE WE AFFECT TENSOR
 			this.logTime(t0, performance.now(), 'Adversarial example generated')
 
 			// cleanup img tensors
@@ -130,47 +133,49 @@ export class SelectionComponent implements OnInit
 		let topX = 3
 		let canvasSize = 500
 
-		this.validateParamsUpdateDisplayVars(false) //adversarial model is not required to be selected at this point
+		this.validateSelectedParameters(false) //adversarial model is not required to be selected at this point
 		var selectedOriginalPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedPredictionModel)
 		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
 
 		// get the predictions from the original canvas
 		let originalPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasOriginal, topX)
 		// update the prediction variables, for use within the display component
-		this.transferService.setOriginalPredictions(originalPredictions)		
+		//this.transferService.setOriginalPredictions(originalPredictions)		
 
 		// get the top prediction, for use as the target class for FGSM
 		this.topPrediction = originalPredictions[0].className		
 
 		// return here if generation has not yet been done
 		if(!this.adversarialImageGenerated)
-			throw 'Could not predict '
+		{
+			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), true)
+			return
+		}
 		
 
 		// get the predictions from the (newly drawn) adversarial canvas
 		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, topX)
 
-		// // now re-draw the adversarial image larger, as prediction has been done with the raw model size
-		// let advImgTensor = this.imgService.getTensorFromCanvas(this.canvasAdversarial, 4)
-		// this.imgService.drawTensorToCanvas(this.canvasAdversarial,advImgTensor, canvasSize,canvasSize)
-
-		// advImgTensor.dispose()
-
 		// update the prediction variables, for use within the display component
-		this.transferService.setAdversarialPredictions(adversarialPredictions)			
+		//this.transferService.setAdversarialPredictions(adversarialPredictions)			
+
+		//this change forces predicton of both original/adv at the same time
+		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions), true)
 	}
 
 
 	/** TODO: Rename? **/
 	async executeAttackMethod()
 	{
-		this.validateParamsUpdateDisplayVars()
+		this.validateSelectedParameters(false)
 
 		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
 
 		await this.generateAndDrawAdversarialImage(selectedAdvPredictionModelObject, this.selectedAttackMethod, this.canvasOriginal, this.canvasAdversarial, this.topPrediction)
 
 		this.adversarialImageGenerated = true;
+		this.transferService.setAdversarialImageModelName('('+ selectedAdvPredictionModelObject.name + ')')
+
 	}
 
 
@@ -186,17 +191,6 @@ export class SelectionComponent implements OnInit
 	async onGenerateButtonClick()	
 	{
 		this.executeAttackMethod()
-	}
-
-	/** TODO */
-	validateParamsUpdateDisplayVars(checkAdversarialModel:boolean = true)
-	{
-		this.validateSelectedParameters(checkAdversarialModel)
-
-		// update the selected model variables, for use within the display component
-		this.transferService.setOriginalPredictionModel(this.selectedPredictionModel)
-		this.transferService.setAdversarialPredictionModel(this.selectedAdversarialPredictionModel)
-
 	}
 
 
@@ -283,9 +277,9 @@ export class SelectionComponent implements OnInit
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
-		this.imgService.drawImageToCanvas(img, 'canvasOriginal', 500, 500)
-		//this.imgService.drawImageToCanvas(img, 'canvasDifference', 299, 299)
-		//this.imgService.drawImageToCanvas(img, 'canvasAdversarial', 500, 500)
+		this.imgService.drawImageToCanvas(img, 'canvasOriginal', this.canvasSize, this.canvasSize)
+		this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
+		this.imgService.drawImageToCanvas(img, 'canvasAdversarial', this.canvasSize, this.canvasSize)
 	}
 
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */
