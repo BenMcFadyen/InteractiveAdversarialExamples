@@ -9,15 +9,27 @@
 
 		</div>
 
-		<div class = "modelSelection">
 
-			<select [(ngModel)]="selectedModel">
+		<div class = "modelSelection adversarialPredictionModelSelection">
+
+			<p> Adversarial Model </p>
+			<select [(ngModel)]="selectedAdversarialPredictionModel">
+				<option *ngFor="let model of modelService.adversarialModels" [value]="model.name">{{model.name}}</option> 
+			</select>
+			<button [disabled]="!allModelsLoaded" (click) = "onGenerateButtonClick()"> Generate </button>			
+		</div>
+
+		<div class = "modelSelection predictionModelSelection">
+
+			<p> Prediction Model </p>
+			<select [(ngModel)]="selectedPredictionModel">
 				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
 			</select>
 
 			<button [disabled]="!allModelsLoaded" (click) = "onPredictButtonClick()"> Predict </button>
 
 		</div>
+
 
 		<div class = "epsilonSelection">
 
