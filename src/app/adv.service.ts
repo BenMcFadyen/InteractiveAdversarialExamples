@@ -25,16 +25,16 @@ export class AdvService
 	* Generates perturbation in respect to the provided targetClass
 	* @return {tf.Tensor} perturbed img tensor
 	*/
-	private async singleStepAttack(modelObj: ModelData, classLabels, targetClass, img3, epsilon)
+	private async singleStepAttack(modelObj: ModelData, targetClass, img3, epsilon)
 	{
 		return tf.tidy(()=>
 		{
 			let tbuffer = tf.buffer([1000]) // used for storing the one-hot label
 
 			// one-hot encode the target class  //TODO: Use tf.oneHot?
-			Object.keys(classLabels).forEach(function(key) 
+			Object.keys(modelObj.classLabels).forEach(function(key) 
 			{
-				if (classLabels[key].valueOf() == targetClass.valueOf()) 
+				if (modelObj.classLabels[key].valueOf() == targetClass.valueOf()) 
 					tbuffer.set(1, parseInt(key));
 			})
 		
@@ -49,7 +49,7 @@ export class AdvService
 	  		if(modelObj.predictionOutputLayer != null)
 	  			 model = this.getModelAtEndpoint(modelObj.model, modelObj.predictionOutputLayer)
 
-	  		const getModelLogits = x => model.predict(x.toFloat()).as1D() //must be the RAW prediction logits, BEFORE any activation functions, or the gradient calculated will not be correct
+	  		const getModelLogits = x => (<tf.Tensor> model.predict(x.toFloat())).as1D() //must be the RAW prediction logits, BEFORE any activation functions, or the gradient calculated will not be correct
 		    const lossFunction = x => tf.losses.softmaxCrossEntropy(oneHotClassLabels, getModelLogits(x))
 		    const gradientFunction = tf.grad(lossFunction)
 		    var gradient = gradientFunction(img3)
@@ -74,16 +74,15 @@ export class AdvService
 		return revSoftMaxNums
 	}
 
-
 	getModelAtEndpoint(model: tf.Model, endpoint:string)
 	{
 		return tf.model({inputs:model.inputs, outputs:model.getLayer(endpoint).output})
 	}
 
 
-	async FGSM(modelObj: ModelData, classLabels, orginalPrediction: string, img3, img4, epsilon = 1)
+	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1)
 	{		
-		return this.singleStepAttack(modelObj, classLabels, orginalPrediction, img3, epsilon).then(perturbation =>
+		return this.singleStepAttack(modelObj, orginalPrediction, img3, epsilon).then(perturbation =>
 		{
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
@@ -93,10 +92,9 @@ export class AdvService
 		})
 	}
 
-
-	async Targeted_FGSM(modelObj: ModelData, classLabels, targetPrediction:string, img3, img4, epsilon = 1)
+	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1)
 	{
-		return this.singleStepAttack(modelObj, classLabels, targetPrediction, img3, epsilon).then(perturbation =>
+		return this.singleStepAttack(modelObj, targetPrediction, img3, epsilon).then(perturbation =>
 		{
 			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Subtract).then(perturbedImgTensor => 
@@ -122,7 +120,6 @@ export class AdvService
 		return tf.sub(tf.cast(img4,'float32'), perturbationWithAlpha)
 
 	}
-
 
 	/**
 	* TODO..
