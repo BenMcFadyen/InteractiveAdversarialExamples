@@ -1,31 +1,62 @@
 <html>
 <body>
 
+<div class = "flexContainer">
+
+	<div class = "imageContainer">
+
+		<div class = "original">
+			<p> Original </p>
+			<canvas id = "canvasOriginal" width="350" height = "350"> </canvas>
+		</div>
 
 
+		<div class = "difference">
+			<p> Perturbation/Difference</p>			
+			<canvas id = "canvasDifference" width="250" height = "250"> </canvas>
+		</div>
 
-<div class = "flexPredictions">
+		<div class = "adversarial">
+			<p> Adversarial {{adversarialImageModelNameSource}}</p>
+			<canvas id = "canvasAdversarial" width="350" height = "350"> </canvas>
+		</div>
 
-	<div class = "original">
-		<p> Original: {{originalPredictionModel}} </p>
-
-		<canvas id = "canvasOriginal" width="299" height = "299"> </canvas>
-
-        <table class = "predictions originalPredictions">
-			<thead>
-				<tr>
-					<th>Class Label</th>
-					<th>Confidence</th>
-				</tr>
-			</thead>
-			<tr *ngFor="let originalPrediction of originalPredictions">
-				<td>{{ originalPrediction.className }}</td>
-				<td>{{ originalPrediction.confidence }}</td>
-			</tr>					
-		</table>
 	</div>
 
 
+	<div class = "predictions" *ngFor="let modelPrediction of allModelPredictions">
+	 	<table class = "prediction original">
+			<thead>
+				<tr>
+					<th>{{ modelPrediction.modelName }}:  Class Label</th>
+					<th> Confidence </th>
+				</tr>
+			</thead>
+				<tr *ngFor="let originalPrediction of modelPrediction.originalPredictions">
+					<td>{{ originalPrediction.className }}</td>
+					<td>{{ originalPrediction.confidence }}</td>
+				</tr>					
+		</table>
+
+
+	 	<table class = "prediction original">
+			<thead>
+				<tr>
+					<th>{{ modelPrediction.modelName }}:  Class Label</th>
+					<th> Confidence </th>
+				</tr>
+			</thead>
+				<tr *ngFor="let adversarialPrediction of modelPrediction.adversarialPredictions">
+					<td>{{ adversarialPrediction.className }}</td>
+					<td>{{ adversarialPrediction.confidence }}</td>
+				</tr>					
+		</table>
+	</div>
+
+</div>
+ 
+</body>
+</html>
 
 	<!-- <div class = "difference">
 		<p> Perturbation</p>
@@ -43,121 +74,3 @@
 			</tr>					
 		</table>
 	</div> -->
-
-	<div class = "adversarial">
-		<p> Adversarial: {{adversarialPredictionModel}}</p>
-		<canvas id = "canvasAdversarial" width="299" height = "299"> </canvas>
-        <table class = "predictions adversarialPredictions">
-			<thead>
-				<tr>
-					<th>Class Label</th>
-					<th>Confidence</th>
-				</tr>
-			</thead>
-			<tr *ngFor="let adversarialPrediction of adversarialPredictions">
-				<td>{{ adversarialPrediction.className }}</td>
-				<td>{{ adversarialPrediction.confidence }}</td>
-			</tr>					
-		</table>
-	</div>		
-
-</div>
-
-
-
-
-<table class = "tablePredictions">
-	<thead>
-		<tr>
-			<th>Original</th>
-			<th>Difference</th>
-			<th>Adversarial</th>
-		</tr>
-	</thead>
-
-		<tr>
-			<canvas id = "canvasOriginal_TableTest" width="299" height="299"> </canvas>
-			<canvas id = "canvasDifference_TableTest" width="299" height="299"> </canvas>
-			<canvas id = "canvasAdversarial_TableTest" width="299" height="299"> </canvas>
-		</tr>
-
-		<tr>
-			<td>	
-		        <table class = "predictions originalPredictions">
-					<thead>
-						<tr>
-							<th>Class Label</th>
-							<th>Confidence</th>
-						</tr>
-					</thead>
-					<tr *ngFor="let originalPrediction of originalPredictions">
-						<td>{{ originalPrediction.className }}</td>
-						<td>{{ originalPrediction.confidence }}</td>
-					</tr>					
-				</table>
-			</td>
-
-			<td>	
-		        <table class = "predictions differencePredictions">
-					<thead>
-						<tr>
-							<th>Class Label</th>
-							<th>Confidence</th>
-						</tr>
-					</thead>
-					<tr *ngFor="let differencePrediction of differencePredictions">
-						<td>{{ differencePrediction.className }}</td>
-						<td>{{ differencePrediction.confidence }}</td>
-					</tr>					
-				</table>
-			</td>
-
-			<td>	
-		        <table class = "predictions adversarialPredictions">
-					<thead>
-						<tr>
-							<th>Class Label</th>
-							<th>Confidence</th>
-						</tr>
-					</thead>
-					<tr *ngFor="let adversarialPrediction of adversarialPredictions">
-						<td>{{ adversarialPrediction.className }}</td>
-						<td>{{ adversarialPrediction.confidence }}</td>
-					</tr>					
-				</table>
-			</td>
-
-		</tr>
-</table>
-
-</body>
-</html>
-
-
-
-
-
-
-<!--
-<table id = "predictionTable">
-<tr>
-	<th> Predictions </th>
-	<th> Adversarial Predictions</th>
-</tr>
-<tr>
-	<td>
-	<ul class = "mainPredictions">
-		<li *ngFor="let prediction of predictions">
-			<span class = "badge"> {{prediction.className}}: </span> {{prediction.probability}}
-		</li>
-	</ul>
-	<td>
-	<tr>
-		<tr>
-		<ul class = "advPrediction">
-			<li *ngFor="let advPrediction of advPredictions">
-				<span class = "badge"> {{advPrediction.className}}: </span> {{advPrediction.probability}}
-			</li>
-		</ul>	
-	</tr>		
-</tr> !-->

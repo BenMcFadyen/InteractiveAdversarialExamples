@@ -5,61 +5,91 @@ html, body
 
 	p
 	{
-		font-size: 32px;	
+		font-size: 28px;	
 		font-weight: bold;
 	}
 }
 
 
-.flexPredictions
+.flexContainer
+{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+
+.imageContainer
 {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	align-items: flex-start;
 	align-content: center;
 
 	justify-content: space-around;
 
-	height: 100%;
 	border-style: solid;
 	border-color: purple;	
 	//max-width: 80%;
 }
 
-
-
 .predictions
+{
+	display: flex;
+	flex-direction: row;
+	border-style: solid;
+	border-color: orange;
+  	font-size: 28px;
+}
+
+.prediction
 {
 	border-style: solid;
 	border-color: green;
-  	font-size: 32px;
+  	font-size: 28px;
+  	width:50%;
+	border: 1px solid #ddd;
+	padding: 8px;  	
+  	border-collapse: collapse;
+
 
 	th
 	{
-	  text-align: center;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		text-align: center;
+		background-color: #e0e0e0;
+		color: black;	  
 	}
 
 	td
 	{
-	  text-align: right;
-	  //font-size: 32px;
+		text-align: right;
+		text-align: center;
+		border: 1px solid #ddd;
+		padding: 8px;  	
+
+	  //font-size: 28px;
 	}
 
-}
 
-
-.tablePredictions
-{
-	display: none;
-	border-style: solid;
-	border-color: orange;
-	margin: 25px;
-
-
-	td
+	// colour every nth row grey
+	tr:nth-child(even)
 	{
-	  float:left;
+		background-color: #f2f2f2;
 	}
 
+	// confidence column
+	td:nth-child(2)
+	{
+		text-align: center;
+		width:20px
+	}
+
+	// colour change on hover
+	//tr:hover {background-color: #ddd;}
 
 }
+
+
+

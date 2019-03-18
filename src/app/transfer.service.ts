@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Prediction } from './Prediction';
+import { ModelPrediction } from './ModelPrediction';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,95 +9,53 @@ import { BehaviorSubject } from 'rxjs';
 export class TransferService 
 {
 
-	private originalPredictionModel:string
-	private adversarialPredictionModel:string
+ 	private placeholderPredictions: Prediction[] = [new Prediction('A', 50),
+											 		 new Prediction('B', 25),
+											 		 new Prediction('C', 25)]
 
- 	private originalPredictions: Prediction[] = [new Prediction('A', 1),
-										 		 new Prediction('C', 2),
-										 		 new Prediction('E', 3)]
+	private placeholderModelPrediction = new ModelPrediction('Placeholder', this.placeholderPredictions, this.placeholderPredictions, this.placeholderPredictions)
 
- 	private differencePredictions: Prediction[] = [new Prediction('1',2),
-										 		   new Prediction('3', 4),
-										 		   new Prediction('5', 6)] 	
-
- 	private adversarialPredictions: Prediction[] = [new Prediction('7', 8),
-											 		new Prediction('9', 10),
-											 		new Prediction('11', 12)]
+	private allModelPredictions:ModelPrediction[] //= [this.placeholderModelPrediction]
+	private allModelPredictionsSource = new BehaviorSubject(this.allModelPredictions);
+	currentAllModelPredictionsSource = this.allModelPredictionsSource.asObservable();
 
 
-	private originalPredictionModelSource = new BehaviorSubject(this.originalPredictionModel);
-	private adversarialPredictionModelSource = new BehaviorSubject(this.adversarialPredictionModel);
-
-	currentOriginalPredictionModelSource = this.originalPredictionModelSource.asObservable();
-	currentAdversarialPredictionModelSource = this.adversarialPredictionModelSource.asObservable();
-
-	private originalPredictionsSource = new BehaviorSubject(this.originalPredictions);
-	private differencePredictionsSource = new BehaviorSubject(this.differencePredictions);
-	private adversarialPredictionsSource = new BehaviorSubject(this.adversarialPredictions);
-
-	currentOriginalPredictions = this.originalPredictionsSource.asObservable();
-	currentDifferencePredictions = this.differencePredictionsSource.asObservable();
-	currentAdversarialPredictionsSource = this.adversarialPredictionsSource.asObservable();
+	private adversarialImageModelName:string
+	private adversarialImageModelNameSource = new BehaviorSubject(this.adversarialImageModelName);
+	currentAdversarialImageModelNameSource = this.adversarialImageModelNameSource.asObservable();
 
 	constructor() 
 	{ 
 
 	}
 
-	setOriginalPredictionModel(originalPredictionModel: string)
+	setAdversarialImageModelName(adversarialImageModelName:string)
 	{
-		this.originalPredictionModelSource.next(originalPredictionModel)
+		this.adversarialImageModelNameSource.next(adversarialImageModelName)
 	}
 
-	getOriginalPredictionModel() : string
+	getAdversarialImageModelName() : string
 	{
-		return this.originalPredictionModel
-	}
-
-
-	setAdversarialPredictionModel(adversarialPredictionModel: string)
-	{
-		this.adversarialPredictionModelSource.next(adversarialPredictionModel)
-	}
-
-	getAdversarialPredictionModel() : string
-	{
-		return this.adversarialPredictionModel
+		return this.adversarialImageModelName
 	}
 
 
-
-
-
-
-	setOriginalPredictions(originalPredictions: Prediction[])
+	addNewModelPrediction(newModelPrediction: ModelPrediction, clearPrevious:boolean)
 	{
-		this.originalPredictionsSource.next(originalPredictions)
+
+		if(clearPrevious)
+		{
+			this.allModelPredictionsSource.next([newModelPrediction])
+			return
+		}
+
+		this.allModelPredictions.push(newModelPrediction)
 	}
 
 
-	getOriginalPredictions() : Prediction[]
+	getAllModelPredictions() : ModelPrediction[]
 	{
-		return this.originalPredictions
+		return this.allModelPredictions
 	}
 
-	setDifferencePredictions(differencePredictions: Prediction[])
-	{
-		this.differencePredictionsSource.next(differencePredictions)
-	}
-
-	getDifferencePredictions() : Prediction[]
-	{
-		return this.differencePredictions
-	}
-
-	setAdversarialPredictions(adversarialPredictions: Prediction[])
-	{
-		this.adversarialPredictionsSource.next(adversarialPredictions)
-	}
-
-	getAdversarialPredictions() : Prediction[]
-	{
-		return this.adversarialPredictions
-	}
 }

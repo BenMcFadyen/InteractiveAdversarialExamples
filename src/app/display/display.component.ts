@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../Prediction';
+import { ModelPrediction } from '../ModelPrediction';
+
+
 import { TransferService } from '../transfer.service';
 
 @Component({
@@ -9,27 +12,19 @@ import { TransferService } from '../transfer.service';
 })
 export class DisplayComponent implements OnInit
 {
-
- 	originalPredictionModel: string
- 	adversarialPredictionModel: string
-
- 	originalPredictions: Prediction[]
- 	differencePredictions: Prediction[]
- 	adversarialPredictions: Prediction[]
+ 	allModelPredictions:ModelPrediction[]
+ 	adversarialImageModelNameSource:string 
 
 	constructor(private tferService: TransferService) 
 	{
-		
+
+
 	}
 
 	ngOnInit() 
 	{
-		this.tferService.currentOriginalPredictions.subscribe(originalPredictions => this.originalPredictions = originalPredictions)
-		this.tferService.currentDifferencePredictions.subscribe(differencePredictions => this.differencePredictions = differencePredictions)
-		this.tferService.currentAdversarialPredictionsSource.subscribe(adversarialPredictions => this.adversarialPredictions = adversarialPredictions)
-
-		this.tferService.currentOriginalPredictionModelSource.subscribe(originalPredictionModel => this.originalPredictionModel = originalPredictionModel)
-		this.tferService.currentAdversarialPredictionModelSource.subscribe(adversarialPredictionModel => this.adversarialPredictionModel = adversarialPredictionModel)
+		this.tferService.currentAllModelPredictionsSource.subscribe(allModelPredictions => this.allModelPredictions = allModelPredictions)
+		this.tferService.currentAdversarialImageModelNameSource.subscribe(adversarialImageModelNameSource => this.adversarialImageModelNameSource = adversarialImageModelNameSource)
 
 	}
 
