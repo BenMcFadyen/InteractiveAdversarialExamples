@@ -7,7 +7,7 @@
 <div class = "flexPredictions">
 
 	<div class = "original">
-		<p> Original</p>
+		<p> Original: {{originalPredictionModel}} </p>
 
 		<canvas id = "canvasOriginal" width="299" height = "299"> </canvas>
 
@@ -27,7 +27,7 @@
 
 
 
-<!-- 	<div class = "difference">
+	<!-- <div class = "difference">
 		<p> Perturbation</p>
 		<canvas id = "canvasDifference" width="299" height = "299"> </canvas>
         <table class = "predictions differencePredictions">
@@ -45,7 +45,7 @@
 	</div> -->
 
 	<div class = "adversarial">
-		<p> Adversarial</p>
+		<p> Adversarial: {{adversarialPredictionModel}}</p>
 		<canvas id = "canvasAdversarial" width="299" height = "299"> </canvas>
         <table class = "predictions adversarialPredictions">
 			<thead>

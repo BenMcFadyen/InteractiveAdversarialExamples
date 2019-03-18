@@ -10,20 +10,27 @@ import { TransferService } from '../transfer.service';
 export class DisplayComponent implements OnInit
 {
 
+ 	originalPredictionModel: string
+ 	adversarialPredictionModel: string
+
  	originalPredictions: Prediction[]
  	differencePredictions: Prediction[]
  	adversarialPredictions: Prediction[]
 
-	constructor(private transferService: TransferService) 
+	constructor(private tferService: TransferService) 
 	{
 		
 	}
 
 	ngOnInit() 
 	{
-		this.transferService.currentoriginalPredictions.subscribe(originalPredictions => this.originalPredictions = originalPredictions)
-		this.transferService.currentdifferencePredictions.subscribe(differencePredictions => this.differencePredictions = differencePredictions)
-		this.transferService.currentadversarialPredictionsSource.subscribe(adversarialPredictions => this.adversarialPredictions = adversarialPredictions)
+		this.tferService.currentOriginalPredictions.subscribe(originalPredictions => this.originalPredictions = originalPredictions)
+		this.tferService.currentDifferencePredictions.subscribe(differencePredictions => this.differencePredictions = differencePredictions)
+		this.tferService.currentAdversarialPredictionsSource.subscribe(adversarialPredictions => this.adversarialPredictions = adversarialPredictions)
+
+		this.tferService.currentOriginalPredictionModelSource.subscribe(originalPredictionModel => this.originalPredictionModel = originalPredictionModel)
+		this.tferService.currentAdversarialPredictionModelSource.subscribe(adversarialPredictionModel => this.adversarialPredictionModel = adversarialPredictionModel)
+
 	}
 
 }
