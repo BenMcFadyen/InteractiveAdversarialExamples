@@ -64,22 +64,19 @@ export class SelectionComponent implements OnInit
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
 
-		var t0 = performance.now();
 
+		var t0 = performance.now();
 		this.modelService.loadAllModels().then(()=>
 		{
 			this.allModelsLoaded = true;
-			var t1 = performance.now();
-
-			this.logTime(t0, t1, 'All models loaded and warmed')
-
+			this.logTime(t0, performance.now(), 'All models loaded and warmed')
 		})
 	}
 
 
 
 	/** TODO: Rename **/
-	getPrediction(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX :number = 3)
+	getPrediction(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3)
 	{
 		let t0 = performance.now();
 
@@ -148,19 +145,16 @@ export class SelectionComponent implements OnInit
 		// return here if generation has not yet been done
 		if(!this.adversarialImageGenerated)
 		{
-			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), true)
+			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), false)
 			return
 		}
 		
-
 		// get the predictions from the (newly drawn) adversarial canvas
 		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, topX)
-
-		// update the prediction variables, for use within the display component
-		//this.transferService.setAdversarialPredictions(adversarialPredictions)			
-
-		//this change forces predicton of both original/adv at the same time
-		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions), true)
+	
+		let override = true;
+		//set the model prediction for display within the display componenet
+		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions), override)
 	}
 
 
@@ -178,9 +172,6 @@ export class SelectionComponent implements OnInit
 
 	}
 
-
-
-
 	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
 	onPredictButtonClick()
 	{	
@@ -192,6 +183,14 @@ export class SelectionComponent implements OnInit
 	{
 		this.executeAttackMethod()
 	}
+
+
+	clearPredictions()
+	{
+		this.transferService.addNewModelPrediction(null, true)
+	}
+
+
 
 
 	/** ensure the parameters required for execution are set*/
@@ -277,9 +276,12 @@ export class SelectionComponent implements OnInit
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
-		this.imgService.drawImageToCanvas(img, 'canvasOriginal', this.canvasSize, this.canvasSize)
-		this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
-		this.imgService.drawImageToCanvas(img, 'canvasAdversarial', this.canvasSize, this.canvasSize)
+		this.imgService.drawImageToCanvas(img, this.canvasOriginal, this.canvasSize, this.canvasSize)
+
+		this.imgService.resetCanvas(this.canvasAdversarial)
+		this.clearPredictions()
+		//this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
+		//this.imgService.drawImageToCanvas(img, 'canvasAdversarial', this.canvasSize, this.canvasSize)
 	}
 
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */
