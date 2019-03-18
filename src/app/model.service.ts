@@ -13,21 +13,29 @@ export class ModelService
 	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
 	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES, false, 'conv_preds', true) //do not apply softmax, batch = true
 	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, true, null, true, false) //do not normalise input for ResNet50
-	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES, true, null, true)
-	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES, true, null, true)
+	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES, false, null, true)
+	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES, false, null, true)
 	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
-	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
+	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 
 
 	allModels : ModelData[] = 
 	[
 		// this.MNIST,
 		this.MobileNet,
-		//this.DenseNet121,
+		this.MobileNetV2,			
 		this.ResNet50,
+		//this.DenseNet121,
 		// this.InceptionV3,	
 		// this.Xception,
-		 this.MobileNetV2,			
+	]
+
+	adversarialModels : ModelData[] = 
+	[
+		 this.MobileNet,
+		 this.MobileNetV2,		
+		 this.ResNet50,
+		// this.Xception,
 	]
 
 	constructor(private imageService: ImageService){}
@@ -117,7 +125,7 @@ export class ModelService
 				if(model.normaliseImage)
 					tensor = this.imageService.normaliseIMGTensor(tensor)
 		
-				let modelOutput = model.model.predict(tensor).flatten() as any
+				let modelOutput = (<tf.Tensor> model.model.predict(tensor)).flatten() as any
 
 				if(!model.applySoftMax) //simply return if softmax does not need to be applied
 					return modelOutput
