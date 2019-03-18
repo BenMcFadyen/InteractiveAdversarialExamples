@@ -15,7 +15,7 @@ export class TransferService
 
 	private placeholderModelPrediction = new ModelPrediction('Placeholder', this.placeholderPredictions, this.placeholderPredictions, this.placeholderPredictions)
 
-	private allModelPredictions:ModelPrediction[] //= [this.placeholderModelPrediction]
+	private allModelPredictions:ModelPrediction[] = null //= [this.placeholderModelPrediction]
 	private allModelPredictionsSource = new BehaviorSubject(this.allModelPredictions);
 	currentAllModelPredictionsSource = this.allModelPredictionsSource.asObservable();
 
@@ -44,12 +44,24 @@ export class TransferService
 	{
 
 		if(clearPrevious)
-		{
+		{	
+			// if newModelPrediction is null, clear the prediction array, this will hide the prediction table
+			if(newModelPrediction == null)
+			{
+				this.allModelPredictions == null
+				this.allModelPredictionsSource.next(null)
+				return
+			}
+
 			this.allModelPredictionsSource.next([newModelPrediction])
 			return
 		}
 
+		if(this.allModelPredictions == null)
+			this.allModelPredictions = new Array()
+
 		this.allModelPredictions.push(newModelPrediction)
+		this.allModelPredictionsSource.next(this.allModelPredictions)
 	}
 
 
