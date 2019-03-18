@@ -149,4 +149,12 @@ export class ImageService
 		return <HTMLCanvasElement> canvas
 	}
 
+
+
+	resetCanvas(canvasIDorObject:string | HTMLCanvasElement)
+	{
+		let canvas = this.getCanvasObject(canvasIDorObject)
+		const context = canvas.getContext('2d');
+		context.clearRect(0, 0, canvas.width, canvas.height);
+	}
 }
