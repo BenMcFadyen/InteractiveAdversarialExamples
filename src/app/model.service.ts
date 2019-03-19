@@ -24,17 +24,17 @@ export class ModelService
 		// this.MNIST,
 		this.MobileNet,
 		this.MobileNetV2,			
-		this.ResNet50,
+		//this.ResNet50,
 		//this.DenseNet121,
 		// this.InceptionV3,	
-		// this.Xception,
+		this.Xception,
 	]
 
 	adversarialModels : ModelData[] = 
 	[
 		 this.MobileNet,
 		 this.MobileNetV2,		
-		 this.ResNet50,
+		 //this.ResNet50,
 		// this.Xception,
 	]
 
