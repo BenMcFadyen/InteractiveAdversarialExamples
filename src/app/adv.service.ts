@@ -5,7 +5,6 @@ import { ModelData } from './ModelData';
 
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './ImageNetClasses';
-import * as mobilenet from '@tensorflow-models/mobilenet';
 
 enum CombineMethod 
 {
@@ -74,9 +73,9 @@ export class AdvService
 		return revSoftMaxNums
 	}
 
-	getModelAtEndpoint(model: tf.Model, endpoint:string)
+	getModelAtEndpoint(model: tf.LayersModel, endpoint:string)
 	{
-		return tf.model({inputs:model.inputs, outputs:model.getLayer(endpoint).output})
+		return new tf.LayersModel({inputs:model.inputs, outputs:model.getLayer(endpoint).output})
 	}
 
 

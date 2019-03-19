@@ -91,7 +91,7 @@ export class ImageService
 
 		return tf.tidy(()=>
 		{
-			let tensor = tf.fromPixels(canvas, numChannels)
+			let tensor = tf.browser.fromPixels(canvas, numChannels)
 
 			if(height != canvas.height || width != canvas.width)
 			{

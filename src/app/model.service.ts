@@ -11,29 +11,34 @@ import {IMAGENET_CLASSES} from './ImageNetClasses';
 export class ModelService 
 {
 	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
+
+	//						{NAME},{HEIGHT},{WIDTH},{CHANNELS},{CLASSES}, {SOFTMAX?} {RAW PRED LAYER}, {BATCH INPUT}, {NORMALISE?}
 	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES, false, 'conv_preds', true) //do not apply softmax, batch = true
-	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, true, null, true, false) //do not normalise input for ResNet50
+	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, false, null, true, false) //do not normalise input for ResNet50
 	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES, false, null, true)
 	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES, false, null, true)
-	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
+	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
+	NASNetMobile = new ModelData('NASNetMobile',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 
 
 	allModels : ModelData[] = 
 	[
-		// this.MNIST,
+		//this.MNIST,
 		this.MobileNet,
-		this.MobileNetV2,			
+		//this.MobileNetV2,			
 		//this.ResNet50,
 		//this.DenseNet121,
-		// this.InceptionV3,	
-		this.Xception,
+		//this.InceptionV3,	
+		//this.Xception,
+		//this.NASNetMobile,
+
 	]
 
 	adversarialModels : ModelData[] = 
 	[
 		 this.MobileNet,
-		 this.MobileNetV2,		
+		 //this.MobileNetV2,		
 		 //this.ResNet50,
 		// this.Xception,
 	]
@@ -43,20 +48,25 @@ export class ModelService
 
 	async loadAllModels()
 	{
+		//TODO: Fix bug when a model fails to load and the promise is not resovled (can't predict)
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	await Promise.all(this.allModels.map(async (currentModel) =>
 		{
 		 	currentModel.model = await this.loadModelFromFile(currentModel)
-			currentModel.loaded = true
 
 			// console.log(currentModel.model)
 			// console.log(currentModel.name + " layers: " + currentModel.model.layers.length)
 
 	 		//console.log("Model Loaded, starting prediction")
+
+	 		if(!currentModel.loaded)
+	 			throw 'Error loading model: ' + currentModel.name
+
 			tf.tidy(()=>
 			{
 				currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
 			})
+			
 	 		//console.log("Prediction done")
 
 	 		//TODO: Add a timer for each specific model load/prediction
@@ -80,9 +90,10 @@ export class ModelService
 		try 
 		{
 			//console.log('Start loading: ' + modelObject.name)			
-			return await tf.loadModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
+			return await tf.loadLayersModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
 			{
 				console.log('Successfully loaded: ' + modelObject.name)
+				modelObject.loaded = true				
 				return loadedModel
 			})
 		}

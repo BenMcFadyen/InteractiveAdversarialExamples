@@ -6,7 +6,6 @@ import { TransferService } from '../transfer.service';
 import { ModelData } from '../ModelData';
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from '../ImageNetClasses';
-import * as mobilenet from '@tensorflow-models/mobilenet';
 import { ModelPrediction } from '../ModelPrediction';
 import { Prediction } from '../Prediction';
 
@@ -255,6 +254,8 @@ export class SelectionComponent implements OnInit
 		this.epsilon = value
 		this.executeAttackMethod()
 		this.predict()
+
+		this.clearPredictions()
 	}
 
 	onRandomClick()

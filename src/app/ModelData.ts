@@ -3,7 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 export class ModelData
 {
 	name: string
-	model: tf.Model
+	model: tf.LayersModel
 	loaded: boolean
 	imgHeight:number
 	imgWidth:number
@@ -17,7 +17,7 @@ export class ModelData
 	/**
 	* @constructor
  	* @param {string} 	name - Name of the model
- 	* @param {tf.Model} model - tensorflow.js model object, used for prediction
+ 	* @param {tf.LayersModel} model - tensorflow.js model object, used for prediction
  	* @param {boolean}  loaded - True if model is loaded
  	* @param {number} 	imgHeight - Required image height (pixels) for prediction
  	* @param {number} 	imgWidth - Required image width (pixels) for prediction
