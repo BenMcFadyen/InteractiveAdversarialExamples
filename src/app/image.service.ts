@@ -135,7 +135,7 @@ export class ImageService
 			let alphaChannel = tf.tensor(filler, tensorShape)
 			let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], concatAxis)
 
-			return tensorWithAlpha
+			return <tf.Tensor3D | tf.Tensor4D> tensorWithAlpha
 		})
 	} 
 
@@ -156,4 +156,10 @@ export class ImageService
 		const context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}
+
+
+
+
+
+
 }
