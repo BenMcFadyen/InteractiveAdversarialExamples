@@ -152,7 +152,7 @@ export class SelectionComponent implements OnInit
 		// get the predictions from the (newly drawn) adversarial canvas
 		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, topX)
 	
-		let override = true;
+		let override = false;
 		//set the model prediction for display within the display componenet
 		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions), override)
 	}
@@ -181,16 +181,19 @@ export class SelectionComponent implements OnInit
 	/** TODO */
 	async onGenerateButtonClick()	
 	{
+		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
+		this.imgService.resetCanvas(this.canvasAdversarial)
+		this.clearPredictions()
+
 		this.executeAttackMethod()
 	}
 
 
+	/** Manually clear (and hide) any set predictions */
 	clearPredictions()
 	{
 		this.transferService.addNewModelPrediction(null, true)
 	}
-
-
 
 
 	/** ensure the parameters required for execution are set*/
@@ -278,8 +281,10 @@ export class SelectionComponent implements OnInit
 
 		this.imgService.drawImageToCanvas(img, this.canvasOriginal, this.canvasSize, this.canvasSize)
 
+		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
 		this.imgService.resetCanvas(this.canvasAdversarial)
 		this.clearPredictions()
+
 		//this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
 		//this.imgService.drawImageToCanvas(img, 'canvasAdversarial', this.canvasSize, this.canvasSize)
 	}
