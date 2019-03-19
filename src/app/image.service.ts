@@ -137,20 +137,19 @@ export class ImageService
 
 			return tensorWithAlpha
 		})
-	}
+	} 
 
-	/* Returns the canvas object if string is given
-	*/
-	getCanvasObject(canvas:string | HTMLCanvasElement) :HTMLCanvasElement
+	/* Checks if passed canvasIDorObject is a string, if so grabs the canvas object and returns it */
+	getCanvasObject(canvasIDorObject:string | HTMLCanvasElement) :HTMLCanvasElement
 	{
-		if(typeof(canvas) == 'string')
-	 		canvas = <HTMLCanvasElement> document.getElementById(canvas) 
+		if(typeof(canvasIDorObject) == 'string')
+	 		canvasIDorObject = <HTMLCanvasElement> document.getElementById(canvasIDorObject) 
 		
-		return <HTMLCanvasElement> canvas
+		return <HTMLCanvasElement> canvasIDorObject
 	}
 
 
-
+	/* Clear any data within the given canvas */
 	resetCanvas(canvasIDorObject:string | HTMLCanvasElement)
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
