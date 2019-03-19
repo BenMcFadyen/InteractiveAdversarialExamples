@@ -218,7 +218,7 @@ export class SelectionComponent implements OnInit
 	/** Log the time taken to perform complete a given action */
 	logTime(t0:number, t1:number, message: string)
 	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(3) + " (ms).")
+		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
 	}
 
 	/** Updates the memory variables provided by tf.memory() */

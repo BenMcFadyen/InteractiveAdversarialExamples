@@ -27,7 +27,7 @@ export class ModelService
 		//this.ResNet50,
 		//this.DenseNet121,
 		// this.InceptionV3,	
-		this.Xception,
+		//this.Xception,
 	]
 
 	adversarialModels : ModelData[] = 
@@ -46,20 +46,20 @@ export class ModelService
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	await Promise.all(this.allModels.map(async (currentModel) =>
 		{
+
+			let t0 = performance.now()
 		 	currentModel.model = await this.loadModelFromFile(currentModel)
 			currentModel.loaded = true
+			this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
 
-			// console.log(currentModel.model)
-			// console.log(currentModel.name + " layers: " + currentModel.model.layers.length)
 
-	 		//console.log("Model Loaded, starting prediction")
-			tf.tidy(()=>
+			t0 = performance.now()
+			await tf.tidy(()=>
 			{
 				currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
 			})
-	 		//console.log("Prediction done")
 
-	 		//TODO: Add a timer for each specific model load/prediction
+			this.logTime(t0, performance.now(), 'Successfully warmed: ' +  currentModel.name)
 		}))
 	}
 
@@ -79,10 +79,8 @@ export class ModelService
 
 		try 
 		{
-			//console.log('Start loading: ' + modelObject.name)			
 			return await tf.loadModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
 			{
-				console.log('Successfully loaded: ' + modelObject.name)
 				return loadedModel
 			})
 		}
@@ -177,6 +175,12 @@ export class ModelService
 	formatNumber(num):number 
 	{
 		return Math.round(num * 100) / 100
+	}
+
+	/** Log the time taken to perform complete a given action */
+	logTime(t0:number, t1:number, message: string)
+	{
+		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(3) + " (ms).")
 	}
 
 }
