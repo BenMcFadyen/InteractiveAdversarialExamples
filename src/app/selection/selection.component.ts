@@ -185,7 +185,6 @@ export class SelectionComponent implements OnInit
 		this.imgService.resetCanvas(this.canvasDifference)
 
 		this.clearPredictions()
-
 		this.executeAttackMethod()
 	}
 
@@ -284,6 +283,7 @@ export class SelectionComponent implements OnInit
 
 		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
 		this.imgService.resetCanvas(this.canvasAdversarial)
+		this.imgService.resetCanvas(this.canvasDifference)
 		this.clearPredictions()
 
 		//this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
