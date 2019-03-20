@@ -70,6 +70,9 @@ export class AdvService
 	{		
 		return this.singleStepAttack(modelObj, orginalPrediction, img3, epsilon).then(perturbation =>
 		{
+			let differenceScaleValue = 50; //TODO: Let the user control this value
+			this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
+
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
 			{
@@ -82,8 +85,7 @@ export class AdvService
 	{
 		return this.singleStepAttack(modelObj, targetPrediction, img3, epsilon).then(perturbation =>
 		{	
-
-			let differenceScaleValue = 50; //TODO: Let the user control this value?
+			let differenceScaleValue = 50; //TODO: Let the user control this value
 			this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
 
 			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
