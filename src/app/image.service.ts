@@ -114,7 +114,7 @@ export class ImageService
 	* @param {epsilon} determines the amount of perturbation applied
 	* @return {tf.Tensor} perturbed img tensor
 	*/
-	applyAlphaChannelToTensor(tensorIMG:tf.Tensor3D | tf.Tensor4D, alphaValue:number = 0)
+	createAndApplyAlphaChannelToTensor(tensorIMG:tf.Tensor3D | tf.Tensor4D, alphaValue:number = 0)
 	{		
 		return tf.tidy(()=>
 		{
@@ -130,31 +130,67 @@ export class ImageService
 				tensorShape = [1, imgHeight, imgWidth, 1]
 				concatAxis = 3				
 			}
+
 			var arraySize = imgHeight * imgWidth 
 			const filler = new Uint8Array(arraySize).fill(alphaValue)
 			let alphaChannel = tf.tensor(filler, tensorShape)
+
 			let tensorWithAlpha = tf.concat([tensorIMG, alphaChannel], concatAxis)
 
-			return tensorWithAlpha
+			return <tf.Tensor3D | tf.Tensor4D> tensorWithAlpha
+		})
+	} 
+
+	/** creates a tensor of given shape, filled with given value*/
+	createFilledTensor(shape:Array<number>, fillValue:number = 255)
+	{
+		if(shape.length < 3 || shape.length > 4)
+			throw 'Cannot create empty tensor, given shape: ' + shape + ' is not of length 3/4'
+
+		return tf.tidy(()=>
+		{
+		 	let imgHeight = shape[0]
+			let imgWidth = shape[1]
+			let imgChannels = shape[2]
+			let tensorShape = [imgHeight, imgWidth, imgChannels]
+
+			if(shape.length == 4)
+			{
+			 	imgHeight = shape[1]
+				imgWidth = shape[2]
+				imgChannels = shape[3]				
+				tensorShape = [1, imgHeight, imgWidth, imgChannels]
+			}
+
+			var arraySize = imgHeight * imgWidth * imgChannels
+			const fillerArray = new Uint8Array(arraySize).fill(fillValue)
+			let filledTensor = tf.tensor(fillerArray, shape)
+
+			return <tf.Tensor3D | tf.Tensor4D> filledTensor
 		})
 	}
 
-	/* Returns the canvas object if string is given
-	*/
-	getCanvasObject(canvas:string | HTMLCanvasElement) :HTMLCanvasElement
+	/* Checks if passed canvasIDorObject is a string, if so grabs the canvas object and returns it */
+	getCanvasObject(canvasIDorObject:string | HTMLCanvasElement) :HTMLCanvasElement
 	{
-		if(typeof(canvas) == 'string')
-	 		canvas = <HTMLCanvasElement> document.getElementById(canvas) 
+		if(typeof(canvasIDorObject) == 'string')
+	 		canvasIDorObject = <HTMLCanvasElement> document.getElementById(canvasIDorObject) 
 		
-		return <HTMLCanvasElement> canvas
+		return <HTMLCanvasElement> canvasIDorObject
 	}
 
 
-
+	/* Clear any data within the given canvas */
 	resetCanvas(canvasIDorObject:string | HTMLCanvasElement)
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
 		const context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}
+
+
+
+
+
+
 }

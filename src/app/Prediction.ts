@@ -2,6 +2,7 @@ export class Prediction
 {
 	className:string;
 	confidence: number;
+	colour: string;
 
 	/**
 	* @constructor
