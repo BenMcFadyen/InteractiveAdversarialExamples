@@ -62,7 +62,6 @@ export class TransferService
 
 	addNewModelPrediction(newModelPrediction: ModelPrediction, clearPrevious:boolean)
 	{
-
 		if(clearPrevious)
 		{	
 			// if newModelPrediction is null, set predictions to null, this will hide the prediction div element
@@ -70,20 +69,15 @@ export class TransferService
 			{
 				this.allModelPredictions = null
 				this.allModelPredictionsSource.next(null)
-				console.log('All model preds: 1')				
-				console.log(this.allModelPredictions)
 				return
 			}
 
 			this.allModelPredictionsSource.next([newModelPrediction])
-			console.log('All model preds: 1')							
-			console.log(this.allModelPredictions)			
 			return
 		}
 
 		if(this.allModelPredictions == null)
 			this.allModelPredictions = new Array()
-
 
 		// checks if newModelPrediction is already a prediction, if it is, removes this.
 		this.checkDuplicateModel(newModelPrediction.modelName)
