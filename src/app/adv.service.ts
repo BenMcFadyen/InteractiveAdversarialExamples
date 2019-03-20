@@ -76,6 +76,7 @@ export class AdvService
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
 			{
+				perturbation.dispose()
 				return <tf.Tensor3D | tf.Tensor4D> perturbedImgTensor
 			})
 		})
@@ -91,6 +92,7 @@ export class AdvService
 			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Subtract).then(perturbedImgTensor => 
 			{
+				perturbation.dispose()
 				return <tf.Tensor3D | tf.Tensor4D> perturbedImgTensor
 			})
 		})
@@ -103,18 +105,21 @@ export class AdvService
 	*/
 	drawPerturbationToCanvas(perturbation:tf.Tensor3D | tf.Tensor4D, differenceScaleValue:number = 50)
 	{
-		// scale the perturbation as required (low epsilon must be scaled to be visible)
-		let scaledPerturbation = this.scaleTensor(perturbation, differenceScaleValue) 
+		tf.tidy(()=>
+		{
+			// scale the perturbation as required (low epsilon must be scaled to be visible)
+			let scaledPerturbation = this.scaleTensor(perturbation, differenceScaleValue) 
 
-		// apply alpha channel to perturbation (ensure it is the correct shape for canvas display)
-		let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(scaledPerturbation, 255)
+			// apply alpha channel to perturbation (ensure it is the correct shape for canvas display)
+			let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(scaledPerturbation, 255)
 
-		// Create the all-white tensor (pixel-value: 255)
-		let whiteTensor = this.imgService.createFilledTensor(perturbationWithAlpha.shape, 255)
+			// Create the all-white tensor (pixel-value: 255)
+			let whiteTensor = this.imgService.createFilledTensor(perturbationWithAlpha.shape, 255)
 
-		// combine the white-tensor with the perturbed one; draw to canvas
-		let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
-		this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)		
+			// combine the white-tensor with the perturbed one; draw to canvas
+			let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
+			this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)		
+		})
 	}
 
 	/**
@@ -124,13 +129,16 @@ export class AdvService
 	*/
 	private async combineImgAndPerturbation(img4, perturbation, combineMethod:CombineMethod)
 	{
-		// apply alpha layer to the perturbation
-		let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(perturbation, 0)
+		return tf.tidy(()=>
+		{
+			// apply alpha layer to the perturbation
+			let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(perturbation, 0)
 
-		if(combineMethod == CombineMethod.Add)
-			return <tf.Tensor3D | tf.Tensor4D> tf.add(tf.cast(img4,'float32'), perturbationWithAlpha)
-		
-		return <tf.Tensor3D | tf.Tensor4D> tf.sub(tf.cast(img4,'float32'), perturbationWithAlpha)
+			if(combineMethod == CombineMethod.Add)
+				return <tf.Tensor3D | tf.Tensor4D> tf.add(tf.cast(img4,'float32'), perturbationWithAlpha)
+			
+			return <tf.Tensor3D | tf.Tensor4D> tf.sub(tf.cast(img4,'float32'), perturbationWithAlpha)
+		})
 	}
 
 	/**
@@ -142,14 +150,17 @@ export class AdvService
 	*/
 	private scaleTensor(tensor, epsilon) 
 	{
-		const tensorData = tensor.dataSync()
-
-		const scaledTensor = tensorData.map(x => 
+		return tf.tidy(()=>
 		{
-			return epsilon * Math.sign(x)
-		})
+			const tensorData = tensor.dataSync()
 
-		return tf.tensor(scaledTensor).reshapeAs(tensor)
+			const scaledTensor = tensorData.map(x => 
+			{
+				return epsilon * Math.sign(x)
+			})
+
+			return tf.tensor(scaledTensor).reshapeAs(tensor)
+		})
 	}	
 
 	/** Experimental (not used) */

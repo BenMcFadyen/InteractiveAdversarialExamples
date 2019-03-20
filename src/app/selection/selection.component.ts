@@ -64,7 +64,6 @@ export class SelectionComponent implements OnInit
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
 
-
 		var t0 = performance.now();
 		this.modelService.loadAllModels().then(()=>
 		{
@@ -83,7 +82,7 @@ export class SelectionComponent implements OnInit
 		// Get and decode the model prediction results of the given image
 		let modelOutput = this.modelService.tryPredict(modelObject, canvas, undefined)
 		let predictions = this.modelService.decodeOutput(modelObject, modelOutput, topX)
-
+		modelOutput.dispose()
 		this.logTime(t0, performance.now(), 'Prediction complete')
 
 		return predictions
