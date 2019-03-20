@@ -73,6 +73,8 @@ export class TransferService
 			}
 
 			this.allModelPredictionsSource.next([newModelPrediction])
+			this.setAdversarialPredictionColouring()
+
 			return
 		}
 
@@ -84,9 +86,92 @@ export class TransferService
 
 		// push the new prediction to the array, then set the source
 		this.allModelPredictions.push(newModelPrediction)
-		this.allModelPredictionsSource.next(this.allModelPredictions)
+		this.allModelPredictionsSource.next(this.allModelPredictions.reverse())
+		this.setAdversarialPredictionColouring()
+
 	}
 
+
+
+	/**	Set the adversarialPredictions styles to be displayed with the following rules:
+	*	T-FGSM (Targeted-Fast Gradient Sign Method)
+	*		 Green  -> Adversarial Top1 = Target Class
+	*		 Orange -> Adversarial Top2-Top5 = Target Class
+	*		 Red 	-> Adversarial Top1 = Original Top1
+	*
+	*	FGSM 
+	*		 Green  -> Adversarial Top1 != Original Top1-5 (The top 1 prediction is not any of the top 1-5 adversarial predictions)
+	*		 Orange -> Adversarial Top1 != Original Top2-5  (The top 1 prediction is not the top1 prediction, but is )
+	*		 Red 	-> Adversarial Top1 = Original Top 1
+	*/
+	setAdversarialPredictionColouring()
+	{
+		if(this.allModelPredictions == null)
+			return
+
+		if(this.allModelPredictions[0].adversarialPredictions == null)
+			return
+
+		for (let modelPrediction of this.allModelPredictions) 
+		{
+
+			if(modelPrediction.targetClass != null) //target class is set, must be T-FGSM
+			{
+				// if adv_top1 == target, colour = green 0
+				if(modelPrediction.adversarialPredictions[0].className == modelPrediction.targetClass)
+				{
+					modelPrediction.adversarialPredictions[0].colour = 'green'		
+				}
+				else if(modelPrediction.adversarialPredictions[0].className != modelPrediction.originalPredictions[0].className)
+				{
+					modelPrediction.adversarialPredictions[0].colour = 'orange'
+				}
+
+				// if adv_top1 == original_top1, colour = red 
+				if(modelPrediction.adversarialPredictions[0].className == modelPrediction.originalPredictions[0].className)
+				{
+					modelPrediction.adversarialPredictions[0].colour = 'red'
+				}
+
+				// if adv_top5/x == target, colour = orange  (not top 1)
+				for(let i = 1; (i <  5 && i < modelPrediction.adversarialPredictions.length); i++)
+				{
+					if(modelPrediction.adversarialPredictions[i].className == modelPrediction.targetClass)
+					{
+						modelPrediction.adversarialPredictions[i].colour = 'orange'
+					}		
+				}
+
+	  		}
+	  		else //target class is not set
+	  		{
+  				// if adv_top1 != original_top1, colour = green 
+				if(modelPrediction.adversarialPredictions[0].className != modelPrediction.originalPredictions[0].className)
+				{
+					modelPrediction.adversarialPredictions[0].colour = 'green'
+				}
+				else if(modelPrediction.adversarialPredictions[0].className == modelPrediction.originalPredictions[0].className)
+				{
+					// if adv_top1 == original_top1, colour = red
+					modelPrediction.adversarialPredictions[0].colour = 'red'
+					return
+				}
+
+  				// if the original top1 is still in the adversarial top 2-5/x range, colour = orange
+				for(let i = 1; (i <  5 && i < modelPrediction.adversarialPredictions.length); i++)
+				{
+					if(modelPrediction.adversarialPredictions[i].className == modelPrediction.originalPredictions[0].className)
+					{
+						modelPrediction.adversarialPredictions[i].colour = 'orange'
+					}
+					else
+					{
+						modelPrediction.adversarialPredictions[i].colour = null
+					}	
+				}
+	  		}
+	  	}
+	}
 
 	getAllModelPredictions() : ModelPrediction[]
 	{

@@ -33,7 +33,7 @@
 					</tr>
 				</thead>
 					<tr *ngFor="let originalPrediction of modelPrediction.originalPredictions">
-						<td>{{ originalPrediction.className }}</td>
+						<td>{{ originalPrediction.className }} </td>
 						<td>{{ originalPrediction.confidence }}</td>
 					</tr>					
 			</table>
@@ -46,7 +46,7 @@
 					</tr>
 				</thead>
 					<tr *ngFor="let adversarialPrediction of modelPrediction.adversarialPredictions">
-						<td>{{ adversarialPrediction.className }}</td>
+						<td class="{{adversarialPrediction.colour}}">{{adversarialPrediction.className }}</td>
 						<td>{{ adversarialPrediction.confidence }}</td>
 					</tr>					
 			</table>
