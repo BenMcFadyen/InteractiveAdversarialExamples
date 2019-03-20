@@ -25,6 +25,9 @@ export class SelectionComponent implements OnInit
 	selectedAttackMethod: string = 'T-FGSM'
 
 	targetClass: string = 'hen'
+
+	targetClassPredDisplay: string
+
 	topPrediction:string
 
 	numBytes:number
@@ -34,6 +37,7 @@ export class SelectionComponent implements OnInit
 
 	canvasSize:number = 350
 	differenceCanvasSize:number = 224
+	topX = 3
 
 	adversarialImageGenerated: boolean
 
@@ -89,6 +93,64 @@ export class SelectionComponent implements OnInit
 	}
 
 
+
+	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
+	predict(wantAdversarialPrediction:boolean = true)
+	{
+		let canvasSize = 500
+
+		this.validateSelectedParameters(false) //adversarial model is not required to be selected at this point
+		var selectedOriginalPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedPredictionModel)
+		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
+
+		// get the predictions from the original canvas
+		let originalPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasOriginal, this.topX)
+		// update the prediction variables, for use within the display component
+		//this.transferService.setOriginalPredictions(originalPredictions)		
+
+		// get the top prediction, for use as the target class for FGSM
+		this.topPrediction = originalPredictions[0].className		
+
+		// return here if generation has not yet been done or is not wanted
+		if(!this.adversarialImageGenerated || !wantAdversarialPrediction)
+		{
+			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), false)
+			return
+		}
+		
+		// get the predictions from the (newly drawn) adversarial canvas
+		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, this.topX)
+	
+		let override = false;
+		//set the model prediction for display within the display componenet
+		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions, this.targetClassPredDisplay), override)
+	}
+
+
+	/** TODO: Rename? **/
+	async executeAttackMethod()
+	{
+		this.validateSelectedParameters(false)
+
+		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
+
+
+		if(this.selectedAttackMethod == 'FGSM' && this.topPrediction == null)
+		{
+			console.log('FGSM Selected, but no prediction, making prediction')
+			this.predict(false)
+
+		}
+
+
+		await this.generateAndDrawAdversarialImage(selectedAdvPredictionModelObject, this.selectedAttackMethod, this.canvasOriginal, this.canvasAdversarial, this.topPrediction)
+
+		this.adversarialImageGenerated = true;
+		this.transferService.setAdversarialImageModelName('('+ selectedAdvPredictionModelObject.name + ')')
+		return
+	}
+
+
 	/** generate an adversarial example using the given model and attack method, for the given source canvas, then draw it to the given target canvas */
 	async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
 	{
@@ -100,18 +162,24 @@ export class SelectionComponent implements OnInit
 		switch(selectedAttackMethod)
 	    {
 			case 'FGSM':
+
+				if(topPredictionFGSM == null)
+					throw 'FGSM cannot be executed without a prediction'
+
 				var attackMethodFunctionResult = this.advService.FGSM(modelObject, topPredictionFGSM, img3, img4, this.epsilon);
+				this.targetClassPredDisplay = null // passed to the transfer service, and used to ensure predictions are colour properly: TODO: Re-factor, hacky
 				break;
 
 			case 'T-FGSM':
 				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass, img3, img4, this.epsilon);
+				this.targetClassPredDisplay = this.targetClass // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
 				break;
 		}
 
 		// Draw the adversarial image to the canvas
 		return await attackMethodFunctionResult.then(adversarialImgTensor => 
 		{	
-			this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize) //TODO OG MODEL OUTPUT HERE? ARE WE AFFECT TENSOR
+			this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize)
 			this.logTime(t0, performance.now(), 'Adversarial example generated')
 
 			// cleanup img tensors
@@ -120,56 +188,13 @@ export class SelectionComponent implements OnInit
 			adversarialImgTensor.dispose()			
 			return
 		})
-	}
+	}	
 
 
-	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
-	predict()
-	{
-		let topX = 3
-		let canvasSize = 500
-
-		this.validateSelectedParameters(false) //adversarial model is not required to be selected at this point
-		var selectedOriginalPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedPredictionModel)
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
-
-		// get the predictions from the original canvas
-		let originalPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasOriginal, topX)
-		// update the prediction variables, for use within the display component
-		//this.transferService.setOriginalPredictions(originalPredictions)		
-
-		// get the top prediction, for use as the target class for FGSM
-		this.topPrediction = originalPredictions[0].className		
-
-		// return here if generation has not yet been done
-		if(!this.adversarialImageGenerated)
-		{
-			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), false)
-			return
-		}
-		
-		// get the predictions from the (newly drawn) adversarial canvas
-		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, topX)
-	
-		let override = false;
-		//set the model prediction for display within the display componenet
-		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions), override)
-	}
 
 
-	/** TODO: Rename? **/
-	async executeAttackMethod()
-	{
-		this.validateSelectedParameters(false)
 
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
 
-		await this.generateAndDrawAdversarialImage(selectedAdvPredictionModelObject, this.selectedAttackMethod, this.canvasOriginal, this.canvasAdversarial, this.topPrediction)
-
-		this.adversarialImageGenerated = true;
-		this.transferService.setAdversarialImageModelName('('+ selectedAdvPredictionModelObject.name + ')')
-
-	}
 
 	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
 	onPredictButtonClick()
@@ -193,6 +218,7 @@ export class SelectionComponent implements OnInit
 	clearPredictions()
 	{
 		this.transferService.addNewModelPrediction(null, true)
+		this.topPrediction = null
 	}
 
 
@@ -249,21 +275,38 @@ export class SelectionComponent implements OnInit
 		}
 	}
 
-	onEpsilonChange(value)
+	onAttackMethodChange()
+	{
+	
+	}
+
+	async onEpsilonChange(value)
 	{
 		// TODO: Should max epsilon value be 100?
 		if(value > 100)
 			value = 100
 
 		this.epsilon = value
-		this.executeAttackMethod()
+
+		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
+		this.imgService.resetCanvas(this.canvasAdversarial)
+		this.imgService.resetCanvas(this.canvasDifference)
+		this.clearPredictions()
+
+		await this.executeAttackMethod()
 		this.predict()
 	}
 
-	onRandomClick()
+	async onRandomClick()
 	{
 		this.targetClass = this.selectRandomImageNetClass()
-		this.executeAttackMethod()
+
+		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
+		this.imgService.resetCanvas(this.canvasAdversarial)
+		this.imgService.resetCanvas(this.canvasDifference)
+		this.clearPredictions()
+
+		await this.executeAttackMethod()
 		this.predict()		
 	}
 

@@ -40,7 +40,7 @@
 
 		<div class = "attackMethodSelection">
 			<p> Attack Method: </p>
-			<select [(ngModel)]="selectedAttackMethod">
+			<select [(ngModel)]="selectedAttackMethod" (change) = "onAttackMethodChange()" >
 				<option *ngFor="let attackMethod of attackMethods" [value]="attackMethod">{{attackMethod}}</option> 
 			</select>
 		</div> 
