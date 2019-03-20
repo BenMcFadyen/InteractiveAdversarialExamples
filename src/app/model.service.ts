@@ -24,10 +24,10 @@ export class ModelService
 		// this.MNIST,
 		this.MobileNet,
 		this.MobileNetV2,			
-		//this.ResNet50,
-		//this.DenseNet121,
-		// this.InceptionV3,	
-		//this.Xception,
+		this.ResNet50,
+		this.DenseNet121,
+		this.InceptionV3,	
+		this.Xception,
 	]
 
 	adversarialModels : ModelData[] = 
@@ -35,7 +35,7 @@ export class ModelService
 		 this.MobileNet,
 		 this.MobileNetV2,		
 		 //this.ResNet50,
-		// this.Xception,
+		 //this.Xception,
 	]
 
 	constructor(private imageService: ImageService){}
@@ -118,7 +118,7 @@ export class ModelService
 		{
 			return tf.tidy(()=>
 			{
-				tensor = tensor || this.imageService.getTensorFromCanvas(originalCanvasObjectorString, model.imgChannels, model.imgHeight, model.imgWidth, model.batchInput)	 //TODO BATCH?		
+				tensor = tensor || this.imageService.getTensorFromCanvas(originalCanvasObjectorString, model.imgChannels, model.imgHeight, model.imgWidth, model.batchInput)
 
 				if(model.normaliseImage)
 					tensor = this.imageService.normaliseIMGTensor(tensor)
@@ -180,7 +180,7 @@ export class ModelService
 	/** Log the time taken to perform complete a given action */
 	logTime(t0:number, t1:number, message: string)
 	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(3) + " (ms).")
+		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
 	}
 
 }

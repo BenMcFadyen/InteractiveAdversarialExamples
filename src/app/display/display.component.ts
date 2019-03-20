@@ -18,7 +18,7 @@ export class DisplayComponent implements OnInit
 	constructor(private tferService: TransferService) 
 	{
 
-
+	
 	}
 
 	ngOnInit() 
@@ -27,5 +27,4 @@ export class DisplayComponent implements OnInit
 		this.tferService.currentAdversarialImageModelNameSource.subscribe(adversarialImageModelNameSource => this.adversarialImageModelNameSource = adversarialImageModelNameSource)
 
 	}
-
 }
