@@ -5,7 +5,6 @@ import { ModelData } from './ModelData';
 
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './ImageNetClasses';
-import * as mobilenet from '@tensorflow-models/mobilenet';
 
 enum CombineMethod 
 {
@@ -60,7 +59,7 @@ export class AdvService
 	}
 
 	/** Used to create a model sliced at one of its layers (used to retreive the model logits before any activation function is applied*/
-	getModelAtSpecificEndpoint(model: tf.Model, endpoint:string)
+	getModelAtSpecificEndpoint(model: tf.LayersModel, endpoint:string)
 	{
 		return tf.model({inputs:model.inputs, outputs:model.getLayer(endpoint).output})
 	}

@@ -10,12 +10,12 @@ import {IMAGENET_CLASSES} from './ImageNetClasses';
 })
 export class ModelService 
 {
-	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9))
+	//MNIST = new ModelData('MNIST', 			28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9)) (Softmax|PredLayer|Batch|Normalise)
 	MobileNet = new ModelData('MobileNet',		224, 224, 3, IMAGENET_CLASSES, false, 'conv_preds', true) //do not apply softmax, batch = true
-	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, true, null, true, false) //do not normalise input for ResNet50
+	ResNet50 = new ModelData('ResNet50',		224, 224, 3, IMAGENET_CLASSES, false, null, true, false) //do not normalise input for ResNet50
 	Xception = new ModelData('Xception',		299, 299, 3, IMAGENET_CLASSES, false, null, true)
 	InceptionV3 = new ModelData('InceptionV3',  299, 299, 3, IMAGENET_CLASSES, false, null, true)
-	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, true, null, true)
+	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 
 
@@ -32,10 +32,12 @@ export class ModelService
 
 	adversarialModels : ModelData[] = 
 	[
-		 this.MobileNet,
-		 this.MobileNetV2,		
-		 //this.ResNet50,
-		 //this.Xception,
+		this.MobileNet,
+		this.MobileNetV2,			
+		this.ResNet50,
+		this.DenseNet121,
+		this.InceptionV3,	
+		this.Xception,
 	]
 
 	constructor(private imageService: ImageService){}
@@ -51,7 +53,6 @@ export class ModelService
 		 	currentModel.model = await this.loadModelFromFile(currentModel)
 			currentModel.loaded = true
 			this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
-
 
 			t0 = performance.now()
 			await tf.tidy(()=>
@@ -79,7 +80,7 @@ export class ModelService
 
 		try 
 		{
-			return await tf.loadModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
+			return await tf.loadLayersModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
 			{
 				return loadedModel
 			})
@@ -161,7 +162,6 @@ export class ModelService
 		// Sort predictions DSC by confidence
 		predictions = predictions.sort((a,b) => a.confidence < b.confidence?1:a.confidence >b.confidence?-1:0)
 	
-
 		// ensure that topX is not greater than the size of the predictions
 		if(topX >= predictions.length)
 			return predictions
