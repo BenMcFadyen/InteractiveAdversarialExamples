@@ -9,6 +9,7 @@ import { SelectionComponent } from './selection/selection.component';
 import { DisplayComponent } from './display/display.component';
 import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
+import { ModelSelectDialogComponent } from './model-select-dialog/model-select-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { HomeComponent } from './home/home.component';
     SelectionComponent,
     DisplayComponent,
     AboutComponent,
-    HomeComponent
+    HomeComponent,
+    ModelSelectDialogComponent
   ],
   imports: [
     BrowserModule,
