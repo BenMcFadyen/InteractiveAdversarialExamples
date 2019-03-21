@@ -18,26 +18,35 @@ export class ModelService
 	MobileNetV2 = new ModelData('MobileNetV2',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 	DenseNet121 = new ModelData('DenseNet121',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 
+	DenseNet169 = new ModelData('DenseNet169',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
+	NASNetMobile = new ModelData('NASNetMobile',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
+	MobileNetV2_14 = new ModelData('MobileNetV2_14',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
+
 
 	allModels : ModelData[] = 
 	[
+		// this.MobileNet,
+		// this.MobileNetV2,			
+		// this.ResNet50,	
+		// this.DenseNet121,			
+		//this.DenseNet169,	
+		this.NASNetMobile,
+		this.MobileNetV2_14,	
 		// this.MNIST,
-		this.MobileNet,
-		this.MobileNetV2,			
-		this.ResNet50,
-		this.DenseNet121,
-		this.InceptionV3,	
-		this.Xception,
+		// this.DenseNet121,
+		// this.InceptionV3,	
+		// this.Xception,		
 	]
 
 	adversarialModels : ModelData[] = 
 	[
-		this.MobileNet,
-		this.MobileNetV2,			
-		this.ResNet50,
-		this.DenseNet121,
-		this.InceptionV3,	
-		this.Xception,
+		// this.MobileNet,
+		// this.MobileNetV2,			
+		// this.ResNet50,	
+		// this.DenseNet121,			
+	//	this.DenseNet169,	
+		this.NASNetMobile,
+		this.MobileNetV2_14,	
 	]
 
 	constructor(private imageService: ImageService){}
@@ -53,6 +62,8 @@ export class ModelService
 		 	currentModel.model = await this.loadModelFromFile(currentModel)
 			currentModel.loaded = true
 			this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
+			// console.log(currentModel.name + 'stats:')
+			// console.log(currentModel)
 
 			t0 = performance.now()
 			await tf.tidy(()=>
