@@ -75,20 +75,17 @@ export class SelectionComponent implements OnInit
         dialogConfig.hasBackdrop = true;
 		dialogConfig.minWidth = 1000
 
+	    dialogConfig.data = this.modelService.allModelStats
+	  
 
-	    dialogConfig.data =
-	    {
-	        id: 1,
-	        title: 'test'
-	    };
 
   		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
 
 	    dialogRef.beforeClose().subscribe(data => console.log("Dialog output:", data)
 
-	    	
 
-	    	
+
+
 	    );  	    
 	} 
 
