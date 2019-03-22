@@ -9,6 +9,10 @@ import {IMAGENET_CLASSES} from '../ImageNetClasses';
 import { ModelPrediction } from '../ModelPrediction';
 import { Prediction } from '../Prediction';
 
+import { MatDialog, MatDialogConfig } from "@angular/material";
+import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
+
+
 @Component({
   selector: 'app-selection',
   templateUrl: './selection.component.html',
@@ -55,10 +59,35 @@ export class SelectionComponent implements OnInit
   	constructor(private modelService: ModelService,
 		  		private imgService: ImageService,
 		  		private transferService: TransferService,
-		  		private advService: AdvService)
+		  		private advService: AdvService,
+		  		private dialog: MatDialog)
 	{
 
 	}
+
+
+	openModelSelectDialog()
+	{
+		const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.hasBackdrop = true;
+		dialogConfig.minWidth = 1000
+
+
+	    dialogConfig.data =
+	    {
+	        id: 1,
+	        title: 'test'
+	    };
+
+  		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
+
+	    dialogRef.afterClosed().subscribe(
+	        data => console.log("Dialog output:", data)
+	    );  	    
+	} 
 
 	ngOnInit() 
 	{
@@ -67,15 +96,13 @@ export class SelectionComponent implements OnInit
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
 
-		var t0 = performance.now();
-		this.modelService.loadAllModels().then(()=>
-		{
-			this.allModelsLoaded = true;
-			this.logTime(t0, performance.now(), 'All models loaded and warmed')
-		})
+		// var t0 = performance.now();
+		// this.modelService.loadAllModels().then(()=>
+		// {
+		// 	this.allModelsLoaded = true;
+		// 	this.logTime(t0, performance.now(), 'All models loaded and warmed')
+		// })
 	}
-
-
 
 	/** TODO: Rename **/
 	getPrediction(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3)
@@ -90,8 +117,6 @@ export class SelectionComponent implements OnInit
 
 		return predictions
 	}
-
-
 
 	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
 	predict(wantAdversarialPrediction:boolean = true)

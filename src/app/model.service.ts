@@ -5,6 +5,7 @@ import { Prediction } from './Prediction';
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './ImageNetClasses';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -49,11 +50,16 @@ export class ModelService
 		this.MobileNetV2_14,	
 	]
 
-	constructor(private imageService: ImageService){}
+	constructor(private imageService: ImageService)
+	{
+
+	}
+
 
 
 	async loadAllModels()
 	{
+
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	await Promise.all(this.allModels.map(async (currentModel) =>
 		{

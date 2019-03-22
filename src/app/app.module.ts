@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,6 +11,14 @@ import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
 import { ModelSelectDialogComponent } from './model-select-dialog/model-select-dialog.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatNativeDateModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
+
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DemoMaterialModule } from './material-module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,14 +27,21 @@ import { ModelSelectDialogComponent } from './model-select-dialog/model-select-d
     DisplayComponent,
     AboutComponent,
     HomeComponent,
-    ModelSelectDialogComponent
+    ModelSelectDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    DemoMaterialModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,  
+    BrowserAnimationsModule,
+    MatInputModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ModelSelectDialogComponent],
 })
 export class AppModule { }

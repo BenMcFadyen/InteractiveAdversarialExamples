@@ -1,3 +1,65 @@
-<p>
-  model-select-dialog works!
-</p>
+<h1 mat-dialog-title> Model Selection</h1>
+
+<mat-dialog-content>
+  <!-- [formGroup]="form"> -->
+  
+<!--     <mat-form-field>
+        <input matInput
+                placeholder="Select models:"
+               formControlName="description">
+    </mat-form-field> -->
+
+<div class = "modelTable">
+
+  <table mat-table [dataSource]="myData">
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+
+      <!-- name -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let model"> {{model.name}} </td>
+      </ng-container>
+
+      <!-- size -->
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef> Model Size (MB) </th>
+        <td mat-cell *matCellDef="let model"> {{model.size}} </td>
+      </ng-container>
+
+      <!-- top1 -->
+      <ng-container matColumnDef="top1">
+        <th mat-header-cell *matHeaderCellDef> Top1 % </th>
+        <td mat-cell *matCellDef="let model"> {{model.top1}} </td>
+      </ng-container>
+
+      <!-- top5 -->
+      <ng-container matColumnDef="top5">
+        <th mat-header-cell *matHeaderCellDef> Top5 %  </th>
+        <td mat-cell *matCellDef="let model"> {{model.top5}} </td>
+      </ng-container>
+
+      <!-- parameters -->
+      <ng-container matColumnDef="parameters">
+        <th mat-header-cell *matHeaderCellDef> No. Parameters </th>
+        <td mat-cell *matCellDef="let model"> {{model.parameters}} </td>
+      </ng-container>
+
+      <!-- requestLoad -->
+      <ng-container matColumnDef="requestLoad">
+        <th mat-header-cell *matHeaderCellDef> Load? </th>
+        <td mat-cell *matCellDef="let model"> 
+          <mat-checkbox [(ngModel)]="model.requestLoad" (change)="onModelSelectChange()" > </mat-checkbox> </td>
+      </ng-container>
+
+  </table>
+</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="onCancelButtonPress()"> Cancel </button>
+    <button class="mat-raised-button mat-primary"(click)="onLoadButtonPress()"> Load </button>
+    <p class= "memory" body-1> Total Size: {{totalSize}} (MB)</p>
+</mat-dialog-actions>
