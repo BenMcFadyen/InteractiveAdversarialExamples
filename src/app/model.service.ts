@@ -35,7 +35,6 @@ export class ModelService
 	// MNIST = new ModelData('MNIST', 28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9)) (Softmax|PredLayer|Batch|Normalise)
 	// MobileNetV2_10 = new ModelData('MobileNetV2_10',  224, 224, 3, IMAGENET_CLASSES, false, null, true)
 
-
 	allModels : ModelData[] = 
 	[
 		this.MobileNet,
@@ -60,105 +59,98 @@ export class ModelService
 		this.INCEPTIONV3_STATS,
 	]
 
-
-
-
-
-	// adversarialModels : ModelData[] = 
-	// [
-	// 	this.MobileNet,
-	// 	this.MobileNetV2,
-	// 	this.NASNetMobile,	
-	// 	this.ResNet50,	
-	// 	this.DenseNet121,			
-	// 	this.DenseNet169,	
-	// 	this.InceptionV3,	
-	// 	this.Xception,
-	// ]
-
 	constructor(private imageService: ImageService)
 	{
 
 	}
 
-
-
-	async loadAllModels()
+	async loadModels(modelNames: string[])
 	{
-
+		let selectedModelObjects = this.getModelDataObjectFromNames(modelNames)
 
 		//TODO: See if models can be loaded and predicted in parallel (save time)
-	 	await Promise.all(this.allModels.map(async (currentModel) =>
+	 	return await Promise.all(selectedModelObjects.map(async (currentModel) =>
 		{
-
 			let t0 = performance.now()
-		 	currentModel.model = await this.loadModelFromFile(currentModel)
-			currentModel.loaded = true
-			this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
-			// console.log(currentModel.name + 'stats:')
-			// console.log(currentModel)
 
-			t0 = performance.now()
-			await tf.tidy(()=>
-			{
-				currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
-			})
+		 	return await this.loadModelFromFile(currentModel).then((loadedModel)=>
+		 	{
+		 		currentModel.model = loadedModel
+		 		currentModel.loaded = true
+				this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
 
-			this.logTime(t0, performance.now(), 'Successfully warmed: ' +  currentModel.name)
+				t0 = performance.now()
+
+				tf.tidy(()=>
+				{
+					currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
+					this.logTime(t0, performance.now(), 'Successfully warmed: ' +  currentModel.name)					
+				})
+		 	}).catch(e =>
+		 	{
+		 		console.error("Error loading model: " + e)
+		 	})
 		}))
 	}
 
-
-	/**
-	* Load a tf.model from given file path
-	*/
+	/** Load a tf.model from given file path */
 	async loadModelFromFile(modelObject:ModelData)
 	{
 		let model = modelObject.model
 
 		if(modelObject.loaded)
-		{
-			console.error("Error: " + model.name + " has already been loaded")
-			return null
-		}	
+			throw(modelObject.name + ' has already been loaded')
 
 		try 
 		{
-			return await tf.loadLayersModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=>
-			{
-				return loadedModel
-			})
+			return await tf.loadLayersModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=> {return loadedModel})
 		}
 		catch(e) 
 		{
-			console.error("Error loading model: " + modelObject.name + " : " + e)
-			return null
+			throw('Error loading layersModel: ' + modelObject.name + ' : ' + e)
 		}	
 	}
 
-	getModelDataObjectFromName(modelName:string)
-	{
-		for(var i = 0; i < this.allModels.length; i++)
-		{
-			if(this.allModels[i].name != modelName)
-				continue
 
-			return this.allModels[i]
+	getModelDataObjectFromName(modelName:string): ModelData
+	{
+		return this.getModelDataObjectFromNames([modelName])[0]
+	}
+
+	/** Take a string[] of potential model names, 
+	* compares them to models defined in allModels,
+	* returns modelObjects of found models */
+	getModelDataObjectFromNames(modelNames:string[]) : ModelData[] 
+	{
+		let modelObjectsToLoad:ModelData[] = new Array()
+
+		for(let i = 0; i < modelNames.length; i++)
+		{
+			let modelFound = false;
+
+			for(let j = 0; j < this.allModels.length; j++)
+			{
+				if(modelNames[i] == this.allModels[j].name)
+				{
+					modelObjectsToLoad.push(this.allModels[j])
+					modelFound = true
+					break;	
+				}
+			}
+
+			if(!modelFound)
+				console.error('Could not find modelObject: ' + modelNames[i])
 		}
 
-		console.error("Could not find model: " + modelName)
-		return null
+		return modelObjectsToLoad
 	}
 
 
 	tryPredict(model:ModelData, originalCanvasObjectorString:HTMLCanvasElement | string, tensor:tf.Tensor)
 	{
 		if(!model.loaded)
-		{
-			console.error(model.name + " has not been loaded")
-			return
-		}
-
+			throw(model.name + " has not been loaded")
+		
 		try 
 		{
 			return tf.tidy(()=>
@@ -179,8 +171,7 @@ export class ModelService
 		}
 		catch(e) 
 		{
-		  console.error("Error predicting: " + model.name + ", " + e)
-		  return
+			throw("Error predicting: " + model.name + ": " + e)
 		}		
 	}
 
@@ -215,7 +206,7 @@ export class ModelService
 		return predictions
 	}
 
-
+	/** Round a number to 2 dp */
 	formatNumber(num):number 
 	{
 		return Math.round(num * 100) / 100

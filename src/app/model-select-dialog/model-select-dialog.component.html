@@ -64,7 +64,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button class="mat-raised-button"(click)="onCancelButtonPress()"> Cancel </button>
-    <button class="mat-raised-button mat-primary"(click)="onLoadButtonPress()"> Load </button>
-    <p class= "memory" body-1> Total Size: {{totalSize}} (MB)</p>
+      <button class="mat-raised-button"(click)="onCancelButtonPress()"> Cancel </button>
+      <button class="mat-raised-button mat-primary"(click)="onLoadButtonPress()"> Load </button>
+      <p class= "memory" body-1> Total Size: {{totalSize}} (MB)</p>
+      <mat-progress-bar *ngIf="modelsLoading" mode="indeterminate"></mat-progress-bar>
+
 </mat-dialog-actions>

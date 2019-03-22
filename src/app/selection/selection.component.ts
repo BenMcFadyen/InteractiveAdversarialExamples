@@ -12,6 +12,7 @@ import { Prediction } from '../Prediction';
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
 
+import {FormControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-selection',
@@ -21,6 +22,12 @@ import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-
 
 export class SelectionComponent implements OnInit 
 {
+
+	adversarialModelControl = new FormControl('', [Validators.required]);
+	predictionModelsControl = new FormControl('', [Validators.required]);
+	attackMethodControl = new FormControl('', [Validators.required]);
+	targetClassControl = new FormControl('', [Validators.required]);
+
 	imgURL: string = 'assets/images/lion.jpg'
 	epsilon: number = 5
 	selectedPredictionModel: string = 'MobileNet'
@@ -50,7 +57,7 @@ export class SelectionComponent implements OnInit
 		'T-FGSM'
 	]
 
-	allModelsLoaded: boolean;
+	loadedModels: string[] = []
 
 	canvasOriginal:string = 'canvasOriginal'
 	canvasDifference:string = 'canvasDifference'		
@@ -81,12 +88,12 @@ export class SelectionComponent implements OnInit
 
   		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
 
-	    dialogRef.beforeClose().subscribe(data => console.log("Dialog output:", data)
+	    dialogRef.afterClosed().subscribe(modelsLoaded => 
+    	{
+    		if(modelsLoaded != null)
+    			this.loadedModels = modelsLoaded
+    	});  	 
 
-
-
-
-	    );  	    
 	} 
 
 	ngOnInit() 
@@ -95,13 +102,6 @@ export class SelectionComponent implements OnInit
 
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
-
-		// var t0 = performance.now();
-		// this.modelService.loadAllModels().then(()=>
-		// {
-		// 	this.allModelsLoaded = true;
-		// 	this.logTime(t0, performance.now(), 'All models loaded and warmed')
-		// })
 	}
 
 	/** TODO: Rename **/
@@ -125,7 +125,7 @@ export class SelectionComponent implements OnInit
 
 		this.validateSelectedParameters(false) //adversarial model is not required to be selected at this point
 		var selectedOriginalPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedPredictionModel)
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
+		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)
 
 		// get the predictions from the original canvas
 		let originalPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasOriginal, this.topX)
@@ -156,7 +156,7 @@ export class SelectionComponent implements OnInit
 	{
 		this.validateSelectedParameters(false)
 
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)	
+		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)
 
 
 		if(this.selectedAttackMethod == 'FGSM' && this.topPrediction == null)
@@ -304,23 +304,16 @@ export class SelectionComponent implements OnInit
 	
 	}
 
-	async onEpsilonChange(value)
+	async onEpsilonChange()
 	{
-		// TODO: Should max epsilon value be 100?
-		if(value > 100)
-			value = 100
-
-		this.epsilon = value
 
 		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
 		this.imgService.resetCanvas(this.canvasAdversarial)
 		this.imgService.resetCanvas(this.canvasDifference)
 		this.clearPredictions()
 
-		await this.executeAttackMethod()
-		this.predict()
-
-		this.clearPredictions()
+		// await this.executeAttackMethod()
+		// this.predict()
 	}
 
 	async onRandomClick()
@@ -332,8 +325,8 @@ export class SelectionComponent implements OnInit
 		this.imgService.resetCanvas(this.canvasDifference)
 		this.clearPredictions()
 
-		await this.executeAttackMethod()
-		this.predict()		
+		// await this.executeAttackMethod()
+		// this.predict()		
 	}
 
 	selectRandomImageNetClass()

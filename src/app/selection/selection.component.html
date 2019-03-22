@@ -5,68 +5,104 @@
 		<img id = "fileSelectImg" [src]="imgURL" height="299" width="299" (load)="onIMGLoad()">
 		<div class = "fileSelection">
 
-			<input type='file' (change)="onSelectFile($event)">
+			<!-- <input type='file' (change)="onSelectFile($event)"> -->
+
+			<button mat-raised-button color="basic" (click)="onUploadFileButtonPress()" (change)="onSelectFile($event)"> 
+		  		Upload
+			</button>	  		
+
+			<button mat-raised-button color="primary" (click)="onSelectFileButtonPress()" (change)="onSelectFile($event)"> 
+		  		Select
+			</button>	  		
 
 		</div>
 
+		<mat-form-field>
+			<mat-label>Adversarial Model</mat-label>
+				<mat-select [formControl]="adversarialModelControl" required>
+					<mat-option>--</mat-option>
+						<mat-option *ngFor="let model of loadedModels" [value]="model">
+							{{model}}
+						</mat-option>
+					</mat-select>
+				<mat-error *ngIf="adversarialModelControl.hasError('required')">Please select an adversarial model</mat-error>
+			<mat-hint>{{adversarialModelControl.value?.sound}}</mat-hint>
+		</mat-form-field>
 
-  		<button mat-raised-button (click)="openModelSelectDialog()"> Open Model Selection</button>
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onPredictButtonClick()"> 
+	  	Generate
+		</button>	  		
+
+		<mat-form-field>
+			<mat-label>Prediction Model(s)</mat-label>
+				<mat-select [formControl]="predictionModelsControl" required multiple>
+				    <mat-select-trigger>
+				      {{predictionModelsControl.value ? predictionModelsControl.value[0] : ''}}
+				      <span *ngIf="predictionModelsControl.value?.length > 1" class="example-additional-selection">
+				        (+{{predictionModelsControl.value.length - 1}} {{predictionModelsControl.value?.length === 2 ? 'other' : 'others'}})
+				      </span>
+				    </mat-select-trigger>					
+					<mat-option>--</mat-option>
+						<mat-option *ngFor="let model of loadedModels" [value]="model">
+							{{model}}
+						</mat-option>
+					</mat-select>
+				<mat-error *ngIf="predictionModelsControl.hasError('required')">Please select a prediction model</mat-error>
+			<mat-hint>{{predictionModelsControl.value?.sound}}</mat-hint>
+		</mat-form-field>
+
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0"(click)="onGenerateButtonClick()"> 
+			Predict
+		</button>
+
+		<mat-form-field>
+			<mat-label>Attack Method</mat-label>
+				<mat-select [formControl]="attackMethodControl" required>
+					<mat-option>--</mat-option>
+						<mat-option *ngFor="let attackMethod of attackMethods" [value]="attackMethod">
+							{{attackMethod}}
+						</mat-option>
+					</mat-select>
+				<mat-error *ngIf="attackMethodControl.hasError('required')">Please select an attack method </mat-error>
+			<mat-hint>{{attackMethodControl.value?.sound}}</mat-hint>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Target Class</mat-label>
+				<mat-select [(value)]="targetClass" [formControl]="targetClassControl" required>
+					<mat-option>--</mat-option>
+						<mat-option *ngFor="let targetClass of imageNet" [(value)]="targetClass">
+							{{targetClass}}
+						</mat-option>
+					</mat-select>
+				<mat-error *ngIf="targetClassControl.hasError('required')">Please select a target class </mat-error>
+			<mat-hint>{{targetClassControl.value?.sound}}</mat-hint>
+		</mat-form-field>			
+
+		<button mat-raised-button color="accent" (click)="onRandomClick()"> 
+	  	Random
+		</button>	  				
+
+
+		<p> Epsilon: {{epsilon}} </p>
+		<mat-slider 
+		 	[(ngModel)]="epsilon"
+			thumbLabel 
+			min="0" 
+			max="250"
+			(change)="onEpsilonChange()">
+		</mat-slider>
 
 
 
-
-		<div class = "modelSelection adversarialPredictionModelSelection">
-
-			<p> Adversarial Model </p>
-			<select [(ngModel)]="selectedAdversarialPredictionModel">
-				<option *ngFor="let model of modelService.adversarialModels" [value]="model.name">{{model.name}}</option> 
-			</select>
-			<button [disabled]="!allModelsLoaded" (click) = "onGenerateButtonClick()"> Generate </button>			
-		</div>
-
-		<div class = "modelSelection predictionModelSelection">
-
-			<p> Prediction Model </p>
-			<select [(ngModel)]="selectedPredictionModel">
-				<option *ngFor="let model of modelService.allModels" [value]="model.name">{{model.name}}</option> 
-			</select>
-
-			<button [disabled]="!allModelsLoaded" (click) = "onPredictButtonClick()"> Predict </button>
-
-		</div>
-
-
-		<div class = "epsilonSelection">
-
-			<p> Epsilon: {{epsilon}} </p>
-			<input  class="epsilonInput"(change)="onEpsilonChange($event.target.value)" placeholder="1">
-
-		</div> 
-
-		<div class = "attackMethodSelection">
-			<p> Attack Method: </p>
-			<select [(ngModel)]="selectedAttackMethod" (change) = "onAttackMethodChange()" >
-				<option *ngFor="let attackMethod of attackMethods" [value]="attackMethod">{{attackMethod}}</option> 
-			</select>
-		</div> 
-
-
-		<div class = "imageNetClassSelection">
-			<p> Target Class: {{targetClass}} </p>
-
-			<button (click) = "onRandomClick()"> Random </button>
-
-			<select [(ngModel)]="targetClass">
-				<option *ngFor="let class of imageNet" [value]="class">{{class}}</option> 
-			</select>
-		</div>
-
-
+		<button mat-raised-button (click)="openModelSelectDialog()"> Open Model Selection</button>
 
 		<div class = "tfMemoryState">
 			<p> Tensors: {{numTensors}} </p>
 			<p> Memory Allocated: {{numBytes}} (MB) </p>
 		</div>
+
+
 
 	</div>
 </body>

@@ -17,3 +17,18 @@ table
 {
 	margin-left:15px;
 }
+
+.mat-dialog-actions
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap:nowrap;
+ // justify-content:center;
+}
+
+.mat-progress-bar
+{
+    margin-left:auto;
+    height:7px;
+    width:50%
+}
