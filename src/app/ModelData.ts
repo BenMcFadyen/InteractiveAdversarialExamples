@@ -1,8 +1,10 @@
 import * as tf from '@tensorflow/tfjs';
+import { ModelStats } from './ModelStats';
 
 export class ModelData
 {
 	name: string
+	stats:ModelStats
 	model: tf.LayersModel
 	loaded: boolean
 	imgHeight:number
@@ -17,6 +19,7 @@ export class ModelData
 	/**
 	* @constructor
  	* @param {string} 	name - Name of the model
+ 	* @param {ModelStats} stats - Stats of the model (size, topX...)
  	* @param {tf.LayersModel} model - tensorflow.js model object, used for prediction
  	* @param {boolean}  loaded - True if model is loaded
  	* @param {number} 	imgHeight - Required image height (pixels) for prediction
@@ -28,12 +31,19 @@ export class ModelData
  	* @param {boolean} 	batchInput - Set true if model requires input to be batched for prediction
  	* @param {boolean} 	normaliseImage - Set true if images are required to be normalised within the range [-1,1] before prediction 	
 	*/
-	constructor(name:string, 	 			imgHeight:number, 
-				imgWidth:number, 			imgChannels:number, 
-				classLabels, 				applySoftMax:boolean, predictionOutputLayer:string = null,
-				batchInput:boolean = true, 	normaliseImage:boolean = true)
+	constructor(name:string, 	 	
+				stats:ModelStats,
+				imgHeight:number, 			
+				imgWidth:number, 			
+				imgChannels:number, 		
+				classLabels, 	 
+				applySoftMax:boolean, 
+				predictionOutputLayer:string = null,
+				batchInput:boolean = true, 
+				normaliseImage:boolean = true)
 	{
 		this.name = name
+		this.stats = stats,
 		this.imgHeight = imgHeight
 		this.imgWidth = imgWidth
 		this.imgChannels = imgChannels
