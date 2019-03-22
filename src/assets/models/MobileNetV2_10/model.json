@@ -1,17 +1,17 @@
 {
   "format": "layers-model",
-  "generatedBy": "keras v2.2.4-tf",
+  "generatedBy": "keras v2.2.4",
   "convertedBy": "TensorFlow.js Converter v1.0.1",
   "modelTopology": {
-    "keras_version": "2.2.4-tf",
+    "keras_version": "2.2.4",
     "backend": "tensorflow",
     "model_config": {
       "class_name": "Model",
       "config": {
-        "name": "mobilenetv2_1.40_224",
+        "name": "mobilenetv2_1.00_224",
         "layers": [
           {
-            "name": "input_1",
+            "name": "input_3",
             "class_name": "InputLayer",
             "config": {
               "batch_input_shape": [
@@ -22,7 +22,7 @@
               ],
               "dtype": "float32",
               "sparse": false,
-              "name": "input_1"
+              "name": "input_3"
             },
             "inbound_nodes": []
           },
@@ -32,7 +32,6 @@
             "config": {
               "name": "Conv1_pad",
               "trainable": true,
-              "dtype": "float32",
               "padding": [
                 [
                   0,
@@ -48,7 +47,7 @@
             "inbound_nodes": [
               [
                 [
-                  "input_1",
+                  "input_3",
                   0,
                   0,
                   {}
@@ -62,8 +61,7 @@
             "config": {
               "name": "Conv1",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 48,
+              "filters": 32,
               "kernel_size": [
                 3,
                 3
@@ -81,17 +79,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -116,37 +114,26 @@
             "config": {
               "name": "bn_Conv1",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -170,7 +157,6 @@
             "config": {
               "name": "Conv1_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -192,7 +178,6 @@
             "config": {
               "name": "expanded_conv_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -211,19 +196,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -246,37 +231,26 @@
             "config": {
               "name": "expanded_conv_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -300,7 +274,6 @@
             "config": {
               "name": "expanded_conv_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -322,8 +295,7 @@
             "config": {
               "name": "expanded_conv_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 24,
+              "filters": 16,
               "kernel_size": [
                 1,
                 1
@@ -341,17 +313,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -376,37 +348,26 @@
             "config": {
               "name": "expanded_conv_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -430,8 +391,7 @@
             "config": {
               "name": "block_1_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 144,
+              "filters": 96,
               "kernel_size": [
                 1,
                 1
@@ -449,17 +409,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -484,37 +444,26 @@
             "config": {
               "name": "block_1_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -538,7 +487,6 @@
             "config": {
               "name": "block_1_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -560,7 +508,6 @@
             "config": {
               "name": "block_1_pad",
               "trainable": true,
-              "dtype": "float32",
               "padding": [
                 [
                   0,
@@ -590,7 +537,6 @@
             "config": {
               "name": "block_1_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -609,19 +555,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -644,37 +590,26 @@
             "config": {
               "name": "block_1_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -698,7 +633,6 @@
             "config": {
               "name": "block_1_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -720,8 +654,7 @@
             "config": {
               "name": "block_1_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 32,
+              "filters": 24,
               "kernel_size": [
                 1,
                 1
@@ -739,17 +672,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -774,37 +707,26 @@
             "config": {
               "name": "block_1_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -828,8 +750,7 @@
             "config": {
               "name": "block_2_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 192,
+              "filters": 144,
               "kernel_size": [
                 1,
                 1
@@ -847,17 +768,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -882,37 +803,26 @@
             "config": {
               "name": "block_2_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -936,7 +846,6 @@
             "config": {
               "name": "block_2_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -958,7 +867,6 @@
             "config": {
               "name": "block_2_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -977,19 +885,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -1012,37 +920,26 @@
             "config": {
               "name": "block_2_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1066,7 +963,6 @@
             "config": {
               "name": "block_2_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -1088,8 +984,7 @@
             "config": {
               "name": "block_2_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 32,
+              "filters": 24,
               "kernel_size": [
                 1,
                 1
@@ -1107,17 +1002,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -1142,37 +1037,26 @@
             "config": {
               "name": "block_2_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1195,8 +1079,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_2_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -1221,8 +1104,7 @@
             "config": {
               "name": "block_3_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 192,
+              "filters": 144,
               "kernel_size": [
                 1,
                 1
@@ -1240,17 +1122,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -1275,37 +1157,26 @@
             "config": {
               "name": "block_3_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1329,7 +1200,6 @@
             "config": {
               "name": "block_3_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -1351,7 +1221,6 @@
             "config": {
               "name": "block_3_pad",
               "trainable": true,
-              "dtype": "float32",
               "padding": [
                 [
                   0,
@@ -1381,7 +1250,6 @@
             "config": {
               "name": "block_3_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -1400,19 +1268,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -1435,37 +1303,26 @@
             "config": {
               "name": "block_3_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1489,7 +1346,6 @@
             "config": {
               "name": "block_3_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -1511,8 +1367,7 @@
             "config": {
               "name": "block_3_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 48,
+              "filters": 32,
               "kernel_size": [
                 1,
                 1
@@ -1530,17 +1385,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -1565,37 +1420,26 @@
             "config": {
               "name": "block_3_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1619,8 +1463,7 @@
             "config": {
               "name": "block_4_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 288,
+              "filters": 192,
               "kernel_size": [
                 1,
                 1
@@ -1638,17 +1481,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -1673,37 +1516,26 @@
             "config": {
               "name": "block_4_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1727,7 +1559,6 @@
             "config": {
               "name": "block_4_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -1749,7 +1580,6 @@
             "config": {
               "name": "block_4_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -1768,19 +1598,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -1803,37 +1633,26 @@
             "config": {
               "name": "block_4_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1857,7 +1676,6 @@
             "config": {
               "name": "block_4_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -1879,8 +1697,7 @@
             "config": {
               "name": "block_4_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 48,
+              "filters": 32,
               "kernel_size": [
                 1,
                 1
@@ -1898,17 +1715,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -1933,37 +1750,26 @@
             "config": {
               "name": "block_4_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -1986,8 +1792,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_4_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -2012,8 +1817,7 @@
             "config": {
               "name": "block_5_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 288,
+              "filters": 192,
               "kernel_size": [
                 1,
                 1
@@ -2031,17 +1835,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -2066,37 +1870,26 @@
             "config": {
               "name": "block_5_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2120,7 +1913,6 @@
             "config": {
               "name": "block_5_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -2142,7 +1934,6 @@
             "config": {
               "name": "block_5_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -2161,19 +1952,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -2196,37 +1987,26 @@
             "config": {
               "name": "block_5_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2250,7 +2030,6 @@
             "config": {
               "name": "block_5_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -2272,8 +2051,7 @@
             "config": {
               "name": "block_5_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 48,
+              "filters": 32,
               "kernel_size": [
                 1,
                 1
@@ -2291,17 +2069,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -2326,37 +2104,26 @@
             "config": {
               "name": "block_5_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2379,8 +2146,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_5_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -2405,8 +2171,7 @@
             "config": {
               "name": "block_6_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 288,
+              "filters": 192,
               "kernel_size": [
                 1,
                 1
@@ -2424,17 +2189,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -2459,37 +2224,26 @@
             "config": {
               "name": "block_6_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2513,7 +2267,6 @@
             "config": {
               "name": "block_6_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -2535,7 +2288,6 @@
             "config": {
               "name": "block_6_pad",
               "trainable": true,
-              "dtype": "float32",
               "padding": [
                 [
                   0,
@@ -2565,7 +2317,6 @@
             "config": {
               "name": "block_6_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -2584,19 +2335,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -2619,37 +2370,26 @@
             "config": {
               "name": "block_6_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2673,7 +2413,6 @@
             "config": {
               "name": "block_6_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -2695,8 +2434,7 @@
             "config": {
               "name": "block_6_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 88,
+              "filters": 64,
               "kernel_size": [
                 1,
                 1
@@ -2714,17 +2452,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -2749,37 +2487,26 @@
             "config": {
               "name": "block_6_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2803,8 +2530,7 @@
             "config": {
               "name": "block_7_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 528,
+              "filters": 384,
               "kernel_size": [
                 1,
                 1
@@ -2822,17 +2548,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -2857,37 +2583,26 @@
             "config": {
               "name": "block_7_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -2911,7 +2626,6 @@
             "config": {
               "name": "block_7_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -2933,7 +2647,6 @@
             "config": {
               "name": "block_7_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -2952,19 +2665,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -2987,37 +2700,26 @@
             "config": {
               "name": "block_7_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3041,7 +2743,6 @@
             "config": {
               "name": "block_7_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -3063,8 +2764,7 @@
             "config": {
               "name": "block_7_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 88,
+              "filters": 64,
               "kernel_size": [
                 1,
                 1
@@ -3082,17 +2782,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -3117,37 +2817,26 @@
             "config": {
               "name": "block_7_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3170,8 +2859,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_7_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -3196,8 +2884,7 @@
             "config": {
               "name": "block_8_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 528,
+              "filters": 384,
               "kernel_size": [
                 1,
                 1
@@ -3215,17 +2902,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -3250,37 +2937,26 @@
             "config": {
               "name": "block_8_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3304,7 +2980,6 @@
             "config": {
               "name": "block_8_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -3326,7 +3001,6 @@
             "config": {
               "name": "block_8_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -3345,19 +3019,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -3380,37 +3054,26 @@
             "config": {
               "name": "block_8_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3434,7 +3097,6 @@
             "config": {
               "name": "block_8_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -3456,8 +3118,7 @@
             "config": {
               "name": "block_8_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 88,
+              "filters": 64,
               "kernel_size": [
                 1,
                 1
@@ -3475,17 +3136,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -3510,37 +3171,26 @@
             "config": {
               "name": "block_8_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3563,8 +3213,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_8_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -3589,8 +3238,7 @@
             "config": {
               "name": "block_9_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 528,
+              "filters": 384,
               "kernel_size": [
                 1,
                 1
@@ -3608,17 +3256,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -3643,37 +3291,26 @@
             "config": {
               "name": "block_9_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3697,7 +3334,6 @@
             "config": {
               "name": "block_9_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -3719,7 +3355,6 @@
             "config": {
               "name": "block_9_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -3738,19 +3373,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -3773,37 +3408,26 @@
             "config": {
               "name": "block_9_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3827,7 +3451,6 @@
             "config": {
               "name": "block_9_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -3849,8 +3472,7 @@
             "config": {
               "name": "block_9_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 88,
+              "filters": 64,
               "kernel_size": [
                 1,
                 1
@@ -3868,17 +3490,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -3903,37 +3525,26 @@
             "config": {
               "name": "block_9_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -3956,8 +3567,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_9_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -3982,8 +3592,7 @@
             "config": {
               "name": "block_10_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 528,
+              "filters": 384,
               "kernel_size": [
                 1,
                 1
@@ -4001,17 +3610,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -4036,37 +3645,26 @@
             "config": {
               "name": "block_10_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4090,7 +3688,6 @@
             "config": {
               "name": "block_10_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -4112,7 +3709,6 @@
             "config": {
               "name": "block_10_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -4131,19 +3727,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -4166,37 +3762,26 @@
             "config": {
               "name": "block_10_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4220,7 +3805,6 @@
             "config": {
               "name": "block_10_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -4242,8 +3826,7 @@
             "config": {
               "name": "block_10_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 136,
+              "filters": 96,
               "kernel_size": [
                 1,
                 1
@@ -4261,17 +3844,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -4296,37 +3879,26 @@
             "config": {
               "name": "block_10_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4350,8 +3922,7 @@
             "config": {
               "name": "block_11_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 816,
+              "filters": 576,
               "kernel_size": [
                 1,
                 1
@@ -4369,17 +3940,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -4404,37 +3975,26 @@
             "config": {
               "name": "block_11_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4458,7 +4018,6 @@
             "config": {
               "name": "block_11_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -4480,7 +4039,6 @@
             "config": {
               "name": "block_11_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -4499,19 +4057,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -4534,37 +4092,26 @@
             "config": {
               "name": "block_11_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4588,7 +4135,6 @@
             "config": {
               "name": "block_11_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -4610,8 +4156,7 @@
             "config": {
               "name": "block_11_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 136,
+              "filters": 96,
               "kernel_size": [
                 1,
                 1
@@ -4629,17 +4174,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -4664,37 +4209,26 @@
             "config": {
               "name": "block_11_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4717,8 +4251,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_11_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -4743,8 +4276,7 @@
             "config": {
               "name": "block_12_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 816,
+              "filters": 576,
               "kernel_size": [
                 1,
                 1
@@ -4762,17 +4294,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -4797,37 +4329,26 @@
             "config": {
               "name": "block_12_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4851,7 +4372,6 @@
             "config": {
               "name": "block_12_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -4873,7 +4393,6 @@
             "config": {
               "name": "block_12_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -4892,19 +4411,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -4927,37 +4446,26 @@
             "config": {
               "name": "block_12_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -4981,7 +4489,6 @@
             "config": {
               "name": "block_12_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -5003,8 +4510,7 @@
             "config": {
               "name": "block_12_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 136,
+              "filters": 96,
               "kernel_size": [
                 1,
                 1
@@ -5022,17 +4528,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5057,37 +4563,26 @@
             "config": {
               "name": "block_12_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5110,8 +4605,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_12_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -5136,8 +4630,7 @@
             "config": {
               "name": "block_13_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 816,
+              "filters": 576,
               "kernel_size": [
                 1,
                 1
@@ -5155,17 +4648,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5190,37 +4683,26 @@
             "config": {
               "name": "block_13_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5244,7 +4726,6 @@
             "config": {
               "name": "block_13_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -5266,7 +4747,6 @@
             "config": {
               "name": "block_13_pad",
               "trainable": true,
-              "dtype": "float32",
               "padding": [
                 [
                   0,
@@ -5296,7 +4776,6 @@
             "config": {
               "name": "block_13_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -5315,19 +4794,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -5350,37 +4829,26 @@
             "config": {
               "name": "block_13_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5404,7 +4872,6 @@
             "config": {
               "name": "block_13_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -5426,8 +4893,7 @@
             "config": {
               "name": "block_13_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 224,
+              "filters": 160,
               "kernel_size": [
                 1,
                 1
@@ -5445,17 +4911,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5480,37 +4946,26 @@
             "config": {
               "name": "block_13_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5534,8 +4989,7 @@
             "config": {
               "name": "block_14_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 1344,
+              "filters": 960,
               "kernel_size": [
                 1,
                 1
@@ -5553,17 +5007,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5588,37 +5042,26 @@
             "config": {
               "name": "block_14_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5642,7 +5085,6 @@
             "config": {
               "name": "block_14_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -5664,7 +5106,6 @@
             "config": {
               "name": "block_14_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -5683,19 +5124,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -5718,37 +5159,26 @@
             "config": {
               "name": "block_14_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5772,7 +5202,6 @@
             "config": {
               "name": "block_14_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -5794,8 +5223,7 @@
             "config": {
               "name": "block_14_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 224,
+              "filters": 160,
               "kernel_size": [
                 1,
                 1
@@ -5813,17 +5241,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5848,37 +5276,26 @@
             "config": {
               "name": "block_14_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -5901,8 +5318,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_14_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -5927,8 +5343,7 @@
             "config": {
               "name": "block_15_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 1344,
+              "filters": 960,
               "kernel_size": [
                 1,
                 1
@@ -5946,17 +5361,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -5981,37 +5396,26 @@
             "config": {
               "name": "block_15_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6035,7 +5439,6 @@
             "config": {
               "name": "block_15_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -6057,7 +5460,6 @@
             "config": {
               "name": "block_15_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -6076,19 +5478,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -6111,37 +5513,26 @@
             "config": {
               "name": "block_15_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6165,7 +5556,6 @@
             "config": {
               "name": "block_15_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -6187,8 +5577,7 @@
             "config": {
               "name": "block_15_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 224,
+              "filters": 160,
               "kernel_size": [
                 1,
                 1
@@ -6206,17 +5595,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -6241,37 +5630,26 @@
             "config": {
               "name": "block_15_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6294,8 +5672,7 @@
             "class_name": "Add",
             "config": {
               "name": "block_15_add",
-              "trainable": true,
-              "dtype": "float32"
+              "trainable": true
             },
             "inbound_nodes": [
               [
@@ -6320,8 +5697,7 @@
             "config": {
               "name": "block_16_expand",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 1344,
+              "filters": 960,
               "kernel_size": [
                 1,
                 1
@@ -6339,17 +5715,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -6374,37 +5750,26 @@
             "config": {
               "name": "block_16_expand_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6428,7 +5793,6 @@
             "config": {
               "name": "block_16_expand_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -6450,7 +5814,6 @@
             "config": {
               "name": "block_16_depthwise",
               "trainable": true,
-              "dtype": "float32",
               "kernel_size": [
                 3,
                 3
@@ -6469,19 +5832,19 @@
               "use_bias": false,
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "bias_regularizer": null,
               "activity_regularizer": null,
               "bias_constraint": null,
               "depth_multiplier": 1,
               "depthwise_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "depthwise_regularizer": null,
@@ -6504,37 +5867,26 @@
             "config": {
               "name": "block_16_depthwise_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6558,7 +5910,6 @@
             "config": {
               "name": "block_16_depthwise_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -6580,8 +5931,7 @@
             "config": {
               "name": "block_16_project",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 448,
+              "filters": 320,
               "kernel_size": [
                 1,
                 1
@@ -6599,17 +5949,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -6634,37 +5984,26 @@
             "config": {
               "name": "block_16_project_BN",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6688,8 +6027,7 @@
             "config": {
               "name": "Conv_1",
               "trainable": true,
-              "dtype": "float32",
-              "filters": 1792,
+              "filters": 1280,
               "kernel_size": [
                 1,
                 1
@@ -6707,17 +6045,17 @@
               "activation": "linear",
               "use_bias": false,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -6742,37 +6080,26 @@
             "config": {
               "name": "Conv_1_bn",
               "trainable": true,
-              "dtype": "float32",
-              "axis": [
-                3
-              ],
+              "axis": -1,
               "momentum": 0.999,
               "epsilon": 0.001,
               "center": true,
               "scale": true,
               "beta_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "gamma_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_mean_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "moving_variance_initializer": {
                 "class_name": "Ones",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "beta_regularizer": null,
               "gamma_regularizer": null,
@@ -6796,7 +6123,6 @@
             "config": {
               "name": "out_relu",
               "trainable": true,
-              "dtype": "float32",
               "max_value": 6.0,
               "negative_slope": 0.0,
               "threshold": 0.0
@@ -6813,12 +6139,11 @@
             ]
           },
           {
-            "name": "global_average_pooling2d",
+            "name": "global_average_pooling2d_2",
             "class_name": "GlobalAveragePooling2D",
             "config": {
-              "name": "global_average_pooling2d",
+              "name": "global_average_pooling2d_2",
               "trainable": true,
-              "dtype": "float32",
               "data_format": "channels_last"
             },
             "inbound_nodes": [
@@ -6838,22 +6163,21 @@
             "config": {
               "name": "Logits",
               "trainable": true,
-              "dtype": "float32",
               "units": 1000,
               "activation": "softmax",
               "use_bias": true,
               "kernel_initializer": {
-                "class_name": "GlorotUniform",
+                "class_name": "VarianceScaling",
                 "config": {
-                  "seed": null,
-                  "dtype": "float32"
+                  "scale": 1.0,
+                  "mode": "fan_avg",
+                  "distribution": "uniform",
+                  "seed": null
                 }
               },
               "bias_initializer": {
                 "class_name": "Zeros",
-                "config": {
-                  "dtype": "float32"
-                }
+                "config": {}
               },
               "kernel_regularizer": null,
               "bias_regularizer": null,
@@ -6864,7 +6188,7 @@
             "inbound_nodes": [
               [
                 [
-                  "global_average_pooling2d",
+                  "global_average_pooling2d_2",
                   0,
                   0,
                   {}
@@ -6875,7 +6199,7 @@
         ],
         "input_layers": [
           [
-            "input_1",
+            "input_3",
             0,
             0
           ]
@@ -6893,12 +6217,10 @@
   "weightsManifest": [
     {
       "paths": [
-        "group1-shard1of6.bin",
-        "group1-shard2of6.bin",
-        "group1-shard3of6.bin",
-        "group1-shard4of6.bin",
-        "group1-shard5of6.bin",
-        "group1-shard6of6.bin"
+        "group1-shard1of4.bin",
+        "group1-shard2of4.bin",
+        "group1-shard3of4.bin",
+        "group1-shard4of4.bin"
       ],
       "weights": [
         {
@@ -6907,7 +6229,7 @@
             3,
             3,
             3,
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -6916,43 +6238,43 @@
           "shape": [
             1,
             1,
-            448,
-            1792
+            320,
+            1280
           ],
           "dtype": "float32"
         },
         {
           "name": "Conv_1_bn/gamma",
           "shape": [
-            1792
+            1280
           ],
           "dtype": "float32"
         },
         {
           "name": "Conv_1_bn/beta",
           "shape": [
-            1792
+            1280
           ],
           "dtype": "float32"
         },
         {
           "name": "Conv_1_bn/moving_mean",
           "shape": [
-            1792
+            1280
           ],
           "dtype": "float32"
         },
         {
           "name": "Conv_1_bn/moving_variance",
           "shape": [
-            1792
+            1280
           ],
           "dtype": "float32"
         },
         {
           "name": "Logits/kernel",
           "shape": [
-            1792,
+            1280,
             1000
           ],
           "dtype": "float32"
@@ -6969,7 +6291,7 @@
           "shape": [
             3,
             3,
-            528,
+            384,
             1
           ],
           "dtype": "float32"
@@ -6977,28 +6299,28 @@
         {
           "name": "block_10_depthwise_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_depthwise_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_depthwise_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_depthwise_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -7007,36 +6329,36 @@
           "shape": [
             1,
             1,
-            88,
-            528
+            64,
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_expand_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_expand_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_expand_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_expand_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -7045,36 +6367,36 @@
           "shape": [
             1,
             1,
-            528,
-            136
+            384,
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_project_BN/gamma",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_project_BN/beta",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_project_BN/moving_mean",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_10_project_BN/moving_variance",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
@@ -7083,7 +6405,7 @@
           "shape": [
             3,
             3,
-            816,
+            576,
             1
           ],
           "dtype": "float32"
@@ -7091,28 +6413,28 @@
         {
           "name": "block_11_depthwise_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_depthwise_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_depthwise_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_depthwise_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7121,36 +6443,36 @@
           "shape": [
             1,
             1,
-            136,
-            816
+            96,
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_expand_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_expand_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_expand_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_expand_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7159,36 +6481,36 @@
           "shape": [
             1,
             1,
-            816,
-            136
+            576,
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_project_BN/gamma",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_project_BN/beta",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_project_BN/moving_mean",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_11_project_BN/moving_variance",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
@@ -7197,7 +6519,7 @@
           "shape": [
             3,
             3,
-            816,
+            576,
             1
           ],
           "dtype": "float32"
@@ -7205,28 +6527,28 @@
         {
           "name": "block_12_depthwise_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_depthwise_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_depthwise_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_depthwise_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7235,36 +6557,36 @@
           "shape": [
             1,
             1,
-            136,
-            816
+            96,
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_expand_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_expand_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_expand_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_expand_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7273,36 +6595,36 @@
           "shape": [
             1,
             1,
-            816,
-            136
+            576,
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_project_BN/gamma",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_project_BN/beta",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_project_BN/moving_mean",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
         {
           "name": "block_12_project_BN/moving_variance",
           "shape": [
-            136
+            96
           ],
           "dtype": "float32"
         },
@@ -7311,7 +6633,7 @@
           "shape": [
             3,
             3,
-            816,
+            576,
             1
           ],
           "dtype": "float32"
@@ -7319,28 +6641,28 @@
         {
           "name": "block_13_depthwise_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_depthwise_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_depthwise_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_depthwise_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7349,36 +6671,36 @@
           "shape": [
             1,
             1,
-            136,
-            816
+            96,
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_expand_BN/gamma",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_expand_BN/beta",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_expand_BN/moving_mean",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_expand_BN/moving_variance",
           "shape": [
-            816
+            576
           ],
           "dtype": "float32"
         },
@@ -7387,36 +6709,36 @@
           "shape": [
             1,
             1,
-            816,
-            224
+            576,
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_project_BN/gamma",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_project_BN/beta",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_project_BN/moving_mean",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_13_project_BN/moving_variance",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
@@ -7425,7 +6747,7 @@
           "shape": [
             3,
             3,
-            1344,
+            960,
             1
           ],
           "dtype": "float32"
@@ -7433,28 +6755,28 @@
         {
           "name": "block_14_depthwise_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_depthwise_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_depthwise_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_depthwise_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7463,36 +6785,36 @@
           "shape": [
             1,
             1,
-            224,
-            1344
+            160,
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_expand_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_expand_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_expand_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_expand_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7501,36 +6823,36 @@
           "shape": [
             1,
             1,
-            1344,
-            224
+            960,
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_project_BN/gamma",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_project_BN/beta",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_project_BN/moving_mean",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_14_project_BN/moving_variance",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
@@ -7539,7 +6861,7 @@
           "shape": [
             3,
             3,
-            1344,
+            960,
             1
           ],
           "dtype": "float32"
@@ -7547,28 +6869,28 @@
         {
           "name": "block_15_depthwise_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_depthwise_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_depthwise_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_depthwise_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7577,36 +6899,36 @@
           "shape": [
             1,
             1,
-            224,
-            1344
+            160,
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_expand_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_expand_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_expand_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_expand_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7615,36 +6937,36 @@
           "shape": [
             1,
             1,
-            1344,
-            224
+            960,
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_project_BN/gamma",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_project_BN/beta",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_project_BN/moving_mean",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
         {
           "name": "block_15_project_BN/moving_variance",
           "shape": [
-            224
+            160
           ],
           "dtype": "float32"
         },
@@ -7653,7 +6975,7 @@
           "shape": [
             3,
             3,
-            1344,
+            960,
             1
           ],
           "dtype": "float32"
@@ -7661,28 +6983,28 @@
         {
           "name": "block_16_depthwise_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_depthwise_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_depthwise_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_depthwise_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7691,36 +7013,36 @@
           "shape": [
             1,
             1,
-            224,
-            1344
+            160,
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_expand_BN/gamma",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_expand_BN/beta",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_expand_BN/moving_mean",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_expand_BN/moving_variance",
           "shape": [
-            1344
+            960
           ],
           "dtype": "float32"
         },
@@ -7729,41 +7051,155 @@
           "shape": [
             1,
             1,
-            1344,
-            448
+            960,
+            320
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_project_BN/gamma",
           "shape": [
-            448
+            320
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_project_BN/beta",
           "shape": [
-            448
+            320
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_project_BN/moving_mean",
           "shape": [
-            448
+            320
           ],
           "dtype": "float32"
         },
         {
           "name": "block_16_project_BN/moving_variance",
           "shape": [
-            448
+            320
           ],
           "dtype": "float32"
         },
         {
           "name": "block_1_depthwise/depthwise_kernel",
+          "shape": [
+            3,
+            3,
+            96,
+            1
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_depthwise_BN/gamma",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_depthwise_BN/beta",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_depthwise_BN/moving_mean",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_depthwise_BN/moving_variance",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_expand/kernel",
+          "shape": [
+            1,
+            1,
+            16,
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_expand_BN/gamma",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_expand_BN/beta",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_expand_BN/moving_mean",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_expand_BN/moving_variance",
+          "shape": [
+            96
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_project/kernel",
+          "shape": [
+            1,
+            1,
+            96,
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_project_BN/gamma",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_project_BN/beta",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_project_BN/moving_mean",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_1_project_BN/moving_variance",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_2_depthwise/depthwise_kernel",
           "shape": [
             3,
             3,
@@ -7773,35 +7209,35 @@
           "dtype": "float32"
         },
         {
-          "name": "block_1_depthwise_BN/gamma",
+          "name": "block_2_depthwise_BN/gamma",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_depthwise_BN/beta",
+          "name": "block_2_depthwise_BN/beta",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_depthwise_BN/moving_mean",
+          "name": "block_2_depthwise_BN/moving_mean",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_depthwise_BN/moving_variance",
+          "name": "block_2_depthwise_BN/moving_variance",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_expand/kernel",
+          "name": "block_2_expand/kernel",
           "shape": [
             1,
             1,
@@ -7811,35 +7247,149 @@
           "dtype": "float32"
         },
         {
-          "name": "block_1_expand_BN/gamma",
+          "name": "block_2_expand_BN/gamma",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_expand_BN/beta",
+          "name": "block_2_expand_BN/beta",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_expand_BN/moving_mean",
+          "name": "block_2_expand_BN/moving_mean",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_expand_BN/moving_variance",
+          "name": "block_2_expand_BN/moving_variance",
           "shape": [
             144
           ],
           "dtype": "float32"
         },
         {
-          "name": "block_1_project/kernel",
+          "name": "block_2_project/kernel",
+          "shape": [
+            1,
+            1,
+            144,
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_2_project_BN/gamma",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_2_project_BN/beta",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_2_project_BN/moving_mean",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_2_project_BN/moving_variance",
+          "shape": [
+            24
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_depthwise/depthwise_kernel",
+          "shape": [
+            3,
+            3,
+            144,
+            1
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_depthwise_BN/gamma",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_depthwise_BN/beta",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_depthwise_BN/moving_mean",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_depthwise_BN/moving_variance",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_expand/kernel",
+          "shape": [
+            1,
+            1,
+            24,
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_expand_BN/gamma",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_expand_BN/beta",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_expand_BN/moving_mean",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_expand_BN/moving_variance",
+          "shape": [
+            144
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "block_3_project/kernel",
           "shape": [
             1,
             1,
@@ -7849,258 +7399,30 @@
           "dtype": "float32"
         },
         {
-          "name": "block_1_project_BN/gamma",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_1_project_BN/beta",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_1_project_BN/moving_mean",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_1_project_BN/moving_variance",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_depthwise/depthwise_kernel",
-          "shape": [
-            3,
-            3,
-            192,
-            1
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_depthwise_BN/gamma",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_depthwise_BN/beta",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_depthwise_BN/moving_mean",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_depthwise_BN/moving_variance",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_expand/kernel",
-          "shape": [
-            1,
-            1,
-            32,
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_expand_BN/gamma",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_expand_BN/beta",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_expand_BN/moving_mean",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_expand_BN/moving_variance",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_project/kernel",
-          "shape": [
-            1,
-            1,
-            192,
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_project_BN/gamma",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_project_BN/beta",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_project_BN/moving_mean",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_2_project_BN/moving_variance",
-          "shape": [
-            32
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_depthwise/depthwise_kernel",
-          "shape": [
-            3,
-            3,
-            192,
-            1
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_depthwise_BN/gamma",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_depthwise_BN/beta",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_depthwise_BN/moving_mean",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_depthwise_BN/moving_variance",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_expand/kernel",
-          "shape": [
-            1,
-            1,
-            32,
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_expand_BN/gamma",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_expand_BN/beta",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_expand_BN/moving_mean",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_expand_BN/moving_variance",
-          "shape": [
-            192
-          ],
-          "dtype": "float32"
-        },
-        {
-          "name": "block_3_project/kernel",
-          "shape": [
-            1,
-            1,
-            192,
-            48
-          ],
-          "dtype": "float32"
-        },
-        {
           "name": "block_3_project_BN/gamma",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_3_project_BN/beta",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_3_project_BN/moving_mean",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_3_project_BN/moving_variance",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -8109,7 +7431,7 @@
           "shape": [
             3,
             3,
-            288,
+            192,
             1
           ],
           "dtype": "float32"
@@ -8117,28 +7439,28 @@
         {
           "name": "block_4_depthwise_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_depthwise_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_depthwise_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_depthwise_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8147,36 +7469,36 @@
           "shape": [
             1,
             1,
-            48,
-            288
+            32,
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_expand_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_expand_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_expand_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_expand_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8185,36 +7507,36 @@
           "shape": [
             1,
             1,
-            288,
-            48
+            192,
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_project_BN/gamma",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_project_BN/beta",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_project_BN/moving_mean",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_4_project_BN/moving_variance",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -8223,7 +7545,7 @@
           "shape": [
             3,
             3,
-            288,
+            192,
             1
           ],
           "dtype": "float32"
@@ -8231,28 +7553,28 @@
         {
           "name": "block_5_depthwise_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_depthwise_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_depthwise_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_depthwise_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8261,36 +7583,36 @@
           "shape": [
             1,
             1,
-            48,
-            288
+            32,
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_expand_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_expand_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_expand_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_expand_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8299,36 +7621,36 @@
           "shape": [
             1,
             1,
-            288,
-            48
+            192,
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_project_BN/gamma",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_project_BN/beta",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_project_BN/moving_mean",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "block_5_project_BN/moving_variance",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -8337,7 +7659,7 @@
           "shape": [
             3,
             3,
-            288,
+            192,
             1
           ],
           "dtype": "float32"
@@ -8345,28 +7667,28 @@
         {
           "name": "block_6_depthwise_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_depthwise_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_depthwise_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_depthwise_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8375,36 +7697,36 @@
           "shape": [
             1,
             1,
-            48,
-            288
+            32,
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_expand_BN/gamma",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_expand_BN/beta",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_expand_BN/moving_mean",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_expand_BN/moving_variance",
           "shape": [
-            288
+            192
           ],
           "dtype": "float32"
         },
@@ -8413,36 +7735,36 @@
           "shape": [
             1,
             1,
-            288,
-            88
+            192,
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_project_BN/gamma",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_project_BN/beta",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_project_BN/moving_mean",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_6_project_BN/moving_variance",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
@@ -8451,7 +7773,7 @@
           "shape": [
             3,
             3,
-            528,
+            384,
             1
           ],
           "dtype": "float32"
@@ -8459,28 +7781,28 @@
         {
           "name": "block_7_depthwise_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_depthwise_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_depthwise_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_depthwise_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8489,36 +7811,36 @@
           "shape": [
             1,
             1,
-            88,
-            528
+            64,
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_expand_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_expand_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_expand_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_expand_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8527,36 +7849,36 @@
           "shape": [
             1,
             1,
-            528,
-            88
+            384,
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_project_BN/gamma",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_project_BN/beta",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_project_BN/moving_mean",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_7_project_BN/moving_variance",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
@@ -8565,7 +7887,7 @@
           "shape": [
             3,
             3,
-            528,
+            384,
             1
           ],
           "dtype": "float32"
@@ -8573,28 +7895,28 @@
         {
           "name": "block_8_depthwise_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_depthwise_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_depthwise_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_depthwise_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8603,36 +7925,36 @@
           "shape": [
             1,
             1,
-            88,
-            528
+            64,
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_expand_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_expand_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_expand_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_expand_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8641,36 +7963,36 @@
           "shape": [
             1,
             1,
-            528,
-            88
+            384,
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_project_BN/gamma",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_project_BN/beta",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_project_BN/moving_mean",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_8_project_BN/moving_variance",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
@@ -8679,7 +8001,7 @@
           "shape": [
             3,
             3,
-            528,
+            384,
             1
           ],
           "dtype": "float32"
@@ -8687,28 +8009,28 @@
         {
           "name": "block_9_depthwise_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_depthwise_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_depthwise_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_depthwise_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8717,36 +8039,36 @@
           "shape": [
             1,
             1,
-            88,
-            528
+            64,
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_expand_BN/gamma",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_expand_BN/beta",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_expand_BN/moving_mean",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_expand_BN/moving_variance",
           "shape": [
-            528
+            384
           ],
           "dtype": "float32"
         },
@@ -8755,64 +8077,64 @@
           "shape": [
             1,
             1,
-            528,
-            88
+            384,
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_project_BN/gamma",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_project_BN/beta",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_project_BN/moving_mean",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "block_9_project_BN/moving_variance",
           "shape": [
-            88
+            64
           ],
           "dtype": "float32"
         },
         {
           "name": "bn_Conv1/gamma",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "bn_Conv1/beta",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "bn_Conv1/moving_mean",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "bn_Conv1/moving_variance",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -8821,7 +8143,7 @@
           "shape": [
             3,
             3,
-            48,
+            32,
             1
           ],
           "dtype": "float32"
@@ -8829,28 +8151,28 @@
         {
           "name": "expanded_conv_depthwise_BN/gamma",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_depthwise_BN/beta",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_depthwise_BN/moving_mean",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_depthwise_BN/moving_variance",
           "shape": [
-            48
+            32
           ],
           "dtype": "float32"
         },
@@ -8859,36 +8181,36 @@
           "shape": [
             1,
             1,
-            48,
-            24
+            32,
+            16
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_project_BN/gamma",
           "shape": [
-            24
+            16
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_project_BN/beta",
           "shape": [
-            24
+            16
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_project_BN/moving_mean",
           "shape": [
-            24
+            16
           ],
           "dtype": "float32"
         },
         {
           "name": "expanded_conv_project_BN/moving_variance",
           "shape": [
-            24
+            16
           ],
           "dtype": "float32"
         }
