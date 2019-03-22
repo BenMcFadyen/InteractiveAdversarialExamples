@@ -84,8 +84,11 @@ export class SelectionComponent implements OnInit
 
   		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
 
-	    dialogRef.afterClosed().subscribe(
-	        data => console.log("Dialog output:", data)
+	    dialogRef.beforeClose().subscribe(data => console.log("Dialog output:", data)
+
+	    	
+
+	    	
 	    );  	    
 	} 
 

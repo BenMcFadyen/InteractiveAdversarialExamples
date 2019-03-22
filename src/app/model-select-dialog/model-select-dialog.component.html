@@ -11,10 +11,11 @@
 
 <div class = "modelTable">
 
-  <table mat-table [dataSource]="myData">
+  <table mat-table [dataSource]="modelData">
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"
+       (click)= "onModelSelectChange(row)"></tr>
 
       <!-- name -->
       <ng-container matColumnDef="name">
@@ -48,9 +49,13 @@
 
       <!-- requestLoad -->
       <ng-container matColumnDef="requestLoad">
-        <th mat-header-cell *matHeaderCellDef> Load? </th>
-        <td mat-cell *matCellDef="let model"> 
-          <mat-checkbox [(ngModel)]="model.requestLoad" (change)="onModelSelectChange()" > </mat-checkbox> </td>
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let model">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="onModelSelectChange(model)"
+                        [checked]="model.requestLoad">
+          </mat-checkbox>
+        </td>
       </ng-container>
 
   </table>

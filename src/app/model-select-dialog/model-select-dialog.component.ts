@@ -12,7 +12,7 @@ export class ModelSelectDialogComponent implements OnInit
 	columnsToDisplay = ['name', 'size', 'top1', 'top5', 'parameters', 'requestLoad'];
 	totalSize = 0.0
 
-	myData = [
+	modelData = [
 	  {name: 'MobileNet',    size: 14.2,  top1: 70.4, top5: 89.5, parameters: 4253864,  requestLoad:false},
 	  {name: 'MobileNetV2',	 size: 24.5,  top1: 71.3, top5: 90.1, parameters: 3538984,  requestLoad:false},
 	  {name: 'NASNetMobile', size: 24.1,  top1: 74.4, top5: 91.9, parameters: 5326716,  requestLoad:false},	  
@@ -46,11 +46,13 @@ export class ModelSelectDialogComponent implements OnInit
 	    this.dialogRef.close('test');
 	}
 
-	onModelSelectChange()
+	onModelSelectChange(val)
 	{
+		val.requestLoad = !val.requestLoad 	
+
 		this.totalSize = 0.0
 
-		for (let model of this.myData)
+		for (let model of this.modelData)
 		{
 			if(model.requestLoad)
 				this.totalSize += model.size
