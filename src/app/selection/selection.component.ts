@@ -13,6 +13,8 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
 
 import {FormControl, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-selection',
@@ -23,18 +25,14 @@ import {FormControl, Validators} from '@angular/forms';
 export class SelectionComponent implements OnInit 
 {
 
-	adversarialModelControl = new FormControl('', [Validators.required]);
-	predictionModelsControl = new FormControl('', [Validators.required]);
-	attackMethodControl = new FormControl('', [Validators.required]);
-	targetClassControl = new FormControl('', [Validators.required]);
+	adversarialModel = new FormControl('', [Validators.required]);
+	predictionModels = new FormControl('', [Validators.required]);
+	attackMethod = new FormControl('', [Validators.required]);
+	targetClass = new FormControl('', [Validators.required]);
 
 	imgURL: string = 'assets/images/lion.jpg'
-	epsilon: number = 5
-	selectedPredictionModel: string = 'MobileNet'
-	selectedAdversarialPredictionModel: string = 'MobileNet'
-	selectedAttackMethod: string = 'T-FGSM'
 
-	targetClass: string = 'hen'
+	epsilon: number = 5
 
 	targetClassPredDisplay: string
 
@@ -43,7 +41,8 @@ export class SelectionComponent implements OnInit
 	numBytes:number
 	numTensors:number
 
-	imageNet: string[]
+	imageNetClasses: string[]
+	filteredImageNetClasses: Observable<string[]>;	
 
 	canvasSize:number = 350
 	differenceCanvasSize:number = 224
@@ -51,7 +50,7 @@ export class SelectionComponent implements OnInit
 
 	adversarialImageGenerated: boolean
 
-	attackMethods: string[] = 
+	availableAttackMethods: string[] = 
 	[
 		'FGSM',
 		'T-FGSM'
@@ -84,8 +83,6 @@ export class SelectionComponent implements OnInit
 
 	    dialogConfig.data = this.modelService.allModelStats
 	  
-
-
   		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
 
 	    dialogRef.afterClosed().subscribe(modelsLoaded => 
@@ -102,7 +99,17 @@ export class SelectionComponent implements OnInit
 
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
+
+		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
 	}
+
+
+	private _filter(value: string): string[] 
+	{
+		return this.imageNetClasses.filter(imageNetClass => imageNetClass.toLowerCase().includes(value.toLowerCase()));
+	}	
+
+
 
 	/** TODO: Rename **/
 	getPrediction(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3)
@@ -223,7 +230,9 @@ export class SelectionComponent implements OnInit
 	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
 	onPredictButtonClick()
 	{	
-		this.predict()
+		//this.predict()
+
+		console.log(this.attackMethodControl.value)
 	}
 
 	/** TODO */
@@ -318,7 +327,7 @@ export class SelectionComponent implements OnInit
 
 	async onRandomClick()
 	{
-		this.targetClass = this.selectRandomImageNetClass()
+		this.targetClass.setValue(this.selectRandomImageNetClass())
 
 		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
 		this.imgService.resetCanvas(this.canvasAdversarial)
@@ -355,8 +364,8 @@ export class SelectionComponent implements OnInit
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */
 	createImageNetArray()
 	{
-		this.imageNet = new Array()
+		this.imageNetClasses = new Array()
 		for(var i = 0; i < 1000; i++)
-			this.imageNet.push(IMAGENET_CLASSES[i])
+			this.imageNetClasses.push(IMAGENET_CLASSES[i])
 	}	
 }

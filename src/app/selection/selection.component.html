@@ -19,69 +19,66 @@
 
 		<mat-form-field>
 			<mat-label>Adversarial Model</mat-label>
-				<mat-select [formControl]="adversarialModelControl" required>
-					<mat-option>--</mat-option>
-						<mat-option *ngFor="let model of loadedModels" [value]="model">
-							{{model}}
-						</mat-option>
-					</mat-select>
-				<mat-error *ngIf="adversarialModelControl.hasError('required')">Please select an adversarial model</mat-error>
-			<mat-hint>{{adversarialModelControl.value?.sound}}</mat-hint>
+			<mat-select [formControl]="adversarialModel" required [disabled]="loadedModels.length==0">
+				<mat-option *ngFor="let model of loadedModels" [value]="model">
+					{{model}}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="adversarialModel.hasError('required')"> Please select an adversarial model </mat-error>
 		</mat-form-field>
 
-		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onPredictButtonClick()"> 
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onGenerateButtonClick()">  
 	  	Generate
 		</button>	  		
 
 		<mat-form-field>
 			<mat-label>Prediction Model(s)</mat-label>
-				<mat-select [formControl]="predictionModelsControl" required multiple>
-				    <mat-select-trigger>
-				      {{predictionModelsControl.value ? predictionModelsControl.value[0] : ''}}
-				      <span *ngIf="predictionModelsControl.value?.length > 1" class="example-additional-selection">
-				        (+{{predictionModelsControl.value.length - 1}} {{predictionModelsControl.value?.length === 2 ? 'other' : 'others'}})
-				      </span>
-				    </mat-select-trigger>					
-					<mat-option>--</mat-option>
-						<mat-option *ngFor="let model of loadedModels" [value]="model">
-							{{model}}
-						</mat-option>
-					</mat-select>
-				<mat-error *ngIf="predictionModelsControl.hasError('required')">Please select a prediction model</mat-error>
-			<mat-hint>{{predictionModelsControl.value?.sound}}</mat-hint>
+			<mat-select [formControl]="predictionModels" required multiple [disabled]="loadedModels.length==0">
+		    <mat-select-trigger>
+		      {{predictionModels.value ? predictionModels.value[0] : ''}}
+		      <span *ngIf="predictionModels.value?.length > 1" class="example-additional-selection">
+		        (+{{predictionModels.value.length - 1}} {{predictionModels.value?.length === 2 ? 'other' : 'others'}})
+		      </span>
+		    </mat-select-trigger>
+
+				<mat-option *ngFor="let model of loadedModels" [value]="model">
+					{{model}}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="predictionModels.hasError('required')">Please select a prediction model</mat-error>
 		</mat-form-field>
 
-		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0"(click)="onGenerateButtonClick()"> 
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onPredictButtonClick()"> 
 			Predict
 		</button>
 
 		<mat-form-field>
 			<mat-label>Attack Method</mat-label>
-				<mat-select [formControl]="attackMethodControl" required>
-					<mat-option>--</mat-option>
-						<mat-option *ngFor="let attackMethod of attackMethods" [value]="attackMethod">
-							{{attackMethod}}
-						</mat-option>
-					</mat-select>
-				<mat-error *ngIf="attackMethodControl.hasError('required')">Please select an attack method </mat-error>
-			<mat-hint>{{attackMethodControl.value?.sound}}</mat-hint>
+			<mat-select [formControl]="attackMethod" required>
+				<mat-option *ngFor="let attackMethod of availableAttackMethods" [value]="attackMethod">
+					{{attackMethod}}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="attackMethod.hasError('required')">Please select an attack method </mat-error>
 		</mat-form-field>
 
-		<mat-form-field>
-			<mat-label>Target Class</mat-label>
-				<mat-select [(value)]="targetClass" [formControl]="targetClassControl" required>
-					<mat-option>--</mat-option>
-						<mat-option *ngFor="let targetClass of imageNet" [(value)]="targetClass">
-							{{targetClass}}
-						</mat-option>
-					</mat-select>
-				<mat-error *ngIf="targetClassControl.hasError('required')">Please select a target class </mat-error>
-			<mat-hint>{{targetClassControl.value?.sound}}</mat-hint>
-		</mat-form-field>			
+		<!-- Hide this if T-FGSM is not selected -->
+		<div class ="TFGSM" *ngIf="attackMethod.value=='T-FGSM'">
+			<mat-form-field>
+				<mat-label>Target Class</mat-label>			
+		  	<input type="text" matInput [formControl]="targetClass" [matAutocomplete]="auto">
+					<mat-autocomplete #auto="matAutocomplete">
+	      		<mat-option *ngFor="let option of filteredImageNetClasses | async" [value]="option">
+	        		{{option}}
+	      		</mat-option>
+					</mat-autocomplete>		 
+					<mat-error *ngIf="targetClass.hasError('required')"> Please select a target class </mat-error>
+			</mat-form-field>
 
-		<button mat-raised-button color="accent" (click)="onRandomClick()"> 
-	  	Random
-		</button>	  				
+			<button mat-raised-button color="accent" (click)="onRandomClick()"> 
+		  	Random
+			</button>	  	
+		</div>			
 
 
 		<p> Epsilon: {{epsilon}} </p>
@@ -91,8 +88,7 @@
 			min="0" 
 			max="250"
 			(change)="onEpsilonChange()">
-		</mat-slider>
-
+		</mat-slider>		
 
 
 		<button mat-raised-button (click)="openModelSelectDialog()"> Open Model Selection</button>
@@ -101,9 +97,7 @@
 			<p> Tensors: {{numTensors}} </p>
 			<p> Memory Allocated: {{numBytes}} (MB) </p>
 		</div>
-
-
-
+		
 	</div>
 </body>
 </html>
