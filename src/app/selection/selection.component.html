@@ -7,11 +7,11 @@
 
 			<!-- <input type='file' (change)="onSelectFile($event)"> -->
 
-			<button mat-raised-button color="basic" (click)="onUploadFileButtonPress()" (change)="onSelectFile($event)"> 
+			<button mat-raised-button color="basic" (click)="onUploadFileButtonClick()" (change)="onSelectFile($event)"> 
 		  		Upload
 			</button>	  		
 
-			<button mat-raised-button color="primary" (click)="onSelectFileButtonPress()" (change)="onSelectFile($event)"> 
+			<button mat-raised-button color="primary" (click)="onSelectFileButtonClick()" (change)="onSelectFile($event)"> 
 		  		Select
 			</button>	  		
 
@@ -27,7 +27,9 @@
 			<mat-error *ngIf="adversarialModel.hasError('required')"> Please select an adversarial model </mat-error>
 		</mat-form-field>
 
-		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onGenerateButtonClick()">  
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+																						(attackMethod.value=='T-FGSM' && !targetClass.valid)" 
+																						(click)="onGenerateButtonClick()">  
 	  	Generate
 		</button>	  		
 
@@ -48,7 +50,8 @@
 			<mat-error *ngIf="predictionModels.hasError('required')">Please select a prediction model</mat-error>
 		</mat-form-field>
 
-		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0" (click)="onPredictButtonClick()"> 
+		<button mat-raised-button color="basic" [disabled]="loadedModels.length==0 || predictionModels.invalid" 
+																						(click)="onPredictButtonClick()"> 
 			Predict
 		</button>
 
@@ -75,7 +78,7 @@
 					<mat-error *ngIf="targetClass.hasError('required')"> Please select a target class </mat-error>
 			</mat-form-field>
 
-			<button mat-raised-button color="accent" (click)="onRandomClick()"> 
+			<button mat-raised-button color="accent" (click)="onRandomButtonClick()"> 
 		  	Random
 			</button>	  	
 		</div>			
@@ -87,7 +90,9 @@
 			thumbLabel 
 			min="0" 
 			max="250"
-			(change)="onEpsilonChange()">
+			(change)="onEpsilonChange()"
+			[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+																						(attackMethod.value=='T-FGSM' && !targetClass.valid)" >
 		</mat-slider>		
 
 
@@ -97,7 +102,7 @@
 			<p> Tensors: {{numTensors}} </p>
 			<p> Memory Allocated: {{numBytes}} (MB) </p>
 		</div>
-		
+
 	</div>
 </body>
 </html>

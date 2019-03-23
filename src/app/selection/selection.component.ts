@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
+import { MatDialog, MatDialogConfig } from "@angular/material";
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
+import { TransferService } from '../transfer.service';
+import { IMAGENET_CLASSES } from '../ImageNetClasses';
+import { ModelPrediction } from '../ModelPrediction';
 import { ModelService } from '../model.service';
 import { ImageService } from '../image.service';
 import { AdvService } from '../adv.service';
-import { TransferService } from '../transfer.service';
-import { ModelData } from '../ModelData';
-import * as tf from '@tensorflow/tfjs';
-import {IMAGENET_CLASSES} from '../ImageNetClasses';
-import { ModelPrediction } from '../ModelPrediction';
 import { Prediction } from '../Prediction';
+import { ModelData } from '../ModelData';
 
-import { MatDialog, MatDialogConfig } from "@angular/material";
-import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
+import * as tf from '@tensorflow/tfjs';
 
-import {FormControl, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-selection',
@@ -24,43 +25,37 @@ import {map, startWith} from 'rxjs/operators';
 
 export class SelectionComponent implements OnInit 
 {
+	private adversarialModel = new FormControl('', [Validators.required]);
+	private predictionModels = new FormControl('', [Validators.required]);
+	private attackMethod = new FormControl('', [Validators.required]);
+	private targetClass = new FormControl('', [Validators.required]);
 
-	adversarialModel = new FormControl('', [Validators.required]);
-	predictionModels = new FormControl('', [Validators.required]);
-	attackMethod = new FormControl('', [Validators.required]);
-	targetClass = new FormControl('', [Validators.required]);
+	private imgURL: string = 'assets/images/lion.jpg'
+	private epsilon: number = 5
+	private numBytes:number
+	private numTensors:number
 
-	imgURL: string = 'assets/images/lion.jpg'
+	private topPrediction:string
+	private targetClassPredDisplay: string
 
-	epsilon: number = 5
+	private imageNetClasses: string[]
+	private filteredImageNetClasses: Observable<string[]>;	
 
-	targetClassPredDisplay: string
+	readonly canvasSize:number = 350
+	readonly differenceCanvasSize:number = 224
+	readonly topX = 3
 
-	topPrediction:string
-
-	numBytes:number
-	numTensors:number
-
-	imageNetClasses: string[]
-	filteredImageNetClasses: Observable<string[]>;	
-
-	canvasSize:number = 350
-	differenceCanvasSize:number = 224
-	topX = 3
-
-	adversarialImageGenerated: boolean
-
-	availableAttackMethods: string[] = 
+	private availableAttackMethods: string[] = 
 	[
 		'FGSM',
 		'T-FGSM'
 	]
 
-	loadedModels: string[] = []
+	private loadedModels: string[] = []
 
-	canvasOriginal:string = 'canvasOriginal'
-	canvasDifference:string = 'canvasDifference'		
-	canvasAdversarial:string = 'canvasAdversarial'
+	private canvasOriginal:string = 'canvasOriginal'
+	private canvasDifference:string = 'canvasDifference'		
+	private canvasAdversarial:string = 'canvasAdversarial'
 
   	constructor(private modelService: ModelService,
 		  		private imgService: ImageService,
@@ -71,8 +66,18 @@ export class SelectionComponent implements OnInit
 
 	}
 
+	ngOnInit() 
+	{
+		this.createImageNetArray()
 
-	openModelSelectDialog()
+		/** Updates the tf memory stats once every second */
+		setInterval(()=> { this.updateMemory() }, 1 * 1000);
+
+		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
+	}
+
+	/** Opens a dialog where the user can select which models they would like to load */
+	private openModelSelectDialog()
 	{
 		const dialogConfig = new MatDialogConfig();
 
@@ -91,28 +96,48 @@ export class SelectionComponent implements OnInit
     			this.loadedModels = modelsLoaded
     	});  	 
 
-	} 
+	} 	
 
-	ngOnInit() 
+
+	/** Predict the original image using the model(s) which have been selected by the user
+	* 	Also predict the adversarial image if this has been drawn to the canvas
+	*	Sends prediction results to be displayed by the Display component.
+	*/
+	private predictAllSelectedModels()
 	{
-		this.createImageNetArray()
+		let canvasSize = this.canvasSize
 
-		/** Updates the tf memory stats once every second */
-		setInterval(()=> { this.updateMemory() }, 1 * 1000);
+		this.validatePrediction()
 
-		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
+		// Get the modelObjects of all the models selected by the user
+		var allPredictionModelObjects = this.modelService.getModelDataObjectsFromNames(this.predictionModels.value)
+
+		// get the predictions of the original image, for all selected models
+		let allModelOriginalPredictions = this.getAllPredictions(allPredictionModelObjects, this.canvasOriginal, this.topX) 
+
+		// initialise the array to null, to allow original predictions to be passed without displaying adversarial (if canvas is blank)
+		let allModelAdversarialPredictions: Prediction[][] = new Array(allPredictionModelObjects.length).fill(null);
+
+		// Set the adversarial predictions, again if an adversarial image is drawn (the canvas isn't blank)
+		if(!this.isAdversarialCanvasBlank())
+			allModelAdversarialPredictions = this.getAllPredictions(allPredictionModelObjects, this.canvasAdversarial, this.topX) 
+	
+
+		for(let i= 0; i < allPredictionModelObjects.length; i++)
+		{
+			// Send all original (and adversarial if wanted) to be displayed
+			// Also provide the targetClassPredDisplay, to be used to colour the predictions properly
+			this.transferService.addNewModelPrediction(new ModelPrediction(	allPredictionModelObjects[i].name,  
+																			allModelOriginalPredictions[i],
+																			null, // Predictions on the difference/perturbation go here
+																			allModelAdversarialPredictions[i],
+																			this.targetClassPredDisplay
+																			), false) //false = (do not override the predictions)
+		}
 	}
 
-
-	private _filter(value: string): string[] 
-	{
-		return this.imageNetClasses.filter(imageNetClass => imageNetClass.toLowerCase().includes(value.toLowerCase()));
-	}	
-
-
-
-	/** TODO: Rename **/
-	getPrediction(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3)
+	/** Gets [topX] predictions of the given [modelObject], for the image within [canvas], logs time taken to console */
+	private getPredictions(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3) : Prediction[]
 	{
 		let t0 = performance.now();
 
@@ -125,65 +150,35 @@ export class SelectionComponent implements OnInit
 		return predictions
 	}
 
-	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
-	predict(wantAdversarialPrediction:boolean = true)
+	/** Gets [topX] predictions of the given [modelObjects], for the image within [canvas], logs time taken to console */
+	private getAllPredictions(modelObjects:ModelData[], canvas:string | HTMLCanvasElement, topX:number = 3) : Prediction[][]
 	{
-		let canvasSize = 500
+		let allPredictions:Prediction[][] = []
 
-		this.validateSelectedParameters(false) //adversarial model is not required to be selected at this point
-		var selectedOriginalPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedPredictionModel)
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)
-
-		// get the predictions from the original canvas
-		let originalPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasOriginal, this.topX)
-		// update the prediction variables, for use within the display component
-		//this.transferService.setOriginalPredictions(originalPredictions)		
-
-		// get the top prediction, for use as the target class for FGSM
-		this.topPrediction = originalPredictions[0].className		
-
-		// return here if generation has not yet been done or is not wanted
-		if(!this.adversarialImageGenerated || !wantAdversarialPrediction)
+		for(let modelObject of modelObjects)
 		{
-			this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, null), false)
+			allPredictions.push(this.getPredictions(modelObject, canvas, topX))
+		}
+
+		return allPredictions
+	}	
+
+	/** Generates an adversarial image as per the selected parameters*/
+	private async executeAttackMethod()
+	{
+		this.validateGeneration()
+		var adversarialPredictionModelObject = this.modelService.getModelDataObjectFromName(this.adversarialModel.value)
+
+		return await this.generateAndDrawAdversarialImage(adversarialPredictionModelObject, this.attackMethod.value, this.canvasOriginal, this.canvasAdversarial, this.topPrediction).then(()=>
+		{
+			// set the model name (to be displayed next to the adversarial image)
+			this.transferService.setAdversarialImageModelName('('+ adversarialPredictionModelObject.name + ')')
 			return
-		}
-		
-		// get the predictions from the (newly drawn) adversarial canvas
-		let adversarialPredictions = this.getPrediction(selectedOriginalPredictionModelObject, this.canvasAdversarial, this.topX)
-	
-		let override = false;
-		//set the model prediction for display within the display componenet
-		this.transferService.addNewModelPrediction(new ModelPrediction(selectedOriginalPredictionModelObject.name,  originalPredictions, null, adversarialPredictions, this.targetClassPredDisplay), override)
-	}
+		})
+	}	
 
-
-	/** TODO: Rename? **/
-	async executeAttackMethod()
-	{
-		this.validateSelectedParameters(false)
-
-		var selectedAdvPredictionModelObject = this.modelService.getModelDataObjectFromName(this.selectedAdversarialPredictionModel)
-
-
-		if(this.selectedAttackMethod == 'FGSM' && this.topPrediction == null)
-		{
-			console.log('FGSM Selected, but no prediction, making prediction')
-			this.predict(false)
-
-		}
-
-
-		await this.generateAndDrawAdversarialImage(selectedAdvPredictionModelObject, this.selectedAttackMethod, this.canvasOriginal, this.canvasAdversarial, this.topPrediction)
-
-		this.adversarialImageGenerated = true;
-		this.transferService.setAdversarialImageModelName('('+ selectedAdvPredictionModelObject.name + ')')
-		return
-	}
-
-
-	/** generate an adversarial example using the given model and attack method, for the given source canvas, then draw it to the given target canvas */
-	async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
+	/** Generate an adversarial image using the given model and attack method, for the given source canvas, then draw it to the given target canvas */
+	private async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
 	{
 		let t0 = performance.now()
 
@@ -202,8 +197,8 @@ export class SelectionComponent implements OnInit
 				break;
 
 			case 'T-FGSM':
-				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass, img3, img4, this.epsilon);
-				this.targetClassPredDisplay = this.targetClass // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
+				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon);
+				this.targetClassPredDisplay = this.targetClass.value // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
 				break;
 		}
 
@@ -221,78 +216,111 @@ export class SelectionComponent implements OnInit
 		})
 	}	
 
-
-
-
-
-
-
-	/** Predict the source image using the selected model, if adv model is also selected, predict this too. */
-	onPredictButtonClick()
+	private onPredictButtonClick()
 	{	
-		//this.predict()
-
-		console.log(this.attackMethodControl.value)
+		this.predictAllSelectedModels()
 	}
 
-	/** TODO */
-	async onGenerateButtonClick()	
+	//** Generate adversarial image, but don't predict*/
+	private async onGenerateButtonClick()	
 	{
-		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
+		this.resetCanvasAndClearPredictions()
+
+		await this.executeAttackMethod()
+		//this.predictAllSelectedModels() //TODO: Should prediction happen here? any reason not too?
+	}
+
+	//** Set a random target class, calls attack/predict method after*/
+	private async onRandomButtonClick()
+	{
+		this.targetClass.setValue(this.selectRandomImageNetClass())
+
+		this.resetCanvasAndClearPredictions()
+
+		await this.executeAttackMethod()
+		this.predictAllSelectedModels()
+	}
+
+	//** Set a random target class, calls attack/predict method after*/
+	private async onEpsilonChange()
+	{
+		this.resetCanvasAndClearPredictions()
+
+		await this.executeAttackMethod()
+		this.predictAllSelectedModels()
+	}	
+
+	private onUploadFileButtonClick()
+	{
+
+	}
+
+	private onSelectFileButtonClick()
+	{
+
+	}
+
+
+
+	/** Reset the adversarial and differnce/perturbation canvas' and clears any predictions */
+	private resetCanvasAndClearPredictions()
+	{
 		this.imgService.resetCanvas(this.canvasAdversarial)
 		this.imgService.resetCanvas(this.canvasDifference)
 
-		this.clearPredictions()
-		this.executeAttackMethod()
-	}
-
-
-	/** Manually clear (and hide) any set predictions */
-	clearPredictions()
-	{
+		// This lets the display componenet that predictions should be cleared
 		this.transferService.addNewModelPrediction(null, true)
 		this.topPrediction = null
 	}
 
+	/** Validate that the parameters required for prediction are set 
+	* 	Also handled by the client side HTML disable validation
+	*/
+	private validatePrediction()
+	{
+		if(this.predictionModels.invalid)
+			throw 'no valid prediction model(s) selected'
+	}
 
-	/** ensure the parameters required for execution are set*/
-	validateSelectedParameters(checkAdversarialModel:boolean = true)
+	/** Validate that the parameters required for adversarial image generation are set 
+	* 	Also handled by the client side HTML disable validation
+	*/
+	private validateGeneration()
 	{
 		if(this.imgURL == null)
-			throw 'Could not predict: no image selected'
+			throw 'no valid image source found'
 
-		if(this.selectedPredictionModel == null)
-			throw 'Could not predict: no model selected'
+		if(this.adversarialModel.invalid) 
+			throw 'no adversarial model selected'
 
-		if(this.selectedAdversarialPredictionModel == null && checkAdversarialModel) 
-			throw 'Could not predict: no adversarial model selected'
+	    if(this.attackMethod.invalid)
+	    	throw 'no attack method selected'
 
-	    if(!this.attackMethods.includes(this.selectedAttackMethod))
-	    	throw 'Could not predict: Attack method ' + this.selectedAttackMethod + ' is not valid'
-
-		if(this.selectedAttackMethod == 'T-FGSM' && this.targetClass==null)
+		if(this.attackMethod.value == 'T-FGSM' && this.targetClass == null)
 		{
-			this.targetClass = this.selectRandomImageNetClass()
+			this.targetClass.value.set(this.selectRandomImageNetClass())
 			console.log('T-FGSM selected, but no target class was selected, random class selected.')
 		}		    
-	}
 
-	/** Log the time taken to perform complete a given action */
-	logTime(t0:number, t1:number, message: string)
-	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
-	}
+		/* For FGSM, the top prediction of the adversarial model on the original image is needed 
+		* As it is possible for the user to select:
+		*	 Adversarial model: A,
+		*	 Prediction models: B & C
+		* The below ensures that the top1 prediction of Model A is used for FGSM
+		*/
+		if(this.attackMethod.value == 'FGSM' && this.topPrediction == null)
+		{
+			console.log('FGSM selected, but no prediction, making prediction with model: ' + this.adversarialModel.value)
+			let adversarialModelObject = this.modelService.getModelDataObjectFromName(this.adversarialModel.value)
+			let predictions = this.getPredictions(adversarialModelObject, this.canvasOriginal, 1)
+			this.topPrediction = predictions[0].className
+		}		
+	}	
+ 
 
-	/** Updates the memory variables provided by tf.memory() */
-	updateMemory()
-	{
-		let mem = tf.memory()
-		this.numBytes = Math.round((mem.numBytes / 1000000))
-		this.numTensors = mem.numTensors
-	}
 
-	/** Called when the user selects an img file */
-	onSelectFile(event) 
+	/** Called when the user selects an img file when uploading */
+	private onSelectUploadFile(event) 
 	{ 	
 	    const file = event.target.files[0]
 		
@@ -307,65 +335,69 @@ export class SelectionComponent implements OnInit
 			reader.onload = (event:any) => {this.imgURL = event.target.result;}
 		}
 	}
-
-	onAttackMethodChange()
-	{
-	
-	}
-
-	async onEpsilonChange()
-	{
-
-		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
-		this.imgService.resetCanvas(this.canvasAdversarial)
-		this.imgService.resetCanvas(this.canvasDifference)
-		this.clearPredictions()
-
-		// await this.executeAttackMethod()
-		// this.predict()
-	}
-
-	async onRandomClick()
-	{
-		this.targetClass.setValue(this.selectRandomImageNetClass())
-
-		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
-		this.imgService.resetCanvas(this.canvasAdversarial)
-		this.imgService.resetCanvas(this.canvasDifference)
-		this.clearPredictions()
-
-		// await this.executeAttackMethod()
-		// this.predict()		
-	}
-
-	selectRandomImageNetClass()
-	{
-		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
-		return IMAGENET_CLASSES[randomNumber] 
-	}
 	
 	/** Called when an img is loaded (user selection/on initial load)
 	*   Draws the image to canvas' */
-	onIMGLoad()
+	private onIMGLoad()
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
 		this.imgService.drawImageToCanvas(img, this.canvasOriginal, this.canvasSize, this.canvasSize)
 
-		// reset the adversarial canvas and the clear any predictions that were set (as we have a new image)
-		this.imgService.resetCanvas(this.canvasAdversarial)
-		this.imgService.resetCanvas(this.canvasDifference)
-		this.clearPredictions()
+		this.resetCanvasAndClearPredictions()
+	}
 
-		//this.imgService.drawImageToCanvas(img, 'canvasDifference', this.differenceCanvasSize, this.differenceCanvasSize)
-		//this.imgService.drawImageToCanvas(img, 'canvasAdversarial', this.canvasSize, this.canvasSize)
+
+
+	/** Returns true if the adversarial canvas is blank */
+	private isAdversarialCanvasBlank()
+	{
+		let canvas = <HTMLCanvasElement> document.getElementById(this.canvasAdversarial)
+		return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
+	}	
+
+
+
+	/** Used to filter the imageNetClasses for autocompletion*/
+	private _filter(value: string): string[] 
+	{
+		return this.imageNetClasses.filter(imageNetClass => imageNetClass.toLowerCase().includes(value.toLowerCase()));
+	}	
+
+	/** Selects a random class from the imagenet array: */
+	private selectRandomImageNetClass()
+	{
+		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
+		return this.imageNetClasses[randomNumber] 
 	}
 
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */
-	createImageNetArray()
+	private createImageNetArray()
 	{
 		this.imageNetClasses = new Array()
 		for(var i = 0; i < 1000; i++)
 			this.imageNetClasses.push(IMAGENET_CLASSES[i])
 	}	
+
+
+
+	/** Log the time taken to perform complete a given action */
+	private logTime(t0:number, t1:number, message: string)
+	{
+		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
+	}
+
+
+
+	/** Updates the memory variables provided by tf.memory() */
+	private updateMemory()
+	{
+		let mem = tf.memory()
+		this.numBytes = Math.round((mem.numBytes / 1000000))
+		this.numTensors = mem.numTensors
+	}	
+
+
+
+//
 }
