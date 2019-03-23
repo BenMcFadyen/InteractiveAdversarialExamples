@@ -1,76 +1,64 @@
-html, body {
-    border-style: solid;
+html, body
+{
    border-color: blue;
+   border-style: solid;
 }
 
 .container
 {
-	display: inline;
+	display: flex;
+	flex-direction:column;
+	justify-content:space-around;
+}
+
+.image
+{
+	display: flex;
+	align-items:center;
+	justify-content:center;
 }
 
 
-.mat-form-field
+.fileSelection
 {
-	margin-top:25px;	
-	margin-left:25px;
-	width:80%
-}
+	display: flex;
+	align-items:center;
+	justify-content:space-evenly;
 
-img
-{
-	margin-top:25px;
-}
-
-
-p
-{
-	font-size: 32px;
+	button
+	{
+		margin:10px;
+		width:10em;
+	}
 }
 
 
-.fileSelection > *
+
+.buttonLayout
 {
-	font-size: 28px;
-	margin-left: 20px;
-}
+	display: flex;
+	align-items:baseline;
+	justify-content:space-between;
+	margin-top:15px;
 
-.modelSelection > *
-{
-	margin-top: 50px;
-	font-size: 28px;
-	margin-left: 20px;
-	display:inline;
+	.mat-form-field
+	{
+		flex-grow:1;
+		margin-right:15px;
+	
+	}
 
-}
-
-.attackMethodSelection > *
-{
-	margin-top: 50px;
-	font-size: 28px;
-	margin-left: 20px;
-	display:inline;
-
-}
-
-.epsilonSelection > *
-{
-	font-size: 28px;
-	margin-left: 20px;	
-	margin-top:30px;
-	display:inline;
-}
-
-.epsilonInput
-{
-	width:100px;
+	button
+	{
+		margin-left:auto;
+		width:7em
+	}
 }
 
 
-.imageNetClassSelection > *
+.modelSelection
 {
-	margin-top: 50px;
-	font-size: 28px;
-	margin-left: 20px;
-	width:300px;
-	margin-top:50px;
+	margin-top:20px;
+	height:2em;
+	font-size: 1em;
 }

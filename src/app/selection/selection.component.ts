@@ -244,21 +244,38 @@ export class SelectionComponent implements OnInit
 	//** Set a random target class, calls attack/predict method after*/
 	private async onEpsilonChange()
 	{
+		// only update if an adversarial image is drawn
+		if(this.isAdversarialCanvasBlank())
+			return
+
 		this.resetCanvasAndClearPredictions()
 
 		await this.executeAttackMethod()
 		this.predictAllSelectedModels()
 	}	
 
-	private onUploadFileButtonClick()
-	{
-
-	}
 
 	private onSelectFileButtonClick()
 	{
 
 	}
+
+	/** Called when the user selects an img file */
+	private onSelectFile(event) 
+	{ 	
+	    const file = event.target.files[0]
+		
+		if (event.target.files && event.target.files[0]) 
+		{
+   			const file = event.target.files[0]
+
+			var reader = new FileReader()
+			reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+			// called once readAsDataURL is completed
+			reader.onload = (event:any) => {this.imgURL = event.target.result;}
+		}
+	}	
 
 
 
@@ -317,24 +334,6 @@ export class SelectionComponent implements OnInit
 		}		
 	}	
  
-
-
-	/** Called when the user selects an img file when uploading */
-	private onSelectUploadFile(event) 
-	{ 	
-	    const file = event.target.files[0]
-		
-		if (event.target.files && event.target.files[0]) 
-		{
-   			const file = event.target.files[0]
-
-			var reader = new FileReader()
-			reader.readAsDataURL(event.target.files[0]); // read file as data url
-
-			// called once readAsDataURL is completed
-			reader.onload = (event:any) => {this.imgURL = event.target.result;}
-		}
-	}
 	
 	/** Called when an img is loaded (user selection/on initial load)
 	*   Draws the image to canvas' */
