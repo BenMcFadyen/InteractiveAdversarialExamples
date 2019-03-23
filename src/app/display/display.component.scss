@@ -1,7 +1,7 @@
 html, body 
 {
-    border-style: solid;
-    border-color: red;
+    // border-style: solid;
+    // border-color: red;
 
 	p
 	{
@@ -9,6 +9,14 @@ html, body
 		font-weight: bold;
 	}
 }
+
+.mat-divider
+{
+	margin-top:20px;
+	border-top-width:2px;
+}  
+
+
 
 
 .flexContainer
@@ -25,11 +33,9 @@ html, body
 	flex-direction: row;
 	align-items: flex-start;
 	align-content: center;
-
 	justify-content: space-around;
-
-	border-style: solid;
-	border-color: purple;	
+	// border-style: solid;
+	// border-color: purple;	
 	//max-width: 80%;
 }
 
@@ -37,46 +43,22 @@ html, body
 {
 	display: flex;
 	flex-direction: row;
-	border-style: solid;
-	border-color: orange;
-  	font-size: 28px;
 }
 
 .prediction
 {
-	border-style: solid;
-	border-color: green;
-  	font-size: 28px;
   	width:50%;
-	border: 1px solid #ddd;
-	padding: 8px;  	
-  	border-collapse: collapse;
 
-
-	th
-	{
-		padding-top: 12px;
-		padding-bottom: 12px;
-		text-align: center;
-		background-color: #e0e0e0;
-		color: black;	  
-	}
+  	th
+  	{
+		font-size: 20px;
+  	}
 
 	td
 	{
-		text-align: right;
-		text-align: center;
-		border: 1px solid #ddd;
-		padding: 8px;  	
+		text-align: left;
+	  	font-size: 18px;
 
-	  //font-size: 28px;
-	}
-
-
-	// colour every nth row grey
-	tr:nth-child(even)
-	{
-		background-color: #f2f2f2;
 	}
 
 	// confidence column
@@ -86,32 +68,27 @@ html, body
 		width:20px
 	}
 
-
-
 	.red
 	{
-   		color:#ff0000;
+		color:#ff0000;
 		font-weight: bold;
-
-	}
+	}	
 
 	.orange
 	{
-   		color:#ff6a00;
+		color:#ff6a00;
 		font-weight: bold;
+
 	}
 
 	.green
-	{
-   		color:#2aaa00;
+	{	
+		color:#2aaa00;
 		font-weight: bold;
-	}		
 
+	}			 
 
 	// colour change on hover
 	//tr:hover {background-color: #ddd;}
 
 }
-
-
-

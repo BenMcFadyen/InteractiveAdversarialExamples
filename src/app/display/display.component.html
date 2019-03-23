@@ -23,54 +23,57 @@
 
 	</div>
 
-	<div class = "predictionsContainer" ng-if="!allModelPredictions">
-		<div class = "predictions" *ngFor="let modelPrediction of allModelPredictions">
-		 	<table class = "prediction original">
-				<thead>
-					<tr>
-						<th>{{ modelPrediction.modelName }}:  Class Label</th>
-						<th> Confidence </th>
-					</tr>
-				</thead>
-					<tr *ngFor="let originalPrediction of modelPrediction.originalPredictions">
-						<td>{{ originalPrediction.className }} </td>
-						<td>{{ originalPrediction.confidence }}</td>
-					</tr>					
-			</table>
+	<mat-divider></mat-divider>
 
-		 	<table class = "prediction original">
-				<thead>
-					<tr>
-						<th>{{ modelPrediction.modelName }}:  Class Label</th>
-						<th> Confidence </th>
-					</tr>
-				</thead>
-					<tr *ngFor="let adversarialPrediction of modelPrediction.adversarialPredictions">
-						<td class="{{adversarialPrediction.colour}}">{{adversarialPrediction.className }}</td>
-						<td>{{ adversarialPrediction.confidence }}</td>
-					</tr>					
-			</table>
+	<!-- TODO: ADD MODEL NAME TO HEADER -->
+
+	<!-- ng-if="!allModelPredictions"> -->
+	<div class = "predictionsContainer">
+		<div class = "predictions" *ngFor="let modelPrediction of allModelPredictions">
+
+			<table class = "prediction original" mat-table [dataSource]="modelPrediction.originalPredictions">
+		    	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"> </tr>
+		    	<tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+
+	      <!-- Class Name -->
+	      <ng-container matColumnDef="className">
+	        <th mat-header-cell *matHeaderCellDef> Class Name </th>
+	        <td mat-cell *matCellDef="let originalPrediction"> {{ originalPrediction.className }} </td>
+	      </ng-container>
+
+	      <!-- Confidence -->
+	      <ng-container matColumnDef="confidence">
+	        <th mat-header-cell *matHeaderCellDef> Confidence </th>
+	        <td mat-cell *matCellDef="let originalPrediction"> {{originalPrediction.confidence}} </td>
+	      </ng-container>
+
+		  </table>
+
+			<table class = "prediction adversarial" mat-table [dataSource]="modelPrediction.adversarialPredictions">
+		    	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"> </tr>
+		    	<tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+
+	      <!-- Class Name -->
+	      <ng-container matColumnDef="className">
+	        <th mat-header-cell *matHeaderCellDef> Class Name </th>
+	        <td mat-cell *matCellDef="let adversarialPrediction"
+	        [ngClass]="{'red':adversarialPrediction.colour == 'red',
+									    'orange':adversarialPrediction.colour == 'orange',
+									    'green':adversarialPrediction.colour == 'green'}">
+	      	{{ adversarialPrediction.className }} </td>
+	      </ng-container>
+
+	      <!-- Confidence -->
+	      <ng-container matColumnDef="confidence">
+	        <th mat-header-cell *matHeaderCellDef> Confidence </th>
+	        <td mat-cell *matCellDef="let adversarialPrediction"> {{adversarialPrediction.confidence}} </td>
+	      </ng-container>	      
+
+		  </table>
+
 		</div>
 	</div>
 
 </div>
- 
 </body>
 </html>
-
-	<!-- <div class = "difference">
-		<p> Perturbation</p>
-		<canvas id = "canvasDifference" width="299" height = "299"> </canvas>
-        <table class = "predictions differencePredictions">
-			<thead>
-				<tr>
-					<th>Class Label</th>
-					<th>Confidence</th>
-				</tr>
-			</thead>
-			<tr *ngFor="let differencePrediction of differencePredictions">
-				<td>{{ differencePrediction.className }}</td>
-				<td>{{ differencePrediction.confidence }}</td>
-			</tr>					
-		</table>
-	</div> -->
