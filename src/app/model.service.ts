@@ -66,7 +66,7 @@ export class ModelService
 
 	async loadModels(modelNames: string[])
 	{
-		let selectedModelObjects = this.getModelDataObjectFromNames(modelNames)
+		let selectedModelObjects = this.getModelDataObjectsFromNames(modelNames)
 
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	return await Promise.all(selectedModelObjects.map(async (currentModel) =>
@@ -114,13 +114,13 @@ export class ModelService
 
 	getModelDataObjectFromName(modelName:string): ModelData
 	{
-		return this.getModelDataObjectFromNames([modelName])[0]
+		return this.getModelDataObjectsFromNames([modelName])[0]
 	}
 
 	/** Take a string[] of potential model names, 
 	* compares them to models defined in allModels,
 	* returns modelObjects of found models */
-	getModelDataObjectFromNames(modelNames:string[]) : ModelData[] 
+	getModelDataObjectsFromNames(modelNames:string[]) : ModelData[] 
 	{
 		let modelObjectsToLoad:ModelData[] = new Array()
 
