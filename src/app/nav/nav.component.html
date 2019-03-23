@@ -1,11 +1,9 @@
-<header>
-  <div class="container">
-    <a routerLink="/" class="logo"> {{appTitle}} </a>
-    <nav>
-      <ul>
-        <li><a routerLink="/">Home</a></li>
-        <li><a routerLink="/about">About</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<mat-toolbar color="primary">
+  <span>{{appTitle}}</span>
+
+  <span class="example-fill-remaining-space"></span>
+
+	<button mat-flat-button focus-overlay color="primary" routerLink="/"> Home </button>	
+	<button mat-flat-button color="primary" routerLink="/about"> About </button>
+		 
+</mat-toolbar>
