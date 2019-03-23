@@ -74,6 +74,9 @@ export class SelectionComponent implements OnInit
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
 
 		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
+
+
+
 	}
 
 	/** Opens a dialog where the user can select which models they would like to load */
@@ -94,8 +97,7 @@ export class SelectionComponent implements OnInit
     	{
     		if(modelsLoaded != null)
     			this.loadedModels = modelsLoaded
-    	});  	 
-
+    	});  	
 	} 	
 
 
@@ -257,7 +259,8 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-
+		this.transferService.addNewModelPrediction(new ModelPrediction('A', [new Prediction('test1', 10), new Prediction('test1', 10), new Prediction('test1', 10)], null, [new Prediction('test3', 10), new Prediction('test3', 10), new Prediction('test3', 10)]), false)
+		this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
 	}
 
 	/** Called when the user selects an img file */
@@ -342,7 +345,6 @@ export class SelectionComponent implements OnInit
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
 		this.imgService.drawImageToCanvas(img, this.canvasOriginal, this.canvasSize, this.canvasSize)
-
 		this.resetCanvasAndClearPredictions()
 	}
 
