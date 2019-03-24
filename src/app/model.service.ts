@@ -64,6 +64,12 @@ export class ModelService
 
 	}
 
+
+	async loadModel(modelName: string)
+	{
+		return await this.loadModels([modelName])
+	}
+
 	async loadModels(modelNames: string[])
 	{
 		let selectedModelObjects = this.getModelDataObjectsFromNames(modelNames)
@@ -109,6 +115,19 @@ export class ModelService
 		{
 			throw('Error loading layersModel: ' + modelObject.name + ' : ' + e)
 		}	
+	}
+
+	/** returns true if given model name has been loaded already*/
+	hasModelBeenLoaded(modelName:string):boolean
+	{
+		let modelObject = this.getModelDataObjectFromName(modelName)
+
+		if(modelObject.loaded)
+		{	
+			return true
+		}
+
+		return false
 	}
 
 
@@ -183,7 +202,7 @@ export class ModelService
 	decodeOutput(model:ModelData, modelOutput, topX: number): Prediction[]
 	{
 		let predictions = new Array<Prediction>()
-		let modelOutputArray = Array.from(modelOutput.dataSync())
+		let modelOutputArray = Array.from(modelOutput.arraySync())
 
 		// console.log("Model Output:")
 		// console.log(modelOutputArray)
