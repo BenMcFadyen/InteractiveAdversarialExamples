@@ -22,7 +22,7 @@
 			<mat-form-field>
 				<mat-label>Adversarial Model</mat-label>
 				<mat-select [formControl]="adversarialModel" required [disabled]="loadedModels.length==0">
-					<mat-option *ngFor="let model of loadedModels" [value]="model">
+					<mat-option *ngFor="let model of loadedAdversarialModels" [value]="model">
 						{{model}}
 					</mat-option>
 				</mat-select>

@@ -52,6 +52,7 @@ export class SelectionComponent implements OnInit
 	]
 
 	private loadedModels: string[] = []
+	private loadedAdversarialModels: string[] = []
 
 	private canvasOriginal:string = 'canvasOriginal'
 	private canvasDifference:string = 'canvasDifference'		
@@ -97,7 +98,20 @@ export class SelectionComponent implements OnInit
 	    dialogRef.afterClosed().subscribe(modelsLoaded => 
     	{
     		if(modelsLoaded != null)
-    			this.loadedModels = modelsLoaded
+    		{
+    			// currently it is possible to close the dialog, then load a different model
+    			// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
+    			for(let loadedModel of modelsLoaded)
+    			{
+
+    				// only allow models flagged as ok for adversarial image generation
+    				let modelObject = this.modelService.getModelDataObjectFromName(loadedModel)
+    				if(modelObject.availableForAdversarialGeneration)
+    					this.loadedAdversarialModels.push(loadedModel)
+
+    				this.loadedModels.push(loadedModel) 
+    			}
+    		}
     	});  	
 	} 	
 
