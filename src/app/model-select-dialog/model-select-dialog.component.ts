@@ -15,7 +15,7 @@ export class ModelSelectDialogComponent implements OnInit
 	columnsToDisplay = ['name', 'size', 'top1', 'top5', 'parameters', 'requestLoad'];
 	totalSize = 0.0
 	modelsLoading = false;
-
+	modelLoadProgress = 0;
 	modelsToLoad:string[] = []
 
   	constructor(private modelService: ModelService,
@@ -31,7 +31,7 @@ export class ModelSelectDialogComponent implements OnInit
 
     }
 
-	onCancelButtonPress() 
+	onCloseButtonPress() 
 	{
 	    this.dialogRef.close();
 	}
@@ -39,20 +39,48 @@ export class ModelSelectDialogComponent implements OnInit
 
 	onLoadButtonPress() 
 	{
-		// TODO: Alert if no models selected?
-		// TODO: Prevent user clicking additional checkbox once clicked
-		// TODO: Set loaded status once loaded? -> prevent loading again??? allow us to UNLOAD?
 		// TODO: Format Model stats (commas)
 		
-		var t0 = performance.now();
-		this.modelsLoading = true;
+		let modelsLoaded = 0
+		this.modelLoadProgress = 0
 
-		this.modelService.loadModels(this.modelsToLoad).then(()=>
+		if(this.modelsToLoad.length == 0)
+			return console.error('Error: cannot load models, none selected')
+
+		for(let i = 0; i < this.modelsToLoad.length; i++)
 		{
-			this.modelsLoading = false;
-		    this.dialogRef.close(this.modelsToLoad);
-			console.log('All models finished loading')
-		})
+			if(this.modelService.hasModelBeenLoaded(this.modelsToLoad[i]))
+			{
+				console.error("Error: " + this.modelsToLoad[i] + ' has already been loaded')
+				this.modelsToLoad.splice(i,1) //remove the element from the array
+				i-- // decrement i, as we removed an element from the array we are iterating
+			}
+		}
+
+		let totalModelsToLoad = this.modelsToLoad.length
+
+		if(totalModelsToLoad == 0)
+			return console.error('Error: cannot load models, none selected')
+
+
+		var t0 = performance.now();
+		this.modelsLoading = true;		
+		
+		for(let i = 0; i < totalModelsToLoad; i++)
+		{
+			this.modelService.loadModel(this.modelsToLoad[i]).then(()=>
+			{
+				modelsLoaded++
+				this.modelLoadProgress += (100/totalModelsToLoad) 
+
+				console.log('returned')
+				if(i == totalModelsToLoad-1)
+				{
+					this.modelsLoading = false;
+			   		this.dialogRef.close(this.modelsToLoad);
+				}
+			})
+		}
 	}
 
 	onModelSelectChange(val)
