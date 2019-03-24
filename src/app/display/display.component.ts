@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../Prediction';
 import { ModelPrediction } from '../ModelPrediction';
+import { ImageService } from '../image.service';
 
 
 import { TransferService } from '../transfer.service';
@@ -16,10 +17,16 @@ export class DisplayComponent implements OnInit
 
  	adversarialImageModelNameSource:string 
 
-	columnsToDisplay = ['className', 'confidence'];
+	columnsToDisplay = ['className', 'confidence']
 
+	amplification = 0
 
-	constructor(private tferService: TransferService) 
+	adversarialCanvasIsBlank = (()=> 
+	{
+		//return this.imgService.isCanvasBlank('canvasAdversarial')
+	})
+
+	constructor(private tferService: TransferService, private imgService: ImageService) 
 	{
 	}
 
@@ -27,5 +34,12 @@ export class DisplayComponent implements OnInit
 	{
 		this.tferService.currentAllModelPredictionsSource.subscribe(allModelPredictions => this.allModelPredictions = allModelPredictions)
 		this.tferService.currentAdversarialImageModelNameSource.subscribe(adversarialImageModelNameSource => this.adversarialImageModelNameSource = adversarialImageModelNameSource)
+	}
+
+
+	onAmplificationChange()
+	{
+		//TODO:send to transfer service
+
 	}
 }

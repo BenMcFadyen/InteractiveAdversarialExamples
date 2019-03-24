@@ -13,7 +13,7 @@ html, body
 .mat-divider
 {
 	margin-top:20px;
-	border-top-width:2px;
+	border-width:2px;
 }  
 
 
@@ -24,30 +24,52 @@ html, body
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+
 }
 
 
-.imageContainer
+.cardContainer
 {
 	display: flex;
 	flex-direction: row;
-	align-items: flex-start;
+	align-items: stretch;
 	align-content: center;
 	justify-content: space-around;
-	// border-style: solid;
-	// border-color: purple;	
-	//max-width: 80%;
+
+	.mat-card
+	{
+		//height:100%;
+	}
+
+	.mat-card-content
+	{
+		margin:0px;
+	}
+
+	.mat-card-actions
+	{
+		display: flex;
+		justify-content: center;
+		padding:0px;
+
+		.mat-slider 
+		{		
+			width:80%
+		}		
+	}
 }
 
 .predictions
 {
 	display: flex;
 	flex-direction: row;
+	justify-content:space-around;
 }
 
 .prediction
 {
   	width:50%;
+  	max-width:600px;
 
   	th
   	{
