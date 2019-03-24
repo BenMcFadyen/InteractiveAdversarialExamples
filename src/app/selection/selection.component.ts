@@ -75,7 +75,8 @@ export class SelectionComponent implements OnInit
 
 		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
 
-
+		// when a new prediction model is selected (or unselected)
+		this.predictionModels.valueChanges.subscribe(val => {this.onPredictionModelsChange()})
 
 	}
 
@@ -121,7 +122,7 @@ export class SelectionComponent implements OnInit
 		let allModelAdversarialPredictions: Prediction[][] = new Array(allPredictionModelObjects.length).fill(null);
 
 		// Set the adversarial predictions, again if an adversarial image is drawn (the canvas isn't blank)
-		if(!this.isAdversarialCanvasBlank())
+		if(!this.imgService.isCanvasBlank(this.canvasAdversarial))
 			allModelAdversarialPredictions = this.getAllPredictions(allPredictionModelObjects, this.canvasAdversarial, this.topX) 
 	
 
@@ -247,7 +248,7 @@ export class SelectionComponent implements OnInit
 	private async onEpsilonChange()
 	{
 		// only update if an adversarial image is drawn
-		if(this.isAdversarialCanvasBlank())
+		if(this.imgService.isCanvasBlank(this.canvasAdversarial))
 			return
 
 		this.resetCanvasAndClearPredictions()
@@ -259,8 +260,19 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-		this.transferService.addNewModelPrediction(new ModelPrediction('A', [new Prediction('test1', 10), new Prediction('test1', 10), new Prediction('test1', 10)], null, [new Prediction('test3', 10), new Prediction('test3', 10), new Prediction('test3', 10)]), false)
-		this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
+		this.transferService.addNewModelPrediction(new ModelPrediction('A', [new Prediction('test1', 10),
+		 new Prediction('test1', 10),
+		  new Prediction('test1', 10)],
+		   null,null),false)
+		//this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
+	}
+
+
+	private onPredictionModelsChange()
+	{
+		// This lets the display componenet that predictions should be cleared
+		this.transferService.addNewModelPrediction(null, true)
+		this.topPrediction = null
 	}
 
 	/** Called when the user selects an img file */
@@ -347,16 +359,6 @@ export class SelectionComponent implements OnInit
 		this.imgService.drawImageToCanvas(img, this.canvasOriginal, this.canvasSize, this.canvasSize)
 		this.resetCanvasAndClearPredictions()
 	}
-
-
-
-	/** Returns true if the adversarial canvas is blank */
-	private isAdversarialCanvasBlank()
-	{
-		let canvas = <HTMLCanvasElement> document.getElementById(this.canvasAdversarial)
-		return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
-	}	
-
 
 
 	/** Used to filter the imageNetClasses for autocompletion*/
