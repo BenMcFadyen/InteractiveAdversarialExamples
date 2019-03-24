@@ -45,41 +45,44 @@ export class ImageService
         })
 	}	
 
-	drawTensorToCanvas(canvasIDorObject:string | HTMLCanvasElement, tensor:tf.Tensor3D | tf.Tensor4D, height: number = null, width:number = null )
+	async drawTensorToCanvas(canvasIDorObject:string | HTMLCanvasElement, tensor:tf.Tensor3D | tf.Tensor4D, height: number = null, width:number = null )
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
 		let context = canvas.getContext('2d');
 		let alignCorners = false
 
-		tf.tidy(()=>
+		
+		if(tensor.shape.length == 4)
+			tensor = <tf.Tensor3D> tf.reshape(tensor, [tensor.shape[1], tensor.shape[2], tensor.shape[3]])
+
+		// if desired canvas height is not specified, draw to the given tensors shape
+		if(height == null || width == null)
 		{
-			if(tensor.shape.length == 4)
-				tensor = <tf.Tensor3D> tf.reshape(tensor, [tensor.shape[1], tensor.shape[2], tensor.shape[3]])
+			height = tensor.shape[0]
+			width = tensor.shape[1]
+		}
 
-			// if desired canvas height is not specified, draw to the given tensors shape
-			if(height == null || width == null)
-			{
-				height = tensor.shape[0]
-				width = tensor.shape[1]
-			}
+		// set the size of the canvas to the desired (or the tensor)
+		canvas.height = height
+		canvas.width = width
 
-			// set the size of the canvas to the desired (or the tensor)
+		// check if the tensor needs to be resized before drawing to the canvas
+		if(height != tensor.shape[0] || width != tensor.shape[1])
+		{
 			canvas.height = height
 			canvas.width = width
+		    tensor = tf.image.resizeBilinear(tensor, [height, width], alignCorners)
+		}
 
-			// check if the tensor needs to be resized before drawing to the canvas
-			if(height != tensor.shape[0] || width != tensor.shape[1])
-			{
-				canvas.height = height
-				canvas.width = width
-			    tensor = tf.image.resizeBilinear(tensor, [height, width], alignCorners)
-			}
-
-			let imgArray = Uint8ClampedArray.from(tensor.dataSync())
+		await tensor.data().then((tensorData)=>
+		{
+			let imgArray = Uint8ClampedArray.from(tensorData)
 			let imgData = context.createImageData(height, width)
 			imgData.data.set(imgArray)
 			context.putImageData(imgData, 0, 0)
+			tensor.dispose()
 		})
+	
 	}
 
 	/* Returns a tensor of the given canvas

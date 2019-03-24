@@ -208,14 +208,16 @@ export class SelectionComponent implements OnInit
 		// Draw the adversarial image to the canvas
 		return await attackMethodFunctionResult.then(adversarialImgTensor => 
 		{	
-			this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize)
-			this.logTime(t0, performance.now(), 'Adversarial example generated')
-
-			// cleanup img tensors
-			img3.dispose()
-			img4.dispose()
-			adversarialImgTensor.dispose()			
-			return
+			return this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize).then(()=>
+			{
+				this.logTime(t0, performance.now(), 'Adversarial example generated')
+				// cleanup img tensors
+				img3.dispose()
+				img4.dispose()
+				adversarialImgTensor.dispose()			
+				return
+			})
+		
 		})
 	}	
 

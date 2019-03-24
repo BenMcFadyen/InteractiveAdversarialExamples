@@ -26,7 +26,7 @@ export class AdvService
 	*/
 	private async singleStepAttack(modelObj: ModelData, targetClass, img3, epsilon)
 	{
-		return tf.tidy(()=>
+		let gradient = tf.tidy(()=>
 		{
 			let tbuffer = tf.buffer([1000]) // used for storing the one-hot label
 
@@ -51,11 +51,16 @@ export class AdvService
 	  		const getModelLogits = x => (<tf.Tensor> model.predict(x.toFloat())).as1D() //must be the RAW prediction logits, BEFORE any activation functions, or the gradient calculated will not be correct
 		    const lossFunction = x => tf.losses.softmaxCrossEntropy(oneHotClassLabels, getModelLogits(x))
 		    const gradientFunction = tf.grad(lossFunction)
-		    var gradient = gradientFunction(img3)
-			var perturbation = this.scaleTensor(gradient, epsilon)
+		    
+		    return gradientFunction(img3)
+		})
 
+
+		return await this.scaleTensor(gradient, epsilon).then((perturbation )=>
+		{
 			return perturbation
 		})
+		
 	}
 
 	/** Used to create a model sliced at one of its layers (used to retreive the model logits before any activation function is applied*/
@@ -107,17 +112,18 @@ export class AdvService
 		tf.tidy(()=>
 		{
 			// scale the perturbation as required (low epsilon must be scaled to be visible)
-			let scaledPerturbation = this.scaleTensor(perturbation, differenceScaleValue) 
+			this.scaleTensor(perturbation, differenceScaleValue).then((scaledPerturbation)=>
+			{
+				// apply alpha channel to perturbation (ensure it is the correct shape for canvas display)
+				let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(scaledPerturbation, 255)
 
-			// apply alpha channel to perturbation (ensure it is the correct shape for canvas display)
-			let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(scaledPerturbation, 255)
+				// Create the all-white tensor (pixel-value: 255)
+				let whiteTensor = this.imgService.createFilledTensor(perturbationWithAlpha.shape, 255)
 
-			// Create the all-white tensor (pixel-value: 255)
-			let whiteTensor = this.imgService.createFilledTensor(perturbationWithAlpha.shape, 255)
-
-			// combine the white-tensor with the perturbed one; draw to canvas
-			let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
-			this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)		
+				// combine the white-tensor with the perturbed one; draw to canvas
+				let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
+				this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)		
+			})
 		})
 	}
 
@@ -147,19 +153,21 @@ export class AdvService
 	* @param {epsilon} determines the scale of the perturbation
 	* @return {tf.Tensor} perturbed img tensor
 	*/
-	private scaleTensor(tensor, epsilon) 
+	private async scaleTensor(tensor, epsilon) 
 	{
-		return tf.tidy(()=>
+	 	return await tensor.data().then(tensorData =>
 		{
-			const tensorData = tensor.dataSync()
-
-			const scaledTensor = tensorData.map(x => 
+			return tf.tidy(()=>
 			{
-				return epsilon * Math.sign(x)
-			})
+				const scaledTensor = tensorData.map(x => 
+				{
+					return epsilon * Math.sign(x)
+				})
 
-			return tf.tensor(scaledTensor).reshapeAs(tensor)
+				return tf.tensor(scaledTensor).reshapeAs(tensor)
+			})
 		})
+		
 	}	
 
 	/** Experimental (not used) */
