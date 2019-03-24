@@ -47,6 +47,7 @@ export class ModelSelectDialogComponent implements OnInit
 		if(this.modelsToLoad.length == 0)
 			return console.error('Error: cannot load models, none selected')
 
+		// remove already loaded models from the request array, ensure we don't re-load models
 		for(let i = 0; i < this.modelsToLoad.length; i++)
 		{
 			if(this.modelService.hasModelBeenLoaded(this.modelsToLoad[i]))
@@ -60,12 +61,11 @@ export class ModelSelectDialogComponent implements OnInit
 		let totalModelsToLoad = this.modelsToLoad.length
 
 		if(totalModelsToLoad == 0)
-			return console.error('Error: cannot load models, none selected')
-
+			return console.error('Error: All models already loaded')
 
 		var t0 = performance.now();
 		this.modelsLoading = true;		
-		
+
 		for(let i = 0; i < totalModelsToLoad; i++)
 		{
 			this.modelService.loadModel(this.modelsToLoad[i]).then(()=>
@@ -73,11 +73,12 @@ export class ModelSelectDialogComponent implements OnInit
 				modelsLoaded++
 				this.modelLoadProgress += (100/totalModelsToLoad) 
 
-				console.log('returned')
 				if(i == totalModelsToLoad-1)
 				{
 					this.modelsLoading = false;
 			   		this.dialogRef.close(this.modelsToLoad);
+
+			   		console.log('Closing dialog' + totalModelsToLoad)
 				}
 			})
 		}
