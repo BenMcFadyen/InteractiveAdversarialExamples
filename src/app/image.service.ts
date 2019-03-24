@@ -12,6 +12,13 @@ export class ImageService
 		
 	}
 
+	/** Returns true if the given canvas is blank */
+	isCanvasBlank(canvasIDorObject:string | HTMLCanvasElement,)
+	{
+		let canvas = this.getCanvasObject(canvasIDorObject)
+		return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
+	}		
+
 	/**
 	* Draws the given image (HTMLImageElement/HTMLCanvasElement) to the given canvasID
 	*/
