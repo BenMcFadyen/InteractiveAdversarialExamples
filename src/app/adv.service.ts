@@ -51,8 +51,9 @@ export class AdvService
 	  		const getModelLogits = x => (<tf.Tensor> model.predict(x.toFloat())).as1D() //must be the RAW prediction logits, BEFORE any activation functions, or the gradient calculated will not be correct
 		    const lossFunction = x => tf.losses.softmaxCrossEntropy(oneHotClassLabels, getModelLogits(x))
 		    const gradientFunction = tf.grad(lossFunction)
+		    let gradient = gradientFunction(img3)
 		    
-		    return gradientFunction(img3)
+		    return gradient
 		})
 
 
@@ -70,12 +71,13 @@ export class AdvService
 	}
 
 
-	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1)
+	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1, drawToCanvas:boolean = true)
 	{		
 		return this.singleStepAttack(modelObj, orginalPrediction, img3, epsilon).then(perturbation =>
 		{
 			let differenceScaleValue = 50; //TODO: Let the user control this value
-			this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
+			if(drawToCanvas)
+				this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
 
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
@@ -86,13 +88,14 @@ export class AdvService
 		})
 	}
 
-	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1)
+	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1, drawToCanvas:boolean = true)
 	{
 		return this.singleStepAttack(modelObj, targetPrediction, img3, epsilon).then(perturbation =>
 		{	
 			let differenceScaleValue = 50; //TODO: Let the user control this value
-			this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
-
+			if(drawToCanvas)
+				this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
+			
 			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Subtract).then(perturbedImgTensor => 
 			{
