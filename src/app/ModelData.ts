@@ -11,6 +11,7 @@ export class ModelData
 	imgWidth:number
 	imgChannels:number
 	classLabels:Array<any>
+	availableForAdversarialGeneration:boolean
 	applySoftMax:boolean
 	predictionOutputLayer:string
 	batchInput:boolean
@@ -26,7 +27,8 @@ export class ModelData
  	* @param {number} 	imgWidth - Required image width (pixels) for prediction
  	* @param {number} 	imgChannels - Required image channels for prediction
  	* @param {Array<any>} classLabels - Class labels that match the tf.model returns
- 	* @param {boolean} 	applySoftMax - Set true if softmax NEEDS applying to model.predict output
+ 	* @param {boolean} 	availableForAdversarialGeneration - Defines if the model should be used for adversarial image genertation
+ 	* @param {boolean} 	applySoftMax - Set true if softmax NEEDS applying to model.predict output 	
  	* @param {string} 	predictionOutputLayer - The name of the layer at which model logits can be taken BEFORE an activation is applied (e.g softMax)
  	* @param {boolean} 	batchInput - Set true if model requires input to be batched for prediction
  	* @param {boolean} 	normaliseImage - Set true if images are required to be normalised within the range [-1,1] before prediction 	
@@ -36,7 +38,8 @@ export class ModelData
 				imgHeight:number, 			
 				imgWidth:number, 			
 				imgChannels:number, 		
-				classLabels, 	 
+				classLabels,
+				availableForAdversarialGeneration:boolean,
 				applySoftMax:boolean, 
 				predictionOutputLayer:string = null,
 				batchInput:boolean = true, 
@@ -48,6 +51,7 @@ export class ModelData
 		this.imgWidth = imgWidth
 		this.imgChannels = imgChannels
 		this.classLabels = classLabels
+		this.availableForAdversarialGeneration = availableForAdversarialGeneration		
 		this.applySoftMax = applySoftMax
 		this.predictionOutputLayer = predictionOutputLayer
 		this.batchInput = batchInput

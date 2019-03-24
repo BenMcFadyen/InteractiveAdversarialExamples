@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ModelData } from './ModelData';
 import { ModelStats } from './ModelStats';
-
 import { ImageService } from './image.service';
 import { Prediction } from './Prediction';
 import * as tf from '@tensorflow/tfjs';
@@ -13,23 +12,23 @@ import {IMAGENET_CLASSES} from './ImageNetClasses';
 })
 export class ModelService 
 {
-	readonly MOBILETNET_STATS 	=  <ModelStats> {name: 'MobileNet', 	size: 14.2,  top1: 70.4, top5: 89.5, parameters: 4253864,  requestLoad:false}
-	readonly MOBILENETV2_STATS 	=  <ModelStats> {name: 'MobileNetV2',	size: 24.5,  top1: 71.3, top5: 90.1, parameters: 3538984,  requestLoad:false}
-	readonly NASNETMOBILE_STATS =  <ModelStats> {name: 'NASNetMobile', 	size: 24.1,  top1: 74.4, top5: 91.9, parameters: 5326716,  requestLoad:false}
-	readonly RESNET50_STATS 	=  <ModelStats> {name: 'ResNet50',     	size: 100.6, top1: 74.9, top5: 92.1, parameters: 25636712, requestLoad:false}
-	readonly DENSENET121_STATS 	=  <ModelStats> {name: 'DenseNet121',  	size: 32.6,  top1: 82.4, top5: 92.3, parameters: 8062504,  requestLoad:false}
-	readonly DENSENET169_STATS 	=  <ModelStats> {name: 'DenseNet169',  	size: 57.4,  top1: 82.4, top5: 93.2, parameters: 14307880, requestLoad:false}
-	readonly XCEPTION_STATS 	=  <ModelStats> {name: 'Xception',  	size: 89.9,  top1: 79.0, top5: 94.5, parameters: 22910480, requestLoad:false}
-	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	size: 94.0,  top1: 77.9, top5: 93.7, parameters: 23851784, requestLoad:false}
+	readonly MOBILETNET_STATS 	=  <ModelStats> {name: 'MobileNet', 	layers: 93,  size: 14.2,  top1: 70.4, top5: 89.5, parameters: 4253864,  requestLoad:false}
+	readonly MOBILENETV2_STATS 	=  <ModelStats> {name: 'MobileNetV2',	layers: 157, size: 24.5,  top1: 71.3, top5: 90.1, parameters: 3538984,  requestLoad:false}
+	readonly NASNETMOBILE_STATS =  <ModelStats> {name: 'NASNetMobile', 	layers: 771, size: 24.1,  top1: 74.4, top5: 91.9, parameters: 5326716,  requestLoad:false}
+	readonly RESNET50_STATS 	=  <ModelStats> {name: 'ResNet50',     	layers: 177, size: 100.6, top1: 74.9, top5: 92.1, parameters: 25636712, requestLoad:false}
+	readonly DENSENET121_STATS 	=  <ModelStats> {name: 'DenseNet121',  	layers: 429, size: 32.6,  top1: 82.4, top5: 92.3, parameters: 8062504,  requestLoad:false}
+	readonly DENSENET169_STATS 	=  <ModelStats> {name: 'DenseNet169',  	layers: 597, size: 57.4,  top1: 82.4, top5: 93.2, parameters: 14307880, requestLoad:false}
+	readonly XCEPTION_STATS 	=  <ModelStats> {name: 'Xception',  	layers: 313, size: 89.9,  top1: 79.0, top5: 94.5, parameters: 22910480, requestLoad:false}
+	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	layers: 134, size: 94.0,  top1: 77.9, top5: 93.7, parameters: 23851784, requestLoad:false}
 
-	MobileNet 	 = new ModelData('MobileNet', 	this.MOBILETNET_STATS,	224, 224, 3, IMAGENET_CLASSES, false, 'conv_preds', true) //do not apply softmax, batch = true
-	MobileNetV2  = new ModelData('MobileNetV2',	this.MOBILENETV2_STATS, 224, 224, 3, IMAGENET_CLASSES, false, null, true)
-	NASNetMobile = new ModelData('NASNetMobile',this.NASNETMOBILE_STATS,224, 224, 3, IMAGENET_CLASSES, false, null, true)
-	ResNet50 	 = new ModelData('ResNet50',	this.RESNET50_STATS,	224, 224, 3, IMAGENET_CLASSES, false, null, true, false) //do not normalise input for ResNet50
-	DenseNet121  = new ModelData('DenseNet121',	this.DENSENET121_STATS, 224, 224, 3, IMAGENET_CLASSES, false, null, true)
-	DenseNet169  = new ModelData('DenseNet169', this.DENSENET169_STATS, 224, 224, 3, IMAGENET_CLASSES, false, null, true)
-	Xception 	 = new ModelData('Xception',	this.XCEPTION_STATS,	299, 299, 3, IMAGENET_CLASSES, false, null, true)
-	InceptionV3  = new ModelData('InceptionV3',	this.INCEPTIONV3_STATS, 299, 299, 3, IMAGENET_CLASSES, false, null, true)
+	MobileNet 	 = new ModelData('MobileNet', 	this.MOBILETNET_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, 'conv_preds', true) //do not apply softmax, batch = true
+	MobileNetV2  = new ModelData('MobileNetV2',	this.MOBILENETV2_STATS, 224, 224, 3, IMAGENET_CLASSES, true, false, null, true)
+	NASNetMobile = new ModelData('NASNetMobile',this.NASNETMOBILE_STATS,224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
+	ResNet50 	 = new ModelData('ResNet50',	this.RESNET50_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, null, true, false) //do not normalise input for ResNet50
+	DenseNet121  = new ModelData('DenseNet121',	this.DENSENET121_STATS, 224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
+	DenseNet169  = new ModelData('DenseNet169', this.DENSENET169_STATS, 224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
+	Xception 	 = new ModelData('Xception',	this.XCEPTION_STATS,	299, 299, 3, IMAGENET_CLASSES, false, false, null, true)
+	InceptionV3  = new ModelData('InceptionV3',	this.INCEPTIONV3_STATS, 299, 299, 3, IMAGENET_CLASSES, true, false, null, true)
 
 	// NOT IN USE
 	// MNIST = new ModelData('MNIST', 28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9)) (Softmax|PredLayer|Batch|Normalise)
@@ -37,13 +36,13 @@ export class ModelService
 
 	allModels : ModelData[] = 
 	[
-		this.MobileNet,
-		this.MobileNetV2,
-		this.NASNetMobile,	
-		this.ResNet50,	
-		this.DenseNet121,			
+		this.MobileNet, 
+		this.MobileNetV2, 
+		this.NASNetMobile,	 
+		this.ResNet50,
+		this.DenseNet121,		
 		this.DenseNet169,	
-		this.InceptionV3,	
+		this.InceptionV3,
 		this.Xception,
 	]
 
@@ -77,21 +76,47 @@ export class ModelService
 		//TODO: See if models can be loaded and predicted in parallel (save time)
 	 	return await Promise.all(selectedModelObjects.map(async (currentModel) =>
 		{
-			let t0 = performance.now()
+			let t0_load = performance.now()
 
 		 	return await this.loadModelFromFile(currentModel).then((loadedModel)=>
 		 	{
 		 		currentModel.model = loadedModel
 		 		currentModel.loaded = true
-				this.logTime(t0, performance.now(), 'Successfully loaded: ' +  currentModel.name)
+				this.logTime(t0_load, performance.now(), 'Successfully loaded: ' +  currentModel.name)
 
-				t0 = performance.now()
+				let t0_warmPredict = performance.now()
 
+				// warm the prediction
 				tf.tidy(()=>
 				{
 					currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
-					this.logTime(t0, performance.now(), 'Successfully warmed: ' +  currentModel.name)					
+					this.logTime(t0_warmPredict, performance.now(), 'Successfully warmed prediction: ' +  currentModel.name)					
 				})
+
+
+				let t0_warmGrad = performance.now()
+
+				//warm the gradient function -> only if model has been flagged as ok (larger models take too long)
+				if(currentModel.availableForAdversarialGeneration)
+				{
+					tf.tidy(()=>
+					{
+						let oneHotClassLabels = tf.zeros([1000]) 
+
+						let img3 = tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3])
+						let img4 = tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 4])
+
+				  		const getModelLogits = x => (<tf.Tensor> currentModel.model.predict(x.toFloat())).as1D() //must be the RAW prediction logits, BEFORE any activation functions, or the gradient calculated will not be correct
+					    const lossFunction = x => tf.losses.softmaxCrossEntropy(oneHotClassLabels, getModelLogits(x))
+					    const gradientFunction = tf.grad(lossFunction)
+					    let gradient = gradientFunction(img3)
+
+						this.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
+					})	
+				}			
+
+
+
 		 	}).catch(e =>
 		 	{
 		 		console.error("Error loading model: " + e)
