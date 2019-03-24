@@ -23,7 +23,7 @@ export class DisplayComponent implements OnInit
 
 	adversarialCanvasIsBlank = (()=> 
 	{
-		//return this.imgService.isCanvasBlank('canvasAdversarial')
+		return this.imgService.isCanvasBlank('canvasAdversarial')
 	})
 
 	constructor(private tferService: TransferService, private imgService: ImageService) 
