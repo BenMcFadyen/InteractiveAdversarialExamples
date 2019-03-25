@@ -3,6 +3,9 @@ import { Prediction } from './Prediction';
 import { ModelPrediction } from './ModelPrediction';
 import { BehaviorSubject } from 'rxjs';
 
+import * as tf from '@tensorflow/tfjs';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,20 +28,40 @@ export class TransferService
 	currentAdversarialImageModelNameSource = this.adversarialImageModelNameSource.asObservable();
 
 
+	private perturbationAmplification:number
+	private perturbationAmplificationSource = new BehaviorSubject(this.perturbationAmplification);
+	currentPerturbationAmplificationSource = this.perturbationAmplificationSource.asObservable();	
+
+
+	private perturbation:tf.Tensor3D|tf.Tensor4D = null
+	private perturbationSource = new BehaviorSubject(this.perturbation);
+	currentPerturbationSource = this.perturbationSource.asObservable();		
 
 	constructor() 
 	{ 
 
 	}
 
+	setPerturbation(perturbation: tf.Tensor3D|tf.Tensor4D)
+	{
+		// dispose old tensor from memory
+		if(this.perturbationSource.getValue() != null)
+			this.perturbationSource.getValue().dispose()
+		
+
+		this.perturbationSource.next(perturbation)
+	}
+
+
+	setPerturbationAmplification(perturbationAmplification:number)
+	{
+		this.perturbationAmplificationSource.next(perturbationAmplification)
+	}
+	
+
 	setAdversarialImageModelName(adversarialImageModelName:string)
 	{
 		this.adversarialImageModelNameSource.next(adversarialImageModelName)
-	}
-
-	getAdversarialImageModelName() : string
-	{
-		return this.adversarialImageModelName
 	}
 
 
@@ -88,7 +111,6 @@ export class TransferService
 		this.allModelPredictions.push(newModelPrediction)
 		this.allModelPredictionsSource.next(this.allModelPredictions.reverse())
 		this.setAdversarialPredictionColouring()
-
 	}
 
 
