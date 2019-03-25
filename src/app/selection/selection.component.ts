@@ -31,7 +31,6 @@ export class SelectionComponent implements OnInit
 	private targetClass = new FormControl('', [Validators.required]);
 
 	private imgURL: string = 'assets/images/lion.jpg'
-	private epsilon: number = 5
 	private numBytes:number
 	private numTensors:number
 
@@ -44,6 +43,14 @@ export class SelectionComponent implements OnInit
 	readonly canvasSize:number = 350
 	readonly differenceCanvasSize:number = 224
 	readonly topX = 3
+
+
+	private epsilon: number = 3
+	private epsilonMax = 10;
+	private epsilonStep = 0.025;
+
+	private perturbationAmplification:number=0
+
 
 	private availableAttackMethods: string[] = 
 	[
@@ -78,6 +85,8 @@ export class SelectionComponent implements OnInit
 
 		// when a new prediction model is selected (or unselected)
 		this.predictionModels.valueChanges.subscribe(val => {this.onPredictionModelsChange()})
+
+		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
 	}
 
@@ -209,12 +218,12 @@ export class SelectionComponent implements OnInit
 				if(topPredictionFGSM == null)
 					throw 'FGSM cannot be executed without a prediction'
 
-				var attackMethodFunctionResult = this.advService.FGSM(modelObject, topPredictionFGSM, img3, img4, this.epsilon);
+				var attackMethodFunctionResult = this.advService.FGSM(modelObject, topPredictionFGSM, img3, img4, this.epsilon, true, this.perturbationAmplification);
 				this.targetClassPredDisplay = null // passed to the transfer service, and used to ensure predictions are colour properly: TODO: Re-factor, hacky
 				break;
 
 			case 'T-FGSM':
-				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon);
+				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon, true, this.perturbationAmplification);
 				this.targetClassPredDisplay = this.targetClass.value // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
 				break;
 		}
@@ -231,7 +240,6 @@ export class SelectionComponent implements OnInit
 				adversarialImgTensor.dispose()			
 				return
 			})
-		
 		})
 	}	
 
@@ -276,12 +284,37 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-		this.transferService.addNewModelPrediction(new ModelPrediction('A', [new Prediction('test1', 10),
-		 new Prediction('test1', 10),
-		  new Prediction('test1', 10)],
-		   null,null),false)
-		//this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
+		this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
+		this.imgService.drawImageToCanvas(<HTMLCanvasElement> document.getElementById(this.canvasOriginal), this.canvasAdversarial )
 	}
+
+
+	/**  Scales the epsilon max value up/ -> allows for low-level precision if desired */
+	private onIncreaseEpsilonClick()
+	{
+		if(this.epsilonMax < 150)
+		{
+			this.epsilonMax += 10
+			this.epsilonStep = this.epsilonMax / 400
+		}
+	}
+
+	/** Scales the epsilon max value down-> allows for low-level precision if desired */
+	private onDecreaseEpsilonClick()
+	{
+		if(this.epsilonMax == 10)
+		{
+			this.epsilonMax = 1
+			this.epsilonStep = this.epsilonMax / 400
+		}
+
+		if(this.epsilonMax > 10)
+		{
+			this.epsilonMax -= 10
+			this.epsilonStep = this.epsilonMax / 400
+		}
+	}
+
 
 
 	private onPredictionModelsChange()
@@ -326,6 +359,9 @@ export class SelectionComponent implements OnInit
 	*/
 	private validatePrediction()
 	{
+		if(this.imgURL == null)
+			throw 'no valid image source found'
+
 		if(this.predictionModels.invalid)
 			throw 'no valid prediction model(s) selected'
 	}
@@ -415,6 +451,25 @@ export class SelectionComponent implements OnInit
 		this.numBytes = Math.round((mem.numBytes / 1000000))
 		this.numTensors = mem.numTensors
 	}	
+
+
+
+
+	logslider(position) 
+	{
+		// position will be between 0 and 100
+		var minp = 0;
+		var maxp = 100;
+
+		// The result should be between 100 an 10000000
+		var minv = Math.log(100);
+		var maxv = Math.log(10000000);
+
+		// calculate adjustment factor
+		var scale = (maxv-minv) / (maxp-minp);
+
+		return Math.exp(minv + scale*(position-minp));
+	}
 
 
 

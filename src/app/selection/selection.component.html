@@ -97,17 +97,33 @@
 		</div>			
 
 
-		<p> Epsilon: {{epsilon}} </p>
-		<mat-slider 
-		 	[(ngModel)]="epsilon"
-			thumbLabel 
-			min="0" 
-			max="250"
-			(change)="onEpsilonChange()"
-			[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
-																						(attackMethod.value=='T-FGSM' && !targetClass.valid)" >
-		</mat-slider>		
+		<div class="epsilonSelect">
 
+			<p> ϵ: {{epsilon}} </p>
+			<mat-slider
+			 	[(ngModel)]="epsilon"
+				thumbLabel 
+				step="{{epsilonStep}"
+				min="0" 
+				max="{{epsilonMax}}"
+				(change)="onEpsilonChange()"
+				[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+							(attackMethod.value=='T-FGSM' && !targetClass.valid)" >
+			</mat-slider>		
+	
+	 		<div class="epsilonButtons">
+		 		<button class ="increaseEpsilon" mat-raised-button color="blank" (click)="onIncreaseEpsilonClick()"
+		 		[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+							(attackMethod.value=='T-FGSM' && !targetClass.valid)"> 
+		 		▲ </button>
+
+		 		<button class ="lowerEpsilon" mat-raised-button color="blank" (click)="onDecreaseEpsilonClick()"
+		 		[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+							(attackMethod.value=='T-FGSM' && !targetClass.valid)">
+				 ▼ </button>
+		 	</div>
+
+		</div>
 
 		<button class ="modelSelection" mat-raised-button  color="blank" (click)="openModelSelectDialog()"> Model Selection</button>
 
