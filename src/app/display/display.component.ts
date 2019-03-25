@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../Prediction';
 import { ModelPrediction } from '../ModelPrediction';
 import { ImageService } from '../image.service';
+import { AdvService } from '../adv.service';
 
+import * as tf from '@tensorflow/tfjs';
 
 import { TransferService } from '../transfer.service';
 
@@ -19,14 +21,16 @@ export class DisplayComponent implements OnInit
 
 	columnsToDisplay = ['className', 'confidence']
 
-	amplification = 0
+	amplification:number = 10
+
+	perturbation:tf.Tensor3D|tf.Tensor4D
 
 	adversarialCanvasIsBlank = (()=> 
 	{
 		return this.imgService.isCanvasBlank('canvasAdversarial')
 	})
 
-	constructor(private tferService: TransferService, private imgService: ImageService) 
+	constructor(private tferService: TransferService, private imgService: ImageService, private advService: AdvService) 
 	{
 	}
 
@@ -34,12 +38,24 @@ export class DisplayComponent implements OnInit
 	{
 		this.tferService.currentAllModelPredictionsSource.subscribe(allModelPredictions => this.allModelPredictions = allModelPredictions)
 		this.tferService.currentAdversarialImageModelNameSource.subscribe(adversarialImageModelNameSource => this.adversarialImageModelNameSource = adversarialImageModelNameSource)
+		this.tferService.currentPerturbationSource.subscribe(perturbation => this.perturbation = perturbation)
+
 	}
 
 
 	onAmplificationChange()
 	{
-		//TODO:send to transfer service
+		// set the tranfer amplification value, this will ensure that when a new image is generated, the right amplification is applied
+		this.tferService.setPerturbationAmplification(this.amplification)
 
+		// also draw the perturbation to canvas, #
+		if(this.imgService.isCanvasBlank('canvasAdversarial') )
+			return
+
+		if(this.perturbation == null)
+			return
+
+		this.advService.drawPerturbationToCanvas(this.perturbation, this.amplification, this.amplification)
+		
 	}
 }

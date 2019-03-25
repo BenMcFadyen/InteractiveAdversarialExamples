@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ImageService } from './image.service';
 import { ModelService } from './model.service';
 import { ModelData } from './ModelData';
+import { TransferService } from './transfer.service';
 
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './ImageNetClasses';
@@ -18,7 +19,10 @@ enum CombineMethod
 
 export class AdvService 
 {
-	constructor(private imgService:ImageService, private modelService:ModelService) {}
+	perturbationAmplification:number=0
+
+	constructor(private imgService:ImageService, private modelService:ModelService, private transferService:TransferService) {}
+
 
 	/**
 	* Generates perturbation in respect to the provided targetClass
@@ -59,6 +63,7 @@ export class AdvService
 
 		return await this.scaleTensor(gradient, epsilon).then((perturbation )=>
 		{
+			gradient.dispose()
 			return perturbation
 		})
 		
@@ -71,35 +76,43 @@ export class AdvService
 	}
 
 
-	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1, drawToCanvas:boolean = true)
+	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 0)
 	{		
 		return this.singleStepAttack(modelObj, orginalPrediction, img3, epsilon).then(perturbation =>
 		{
-			let differenceScaleValue = 50; //TODO: Let the user control this value
+			// if the perturbation should be drawn to canvas, draw it with the given amplification value (so it can be seen)
 			if(drawToCanvas)
-				this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
+				this.drawPerturbationToCanvas(perturbation, epsilon, perturbAmpli)
+
+			// update the perturbation at the transfer service, so the perturbation can be re-drawn if the user changes the amplification (the above only updates when generated)
+			this.transferService.setPerturbation(perturbation)
 
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
 			{
-				perturbation.dispose()
+				img3.dispose()
+				img4.dispose()
 				return <tf.Tensor3D | tf.Tensor4D> perturbedImgTensor
 			})
 		})
 	}
 
-	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1, drawToCanvas:boolean = true)
+	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 0)
 	{
 		return this.singleStepAttack(modelObj, targetPrediction, img3, epsilon).then(perturbation =>
 		{	
-			let differenceScaleValue = 50; //TODO: Let the user control this value
+			// if the perturbation should be drawn to canvas, draw it with the given amplification value (so it can be seen)
 			if(drawToCanvas)
-				this.drawPerturbationToCanvas(perturbation, differenceScaleValue)
-			
+				this.drawPerturbationToCanvas(perturbation, perturbAmpli)
+
+			// update the perturbation at the transfer service, so the perturbation can be re-drawn if the user changes the amplification (the above only updates when generated)
+			this.transferService.setPerturbation(perturbation)
+
 			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Subtract).then(perturbedImgTensor => 
 			{
-				perturbation.dispose()
+				img3.dispose()
+				img4.dispose()
 				return <tf.Tensor3D | tf.Tensor4D> perturbedImgTensor
 			})
 		})
@@ -110,12 +123,17 @@ export class AdvService
 	* As canvas' are transparant by default the perturbation cannot be drawn to the canvas by default
 	* Here the perturbation is combined with an all-white tensor, so the perturbation is visible when drawn
 	*/
-	drawPerturbationToCanvas(perturbation:tf.Tensor3D | tf.Tensor4D, differenceScaleValue:number = 50)
+	drawPerturbationToCanvas(perturbation:tf.Tensor3D | tf.Tensor4D, originalEpsilon:number, scaleFactor:number = 50)
 	{
-		tf.tidy(()=>
+		// we scale the perturbation to ensure it is visible to the user
+		// if the original Epsilon is greater than the scale value, disregard it, as this will overwrite the perturbation 
+		if(originalEpsilon > scaleFactor)
+			scaleFactor = originalEpsilon
+
+		// scale the perturbation as required (low epsilon must be scaled to be visible)
+		this.scaleTensor(perturbation, scaleFactor).then((scaledPerturbation)=>
 		{
-			// scale the perturbation as required (low epsilon must be scaled to be visible)
-			this.scaleTensor(perturbation, differenceScaleValue).then((scaledPerturbation)=>
+			tf.tidy(()=>
 			{
 				// apply alpha channel to perturbation (ensure it is the correct shape for canvas display)
 				let perturbationWithAlpha = this.imgService.createAndApplyAlphaChannelToTensor(scaledPerturbation, 255)
@@ -125,8 +143,10 @@ export class AdvService
 
 				// combine the white-tensor with the perturbed one; draw to canvas
 				let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
-				this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)		
+				this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)//TODO:HANDLE IMAGE SIZE-ING 
 			})
+
+			scaledPerturbation.dispose()
 		})
 	}
 
@@ -169,22 +189,24 @@ export class AdvService
 
 				return tf.tensor(scaledTensor).reshapeAs(tensor)
 			})
+
+			tensorData.dispose()
 		})
 		
 	}	
 
-	/** Experimental (not used) */
-	reverseSoftmax(softmaxNums, constant)
-	{
-		softmaxNums = softmaxNums.dataSync()
-		let revSoftMaxNums = new Array()
+	/** Experimental (not used) */	
+	// reverseSoftmax(softmaxNums, constant)
+	// {
+	// 	softmaxNums = softmaxNums.dataSync()
+	// 	let revSoftMaxNums = new Array()
 
-		for(let i = 0; i < softmaxNums.length; i++)	
-		{
-			let x = Math.log(softmaxNums[i]) + constant
-			revSoftMaxNums.push(x)
-		}
+	// 	for(let i = 0; i < softmaxNums.length; i++)	
+	// 	{
+	// 		let x = Math.log(softmaxNums[i]) + constant
+	// 		revSoftMaxNums.push(x)
+	// 	}
 
-		return revSoftMaxNums
-	}	
+	// 	return revSoftMaxNums
+	// }	
 }
