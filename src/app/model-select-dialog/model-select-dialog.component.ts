@@ -12,7 +12,7 @@ import { ModelService } from '../model.service';
 export class ModelSelectDialogComponent implements OnInit 
 {
 	modelData = []
-	columnsToDisplay = ['name', 'size', 'top1', 'top5', 'parameters', 'requestLoad'];
+	columnsToDisplay = ['name', 'size', 'layers', 'top1', 'top5', 'parameters', 'requestLoad'];
 	totalSize = 0.0
 	modelsLoading = false;
 	modelLoadProgress = 0;
@@ -36,7 +36,7 @@ export class ModelSelectDialogComponent implements OnInit
 	    this.dialogRef.close();
 	}
 
-
+	//TODO COMMENT THIS
 	onLoadButtonPress() 
 	{
 		// TODO: Format Model stats (commas)
@@ -77,8 +77,6 @@ export class ModelSelectDialogComponent implements OnInit
 				{
 					this.modelsLoading = false;
 			   		this.dialogRef.close(this.modelsToLoad);
-
-			   		console.log('Closing dialog' + totalModelsToLoad)
 				}
 			})
 		}
