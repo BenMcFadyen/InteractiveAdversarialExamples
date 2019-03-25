@@ -96,7 +96,7 @@ export class ModelService
 
 				let t0_warmGrad = performance.now()
 
-				//warm the gradient function -> only if model has been flagged as ok (larger models take too long)
+				//warm the gradient function -> only if model has been flagged as available (larger models take too long)
 				if(currentModel.availableForAdversarialGeneration)
 				{
 					tf.tidy(()=>
@@ -114,7 +114,6 @@ export class ModelService
 						this.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
 					})	
 				}			
-
 
 
 		 	}).catch(e =>
@@ -148,10 +147,8 @@ export class ModelService
 		let modelObject = this.getModelDataObjectFromName(modelName)
 
 		if(modelObject.loaded)
-		{	
 			return true
-		}
-
+	
 		return false
 	}
 
