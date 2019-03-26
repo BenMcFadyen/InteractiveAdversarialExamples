@@ -58,4 +58,10 @@ export class DisplayComponent implements OnInit
 		this.advService.drawPerturbationToCanvas(this.perturbation, this.amplification, this.amplification)
 		
 	}
+
+
+	formatConfidence(number:number)
+	{
+		return parseFloat((number*100).toFixed(2))
+	}
 }
