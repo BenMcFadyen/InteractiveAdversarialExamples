@@ -5,10 +5,10 @@ export class ModelStats
 	layers:number
 	top1: number
 	top5:number
-	parameters:number
+	parameters:string
 	requestLoad:boolean
 
-	constructor(name:string, size:number, layers:number, top1:number, top5:number, parameters:number, requestLoad:boolean)
+	constructor(name:string, size:number, layers:number, top1:number, top5:number, parameters:string, requestLoad:boolean)
 	{
 		this.name = name
 		this.size = size

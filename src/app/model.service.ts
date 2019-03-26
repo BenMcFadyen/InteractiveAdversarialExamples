@@ -12,14 +12,14 @@ import {IMAGENET_CLASSES} from './ImageNetClasses';
 })
 export class ModelService 
 {
-	readonly MOBILETNET_STATS 	=  <ModelStats> {name: 'MobileNet', 	layers: 93,  size: 14.2,  top1: 70.4, top5: 89.5, parameters: 4253864,  requestLoad:false}
-	readonly MOBILENETV2_STATS 	=  <ModelStats> {name: 'MobileNetV2',	layers: 157, size: 24.5,  top1: 71.3, top5: 90.1, parameters: 3538984,  requestLoad:false}
-	readonly NASNETMOBILE_STATS =  <ModelStats> {name: 'NASNetMobile', 	layers: 771, size: 24.1,  top1: 74.4, top5: 91.9, parameters: 5326716,  requestLoad:false}
-	readonly RESNET50_STATS 	=  <ModelStats> {name: 'ResNet50',     	layers: 177, size: 100.6, top1: 74.9, top5: 92.1, parameters: 25636712, requestLoad:false}
-	readonly DENSENET121_STATS 	=  <ModelStats> {name: 'DenseNet121',  	layers: 429, size: 32.6,  top1: 82.4, top5: 92.3, parameters: 8062504,  requestLoad:false}
-	readonly DENSENET169_STATS 	=  <ModelStats> {name: 'DenseNet169',  	layers: 597, size: 57.4,  top1: 82.4, top5: 93.2, parameters: 14307880, requestLoad:false}
-	readonly XCEPTION_STATS 	=  <ModelStats> {name: 'Xception',  	layers: 313, size: 89.9,  top1: 79.0, top5: 94.5, parameters: 22910480, requestLoad:false}
-	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	layers: 134, size: 94.0,  top1: 77.9, top5: 93.7, parameters: 23851784, requestLoad:false}
+	readonly MOBILETNET_STATS 	=  <ModelStats> {name: 'MobileNet', 	layers: 93,  size: 14.2,  top1: 70.4, top5: 89.5, parameters: '4,253,864',  requestLoad:false}
+	readonly MOBILENETV2_STATS 	=  <ModelStats> {name: 'MobileNetV2',	layers: 157, size: 24.5,  top1: 71.3, top5: 90.1, parameters: '3,538,984',  requestLoad:false}
+	readonly NASNETMOBILE_STATS =  <ModelStats> {name: 'NASNetMobile', 	layers: 771, size: 24.1,  top1: 74.4, top5: 91.9, parameters: '5,326,716',  requestLoad:false}
+	readonly RESNET50_STATS 	=  <ModelStats> {name: 'ResNet50',     	layers: 177, size: 100.6, top1: 74.9, top5: 92.1, parameters: '25,636,712', requestLoad:false}
+	readonly DENSENET121_STATS 	=  <ModelStats> {name: 'DenseNet121',  	layers: 429, size: 32.6,  top1: 82.4, top5: 92.3, parameters: '8,062,504',  requestLoad:false}
+	readonly DENSENET169_STATS 	=  <ModelStats> {name: 'DenseNet169',  	layers: 597, size: 57.4,  top1: 82.4, top5: 93.2, parameters: '14,307,880', requestLoad:false}
+	readonly XCEPTION_STATS 	=  <ModelStats> {name: 'Xception',  	layers: 313, size: 89.9,  top1: 79.0, top5: 94.5, parameters: '22,910,480', requestLoad:false}
+	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	layers: 134, size: 94.0,  top1: 77.9, top5: 93.7, parameters: '23,851,784', requestLoad:false}
 
 	MobileNet 	 = new ModelData('MobileNet', 	this.MOBILETNET_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, 'conv_preds', true) //do not apply softmax, batch = true
 	MobileNetV2  = new ModelData('MobileNetV2',	this.MOBILENETV2_STATS, 224, 224, 3, IMAGENET_CLASSES, true, false, null, true)
