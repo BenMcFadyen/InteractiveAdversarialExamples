@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMaterialModule } from './material-module';
+import { ModelsLoadedDialogComponent } from './models-loaded-dialog/models-loaded-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { DemoMaterialModule } from './material-module';
     AboutComponent,
     HomeComponent,
     ModelSelectDialogComponent,
+    ModelsLoadedDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,6 @@ import { DemoMaterialModule } from './material-module';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ModelSelectDialogComponent],
+  entryComponents: [ModelSelectDialogComponent, ModelsLoadedDialogComponent],
 })
 export class AppModule { }
