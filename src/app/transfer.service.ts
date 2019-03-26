@@ -64,56 +64,46 @@ export class TransferService
 		this.adversarialImageModelNameSource.next(adversarialImageModelName)
 	}
 
-
-	checkDuplicateModel(modelName:string):boolean
+	//** Sets model predictions (overwrites)*/
+	setModelPredictions(newModelPredictions:ModelPrediction[])
 	{
-		if(this.allModelPredictions == null)
-			return 
-
-		for(var i = 0; i < this.allModelPredictions.length; i++)
+		// if newModelPrediction is null, set predictions to null, this will hide the prediction div element
+		if(newModelPredictions == null)
 		{
-			if(this.allModelPredictions[i].modelName == modelName)
-			{
-				this.allModelPredictions.splice(i,1)// remove the element from the array
-				return true //TODO potentially insert here too, to prevent the models jumping around when switching
-			}
-		}
-
-		return false
-	}
-
-
-	addNewModelPrediction(newModelPrediction: ModelPrediction, clearPrevious:boolean)
-	{
-		if(clearPrevious)
-		{	
-			// if newModelPrediction is null, set predictions to null, this will hide the prediction div element
-			if(newModelPrediction == null)
-			{
-				this.allModelPredictions = null
-				this.allModelPredictionsSource.next(null)
-				return
-			}
-
-			this.allModelPredictionsSource.next([newModelPrediction])
-			this.setAdversarialPredictionColouring()
-
+			this.allModelPredictions = null
+			this.allModelPredictionsSource.next(null)
 			return
 		}
 
-		if(this.allModelPredictions == null)
-			this.allModelPredictions = new Array()
+		this.setAdversarialModelTopOfPredictionList(newModelPredictions)
 
-		// checks if newModelPrediction is already a prediction, if it is, removes this.
-		this.checkDuplicateModel(newModelPrediction.modelName)
+		this.setAdversarialPredictionColouring(newModelPredictions)
 
-		// push the new prediction to the array, then set the source
-		this.allModelPredictions.push(newModelPrediction)
-		this.allModelPredictionsSource.next(this.allModelPredictions.reverse())
-		this.setAdversarialPredictionColouring()
+		this.allModelPredictionsSource.next(newModelPredictions)
 	}
 
 
+	/** If the model which generated the adversarial image is also within the list of predictions
+	*	Set this to the first element of the array, so it is displayed at the top	
+	*/
+	setAdversarialModelTopOfPredictionList(modelPredictions:ModelPrediction[])
+	{
+		// ensure a model name has actually been set
+		if(this.adversarialImageModelNameSource.value == null)
+			return
+
+		// init at 1, checking the first element is not needed (already correct)
+		for(let i = 1; i < modelPredictions.length; i++)
+		{
+			if(modelPredictions[i].modelName == this.adversarialImageModelNameSource.value)
+			{
+				modelPredictions.push(modelPredictions[0]) //re-add the top first element to the list
+				modelPredictions[0] = modelPredictions[i] //overwrite the top element with the one we want top
+				modelPredictions.splice(i, 1) // remove the old instance of the adversarial model prediction, from whereever it was in the array
+				break
+			}
+		}
+	}
 
 	/**	Set the adversarialPredictions styles to be displayed with the following rules:
 	*	T-FGSM (Targeted-Fast Gradient Sign Method)
@@ -123,18 +113,18 @@ export class TransferService
 	*
 	*	FGSM 
 	*		 Green  -> Adversarial Top1 != Original Top1-5 (The top 1 prediction is not any of the top 1-5 adversarial predictions)
-	*		 Orange -> Adversarial Top1 != Original Top2-5  (The top 1 prediction is not the top1 prediction, but is )
+	*		 Orange -> Adversarial Top1 != Original Top2-5  (The top 1 prediction is not the top1 prediction, but is within the remaining top 2-5)
 	*		 Red 	-> Adversarial Top1 = Original Top 1
 	*/
-	setAdversarialPredictionColouring()
+	setAdversarialPredictionColouring(modelPredictions:ModelPrediction[])
 	{
-		if(this.allModelPredictions == null)
+		if(modelPredictions == null)
 			return
 
-		if(this.allModelPredictions[0].adversarialPredictions == null)
+		if(modelPredictions[0].adversarialPredictions == null)
 			return
 
-		for (let modelPrediction of this.allModelPredictions) 
+		for(let modelPrediction of modelPredictions) 
 		{
 
 			if(modelPrediction.targetClass != null) //target class is set, must be T-FGSM
@@ -176,7 +166,7 @@ export class TransferService
 				{
 					// if adv_top1 == original_top1, colour = red
 					modelPrediction.adversarialPredictions[0].colour = 'red'
-					return
+					continue;
 				}
 
   				// if the original top1 is still in the adversarial top 2-5/x range, colour = orange
@@ -195,9 +185,5 @@ export class TransferService
 	  	}
 	}
 
-	getAllModelPredictions() : ModelPrediction[]
-	{
-		return this.allModelPredictions
-	}
-
+//
 }
