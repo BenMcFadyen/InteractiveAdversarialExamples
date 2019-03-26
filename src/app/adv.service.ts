@@ -76,7 +76,7 @@ export class AdvService
 	}
 
 
-	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 0)
+	async FGSM(modelObj: ModelData, orginalPrediction: string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 25)
 	{		
 		return this.singleStepAttack(modelObj, orginalPrediction, img3, epsilon).then(perturbation =>
 		{
@@ -97,7 +97,7 @@ export class AdvService
 		})
 	}
 
-	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 0)
+	async Targeted_FGSM(modelObj: ModelData, targetPrediction:string, img3, img4, epsilon = 1, drawToCanvas:boolean = true, perturbAmpli:number = 25)
 	{
 		return this.singleStepAttack(modelObj, targetPrediction, img3, epsilon).then(perturbation =>
 		{	

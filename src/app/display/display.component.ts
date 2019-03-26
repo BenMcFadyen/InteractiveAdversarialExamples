@@ -21,7 +21,7 @@ export class DisplayComponent implements OnInit
 
 	columnsToDisplay = ['className', 'confidence']
 
-	amplification:number = 10
+	amplification:number = 25
 
 	perturbation:tf.Tensor3D|tf.Tensor4D
 

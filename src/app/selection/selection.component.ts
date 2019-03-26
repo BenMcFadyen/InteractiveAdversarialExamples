@@ -51,7 +51,7 @@ export class SelectionComponent implements OnInit
 	private epsilonMax:number = 10;
 	private epsilonStep:number = 0.25;
 
-	private perturbationAmplification:number=0
+	private perturbationAmplification:number=25
 
 
 	private availableAttackMethods: string[] = 
@@ -97,16 +97,16 @@ export class SelectionComponent implements OnInit
 	/** Opens a dialog where the user can select which models they would like to load */
 	private openModelSelectDialog()
 	{
-		const dialogConfig = new MatDialogConfig();
+		const dialogConfig = new MatDialogConfig()
 
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.hasBackdrop = true;
+        dialogConfig.disableClose = true
+        dialogConfig.autoFocus = true
+        dialogConfig.hasBackdrop = true
 		dialogConfig.minWidth = 1000
 
 	    dialogConfig.data = this.modelService.allModelStats
 	  
-  		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig);
+  		const dialogRef = this.dialog.open(ModelSelectDialogComponent, dialogConfig)
 
 	    dialogRef.afterClosed().subscribe(modelsLoaded => 
     	{
