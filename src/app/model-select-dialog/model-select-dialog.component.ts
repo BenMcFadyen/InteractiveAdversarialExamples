@@ -20,17 +20,33 @@ export class ModelSelectDialogComponent implements OnInit
 	modelsToLoad:string[] = []
 	modelsLoaded:string[] = []
 
+
   	constructor(private modelService: ModelService,
 				public dialog: MatDialog,		
   				public dialogRef: MatDialogRef<ModelSelectDialogComponent>, 
   				@Inject(MAT_DIALOG_DATA) data) 
   	{
     	this.modelData = data;
+
+    	console.log(data)
+    	this.checkUpdateModelLoadStatus()
+
   	}
 
     ngOnInit() 
     {
 
+    }
+
+    checkUpdateModelLoadStatus()
+    {
+    	for(let i = 0; i < this.modelData.length; i++)
+    	{
+    		this.modelData[i].requestLoad = false
+    		this.modelData[i]["loaded"] = this.modelService.hasModelBeenLoaded(this.modelData[i].name)
+    	}
+
+    	console.log(this.modelData)
     }
 
 	onCloseButtonPress() 
@@ -119,7 +135,7 @@ export class ModelSelectDialogComponent implements OnInit
 
 		for (let model of this.modelData)
 		{
-			if(model.requestLoad)
+			if(model.requestLoad && !model.loaded)
 			{
 				this.modelsToLoad.push(model.name)
 				this.totalSize += model.size
