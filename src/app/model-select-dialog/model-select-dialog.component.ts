@@ -76,7 +76,7 @@ export class ModelSelectDialogComponent implements OnInit
 				this.modelsLoaded.push(this.modelsToLoad[i])				
 				this.modelLoadProgress += (100/totalModelsToLoad) 
 
-				if(i == totalModelsToLoad-1)
+				if(modelsLoaded == totalModelsToLoad)
 				{
 					this.modelsLoading = false;
 
@@ -105,6 +105,7 @@ export class ModelSelectDialogComponent implements OnInit
         dialogConfig.disableClose = false
         dialogConfig.autoFocus = true
         dialogConfig.hasBackdrop = true
+        dialogConfig.minWidth = 325
 
   		return this.dialog.open(ModelsLoadedDialogComponent, dialogConfig)
 	} 		
