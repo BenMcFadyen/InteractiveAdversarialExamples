@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
 import { ModelService } from '../model.service';
+import { ModelsLoadedDialogComponent } from '../models-loaded-dialog/models-loaded-dialog.component';
 
 
 @Component({
@@ -17,8 +18,10 @@ export class ModelSelectDialogComponent implements OnInit
 	modelsLoading = false;
 	modelLoadProgress = 0;
 	modelsToLoad:string[] = []
+	modelsLoaded:string[] = []
 
   	constructor(private modelService: ModelService,
+				public dialog: MatDialog,		
   				public dialogRef: MatDialogRef<ModelSelectDialogComponent>, 
   				@Inject(MAT_DIALOG_DATA) data) 
   	{
@@ -27,7 +30,6 @@ export class ModelSelectDialogComponent implements OnInit
 
     ngOnInit() 
     {
-
 
     }
 
@@ -71,16 +73,41 @@ export class ModelSelectDialogComponent implements OnInit
 			this.modelService.loadModel(this.modelsToLoad[i]).then(()=>
 			{
 				modelsLoaded++
+				this.modelsLoaded.push(this.modelsToLoad[i])				
 				this.modelLoadProgress += (100/totalModelsToLoad) 
 
 				if(i == totalModelsToLoad-1)
 				{
 					this.modelsLoading = false;
-			   		this.dialogRef.close(this.modelsToLoad);
+
+					const dialogRef = this.openModelsLoadedDialog()
+
+					dialogRef.afterClosed().subscribe(closeRequest => 
+					{
+						if(closeRequest == null || closeRequest == 'close')
+						{
+				   			this.dialogRef.close(this.modelsLoaded)
+						}
+
+						return					
+					})
 				}
 			})
 		}
 	}
+
+
+
+	private openModelsLoadedDialog()
+	{
+		const dialogConfig = new MatDialogConfig()
+
+        dialogConfig.disableClose = false
+        dialogConfig.autoFocus = true
+        dialogConfig.hasBackdrop = true
+
+  		return this.dialog.open(ModelsLoadedDialogComponent, dialogConfig)
+	} 		
 
 	onModelSelectChange(val)
 	{
