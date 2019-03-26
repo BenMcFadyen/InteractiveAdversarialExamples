@@ -99,14 +99,13 @@
 
 		<div class="epsilonSelect">
 
-			<p> ϵ: {{epsilon}} </p>
+			<p> ϵ: {{epsilon.value}} </p>
 			<mat-slider
-			 	[(ngModel)]="epsilon"
+			 	[formControl]="epsilon" 
 				thumbLabel 
-				step="{{epsilonStep}"
+				step="{{epsilonStep}}"
 				min="0" 
 				max="{{epsilonMax}}"
-				(change)="onEpsilonChange()"
 				[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
 							(attackMethod.value=='T-FGSM' && !targetClass.valid)" >
 			</mat-slider>		
@@ -118,7 +117,7 @@
 		 		▲ </button>
 
 		 		<button class ="lowerEpsilon" mat-raised-button color="blank" (click)="onDecreaseEpsilonClick()"
-		 		[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
+		 		[disabled]=" loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
 							(attackMethod.value=='T-FGSM' && !targetClass.valid)">
 				 ▼ </button>
 		 	</div>

@@ -29,6 +29,8 @@ export class SelectionComponent implements OnInit
 	private predictionModels = new FormControl('', [Validators.required]);
 	private attackMethod = new FormControl('', [Validators.required]);
 	private targetClass = new FormControl('', [Validators.required]);
+	private epsilon = new FormControl(3);
+
 
 	private imgURL: string = 'assets/images/lion.jpg'
 	private numBytes:number
@@ -45,9 +47,9 @@ export class SelectionComponent implements OnInit
 	readonly topX = 3
 
 
-	private epsilon: number = 3
-	private epsilonMax = 10;
-	private epsilonStep = 0.025;
+
+	private epsilonMax:number = 10;
+	private epsilonStep:number = 0.25;
 
 	private perturbationAmplification:number=0
 
@@ -85,6 +87,8 @@ export class SelectionComponent implements OnInit
 
 		// when a new prediction model is selected (or unselected)
 		this.predictionModels.valueChanges.subscribe(val => {this.onPredictionModelsChange()})
+
+		this.epsilon.valueChanges.subscribe(val => {this.onEpsilonChange()})
 
 		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
@@ -218,12 +222,12 @@ export class SelectionComponent implements OnInit
 				if(topPredictionFGSM == null)
 					throw 'FGSM cannot be executed without a prediction'
 
-				var attackMethodFunctionResult = this.advService.FGSM(modelObject, topPredictionFGSM, img3, img4, this.epsilon, true, this.perturbationAmplification);
+				var attackMethodFunctionResult = this.advService.FGSM(modelObject, topPredictionFGSM, img3, img4, this.epsilon.value, true, this.perturbationAmplification);
 				this.targetClassPredDisplay = null // passed to the transfer service, and used to ensure predictions are colour properly: TODO: Re-factor, hacky
 				break;
 
 			case 'T-FGSM':
-				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon, true, this.perturbationAmplification);
+				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon.value, true, this.perturbationAmplification);
 				this.targetClassPredDisplay = this.targetClass.value // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
 				break;
 		}
@@ -271,6 +275,42 @@ export class SelectionComponent implements OnInit
 	//** Set a random target class, calls attack/predict method after*/
 	private async onEpsilonChange()
 	{
+		let epsilon = this.epsilon.value
+
+		// if the user selects the max epsilon, increase the maximum (up to a limit of 150)
+		if(epsilon >= this.epsilonMax && this.epsilonMax < 150)
+		{	
+			if(this.epsilonMax == 1)
+			{
+				this.epsilonMax = 10
+				this.epsilonStep = this.epsilonMax / 400
+				return 				
+			}
+
+			this.epsilonMax += 10
+			this.epsilonStep = this.epsilonMax / 400
+
+		} // if they return to a lower epsion, scale the maximum back down (allow more fine-tuning of epsilon values)
+		else if(epsilon < (this.epsilonMax/4)) 
+		{
+			console.log('eps less')
+
+			// if the slider is in the range 0-10, and the user selects a low epsilon (say 0.5)
+			// scale the slider range 0-1 (lowest we will go)
+			if(this.epsilonMax == 10 && epsilon <= 1)
+			{
+				this.epsilonMax = 1
+				this.epsilonStep = 0.025
+			}
+
+			if(this.epsilonMax >= 20) //
+			{
+				this.epsilonMax -= 10
+				this.epsilonStep = this.epsilonMax / 400
+			}
+		}
+
+
 		// only update if an adversarial image is drawn
 		if(this.imgService.isCanvasBlank(this.canvasAdversarial))
 			return
@@ -281,41 +321,35 @@ export class SelectionComponent implements OnInit
 		this.predictAllSelectedModels()
 	}	
 
+	/**  Increase the epsilon value by a factor of 10 * the slider step */
+	private onIncreaseEpsilonClick()
+	{
+
+		let newEs = parseFloat((this.epsilon.value + (this.epsilonStep)).toFixed(3))
+
+		if(newEs >= 150)
+
+			return
+
+		this.epsilon.setValue(newEs)
+	}
+
+	/**  Decrease the epsilon value by a factor of 10 * the slider step */
+	private onDecreaseEpsilonClick()
+	{
+		let newEs = parseFloat((this.epsilon.value - (this.epsilonStep)).toFixed(3))
+
+		if(newEs <= 0)
+			return
+
+		this.epsilon.setValue(newEs)	
+	}
 
 	private onSelectFileButtonClick()
 	{
 		this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
 		this.imgService.drawImageToCanvas(<HTMLCanvasElement> document.getElementById(this.canvasOriginal), this.canvasAdversarial )
 	}
-
-
-	/**  Scales the epsilon max value up/ -> allows for low-level precision if desired */
-	private onIncreaseEpsilonClick()
-	{
-		if(this.epsilonMax < 150)
-		{
-			this.epsilonMax += 10
-			this.epsilonStep = this.epsilonMax / 400
-		}
-	}
-
-	/** Scales the epsilon max value down-> allows for low-level precision if desired */
-	private onDecreaseEpsilonClick()
-	{
-		if(this.epsilonMax == 10)
-		{
-			this.epsilonMax = 1
-			this.epsilonStep = this.epsilonMax / 400
-		}
-
-		if(this.epsilonMax > 10)
-		{
-			this.epsilonMax -= 10
-			this.epsilonStep = this.epsilonMax / 400
-		}
-	}
-
-
 
 	private onPredictionModelsChange()
 	{
@@ -470,6 +504,8 @@ export class SelectionComponent implements OnInit
 
 		return Math.exp(minv + scale*(position-minp));
 	}
+
+
 
 
 
