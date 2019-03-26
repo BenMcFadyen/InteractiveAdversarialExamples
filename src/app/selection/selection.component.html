@@ -3,7 +3,7 @@
 	<div class ="container">
 
 		<div class = "image">
-			<img id = "fileSelectImg" [src]="imgURL" height="200" width="200" (load)="onIMGLoad()">
+			<img id = "fileSelectImg" [src]="imgURL" height="150" width="150" (load)="onIMGLoad()">
 		</div>
 
 		<div class = "fileSelection">
@@ -21,7 +21,7 @@
 		<div class = "adversarialModelSelection buttonLayout">
 			<mat-form-field>
 				<mat-label>Adversarial Model</mat-label>
-				<mat-select [formControl]="adversarialModel" required [disabled]="loadedModels.length==0">
+				<mat-select [formControl]="adversarialModel" required>
 					<mat-option *ngFor="let model of loadedAdversarialModels" [value]="model">
 						{{model}}
 					</mat-option>
@@ -43,7 +43,7 @@
 		<div class = "predictionModelSelection buttonLayout">
 			<mat-form-field>
 				<mat-label>Prediction Model(s)</mat-label>
-				<mat-select [formControl]="predictionModels" required multiple [disabled]="loadedModels.length==0">
+				<mat-select [formControl]="predictionModels" required multiple>
 			    <mat-select-trigger>
 			      {{predictionModels.value ? predictionModels.value[0] : ''}}
 			      <span *ngIf="predictionModels.value?.length > 1" class="example-additional-selection">
@@ -105,9 +105,7 @@
 				thumbLabel 
 				step="{{epsilonStep}}"
 				min="0" 
-				max="{{epsilonMax}}"
-				[disabled]="loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
-							(attackMethod.value=='T-FGSM' && !targetClass.valid)" >
+				max="{{epsilonMax}}" >
 			</mat-slider>		
 	
 	 		<div class="epsilonButtons">

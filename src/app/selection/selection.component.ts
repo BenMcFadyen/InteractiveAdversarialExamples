@@ -25,11 +25,11 @@ import * as tf from '@tensorflow/tfjs';
 
 export class SelectionComponent implements OnInit 
 {
-	private adversarialModel = new FormControl('', [Validators.required]);
-	private predictionModels = new FormControl('', [Validators.required]);
-	private attackMethod = new FormControl('', [Validators.required]);
-	private targetClass = new FormControl('', [Validators.required]);
-	private epsilon = new FormControl(3);
+	private adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
+	private predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
+	private attackMethod = new FormControl({value: '', disabled: true}, [Validators.required]);
+	private targetClass = new FormControl({value: '', disabled: false}, [Validators.required]);
+	private epsilon = new FormControl({value: 3, disabled: true});
 
 
 	private imgURL: string = 'assets/images/lion.jpg'
@@ -42,7 +42,7 @@ export class SelectionComponent implements OnInit
 	private imageNetClasses: string[]
 	private filteredImageNetClasses: Observable<string[]>;	
 
-	readonly canvasSize:number = 350
+	readonly canvasSize:number = 224
 	readonly differenceCanvasSize:number = 224
 	readonly topX = 3
 
@@ -112,6 +112,11 @@ export class SelectionComponent implements OnInit
     	{
     		if(modelsLoaded != null)
     		{
+    			this.adversarialModel.enable()
+    			this.predictionModels.enable()
+    			this.attackMethod.enable()
+    			this.epsilon.enable()
+
     			// currently it is possible to close the dialog, then load a different model
     			// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
     			for(let loadedModel of modelsLoaded)
@@ -153,17 +158,20 @@ export class SelectionComponent implements OnInit
 			allModelAdversarialPredictions = this.getAllPredictions(allPredictionModelObjects, this.canvasAdversarial, this.topX) 
 	
 
+		let allModelsAllPredictions: ModelPrediction[] = []
+
+		// compile the model predictions
 		for(let i= 0; i < allPredictionModelObjects.length; i++)
 		{
-			// Send all original (and adversarial if wanted) to be displayed
-			// Also provide the targetClassPredDisplay, to be used to colour the predictions properly
-			this.transferService.addNewModelPrediction(new ModelPrediction(	allPredictionModelObjects[i].name,  
-																			allModelOriginalPredictions[i],
-																			null, // Predictions on the difference/perturbation go here
-																			allModelAdversarialPredictions[i],
-																			this.targetClassPredDisplay
-																			), false) //false = (do not override the predictions)
+			allModelsAllPredictions.push(new ModelPrediction(allPredictionModelObjects[i].name,  
+															allModelOriginalPredictions[i],
+															null, // Predictions on the difference/perturbation go here
+															allModelAdversarialPredictions[i],
+															this.targetClassPredDisplay))
 		}
+
+		this.transferService.setModelPredictions(allModelsAllPredictions)
+
 	}
 
 	/** Gets [topX] predictions of the given [modelObject], for the image within [canvas], logs time taken to console */
@@ -202,7 +210,7 @@ export class SelectionComponent implements OnInit
 		return await this.generateAndDrawAdversarialImage(adversarialPredictionModelObject, this.attackMethod.value, this.canvasOriginal, this.canvasAdversarial, this.topPrediction).then(()=>
 		{
 			// set the model name (to be displayed next to the adversarial image)
-			this.transferService.setAdversarialImageModelName('('+ adversarialPredictionModelObject.name + ')')
+			this.transferService.setAdversarialImageModelName(adversarialPredictionModelObject.name)
 			return
 		})
 	}	
@@ -293,8 +301,6 @@ export class SelectionComponent implements OnInit
 		} // if they return to a lower epsion, scale the maximum back down (allow more fine-tuning of epsilon values)
 		else if(epsilon < (this.epsilonMax/4)) 
 		{
-			console.log('eps less')
-
 			// if the slider is in the range 0-10, and the user selects a low epsilon (say 0.5)
 			// scale the slider range 0-1 (lowest we will go)
 			if(this.epsilonMax == 10 && epsilon <= 1)
@@ -347,14 +353,38 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-		this.transferService.addNewModelPrediction(new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]), false)
-		this.imgService.drawImageToCanvas(<HTMLCanvasElement> document.getElementById(this.canvasOriginal), this.canvasAdversarial )
+		this.transferService.setModelPredictions([
+
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),		
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),																				
+			])
 	}
 
 	private onPredictionModelsChange()
 	{
 		// This lets the display componenet that predictions should be cleared
-		this.transferService.addNewModelPrediction(null, true)
+		this.transferService.setModelPredictions(null)
 		this.topPrediction = null
 	}
 
@@ -384,7 +414,7 @@ export class SelectionComponent implements OnInit
 		this.imgService.resetCanvas(this.canvasDifference)
 
 		// This lets the display componenet that predictions should be cleared
-		this.transferService.addNewModelPrediction(null, true)
+		this.transferService.setModelPredictions(null)
 		this.topPrediction = null
 	}
 
@@ -396,7 +426,7 @@ export class SelectionComponent implements OnInit
 		if(this.imgURL == null)
 			throw 'no valid image source found'
 
-		if(this.predictionModels.invalid)
+		if(this.predictionModels.invalid || this.predictionModels.disabled)
 			throw 'no valid prediction model(s) selected'
 	}
 
@@ -408,10 +438,10 @@ export class SelectionComponent implements OnInit
 		if(this.imgURL == null)
 			throw 'no valid image source found'
 
-		if(this.adversarialModel.invalid) 
+		if(this.adversarialModel.invalid || this.adversarialModel.disabled)  
 			throw 'no adversarial model selected'
 
-	    if(this.attackMethod.invalid)
+	    if(this.attackMethod.invalid || this.attackMethod.disabled)
 	    	throw 'no attack method selected'
 
 		if(this.attackMethod.value == 'T-FGSM' && this.targetClass == null)

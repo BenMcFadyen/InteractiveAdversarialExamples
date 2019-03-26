@@ -20,6 +20,7 @@ enum CombineMethod
 export class AdvService 
 {
 	perturbationAmplification:number=0
+	perturbationCanvasSize:number = 224 //TODO: Tie this to the one defined in the selection component
 
 	constructor(private imgService:ImageService, private modelService:ModelService, private transferService:TransferService) {}
 
@@ -143,7 +144,7 @@ export class AdvService
 
 				// combine the white-tensor with the perturbed one; draw to canvas
 				let whitePerturbedTensor = <tf.Tensor3D | tf.Tensor4D> whiteTensor.add(perturbationWithAlpha)
-				this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, 350, 350)//TODO:HANDLE IMAGE SIZE-ING 
+				this.imgService.drawTensorToCanvas('canvasDifference', whitePerturbedTensor, this.perturbationCanvasSize, this.perturbationCanvasSize)
 			})
 
 			scaledPerturbation.dispose()
