@@ -21,14 +21,16 @@ export class ModelService
 	readonly XCEPTION_STATS 	=  <ModelStats> {name: 'Xception',  	layers: 313, size: 89.9,  top1: 79.0, top5: 94.5, parameters: '22,910,480', requestLoad:false}
 	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	layers: 134, size: 94.0,  top1: 77.9, top5: 93.7, parameters: '23,851,784', requestLoad:false}
 
+
+ 	// name, stats, height, width, channels, classLabels, availableForAdversarial, softmax, predictionOutputLayer, batchInput, normalistImageFirst?
 	MobileNet 	 = new ModelData('MobileNet', 	this.MOBILETNET_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, 'conv_preds', true) //do not apply softmax, batch = true
 	MobileNetV2  = new ModelData('MobileNetV2',	this.MOBILENETV2_STATS, 224, 224, 3, IMAGENET_CLASSES, true, false, null, true)
 	NASNetMobile = new ModelData('NASNetMobile',this.NASNETMOBILE_STATS,224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
 	ResNet50 	 = new ModelData('ResNet50',	this.RESNET50_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, null, true, false) //do not normalise input for ResNet50
 	DenseNet121  = new ModelData('DenseNet121',	this.DENSENET121_STATS, 224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
 	DenseNet169  = new ModelData('DenseNet169', this.DENSENET169_STATS, 224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
-	Xception 	 = new ModelData('Xception',	this.XCEPTION_STATS,	299, 299, 3, IMAGENET_CLASSES, false, false, null, true)
-	InceptionV3  = new ModelData('InceptionV3',	this.INCEPTIONV3_STATS, 299, 299, 3, IMAGENET_CLASSES, true, false, null, true)
+	Xception 	 = new ModelData('Xception',	this.XCEPTION_STATS,	299, 299, 3, IMAGENET_CLASSES, true, false, null, true)
+	InceptionV3  = new ModelData('InceptionV3',	this.INCEPTIONV3_STATS, 299, 299, 3, IMAGENET_CLASSES, false, false, null, true)
 
 	// NOT IN USE
 	// MNIST = new ModelData('MNIST', 28, 28, 1, new Array(0,1,2,3,4,5,6,7,8,9)) (Softmax|PredLayer|Batch|Normalise)
@@ -96,7 +98,7 @@ export class ModelService
 
 				let t0_warmGrad = performance.now()
 
-				//warm the gradient function -> only if model has been flagged as available (larger models take too long)
+				//warm the gradient function -> only if model has been flagged as available (larger models take too long / use too much memory)
 				if(currentModel.availableForAdversarialGeneration)
 				{
 					tf.tidy(()=>
@@ -113,8 +115,8 @@ export class ModelService
 
 						this.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
 					})	
-				}			
-
+				}		
+				return	
 
 		 	}).catch(e =>
 		 	{
@@ -225,9 +227,6 @@ export class ModelService
 	{
 		let predictions = new Array<Prediction>()
 		let modelOutputArray = Array.from(modelOutput.arraySync())
-
-		// console.log("Model Output:")
-		// console.log(modelOutputArray)
 
 		// Create the array in format: {ClassName, Confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
