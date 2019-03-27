@@ -1,0 +1,38 @@
+
+.mat-dialog-content
+{
+	.images
+	{
+		display: flex;
+		flex-direction: row;
+
+		.notSelected
+		{
+		    -webkit-filter:brightness(25%);
+		    -moz-filter:brightness(25%);
+		    filter: url(#brightness); /* required for FF */
+		    filter:brightness(25%);		
+		}	
+
+		.selected
+		{
+			border-color: red;
+		}		
+
+		.row
+		{
+		  display: flex;
+		  flex-direction: row;
+		}
+
+	}
+}
+
+
+.mat-dialog-actions
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap:nowrap;
+  justify-content:space-between;
+}

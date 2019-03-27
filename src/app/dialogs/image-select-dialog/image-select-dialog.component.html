@@ -1,3 +1,28 @@
-<p>
-  image-select-dialog works!
-</p>
+<h1 mat-dialog-title> Image Selection</h1>
+	<mat-dialog-content>
+
+		<div class="images" *ngFor="let row of images">
+			<div class="row" *ngFor="let imgUrl of row">
+					<img id = "imageSelectImg" 
+					[ngClass]="{'notSelected': imageSelected && imgUrl!=selectedImgUrl,
+										  'selected': imageSelected && imgUrl==selectedImgUrl  }"
+					[src]="imgUrl" height="200" width="200" (click)="onImgClick(imgUrl)">
+			</div>
+		</div>
+</mat-dialog-content>
+
+
+<mat-paginator [length]="imageNames.length"
+              [pageSize]="9"
+              (page)="onPageUpdate($event)">
+</mat-paginator>
+
+<mat-dialog-actions>
+	<button mat-raised-button color="blank"
+	(click)="onCloseButtonClick()"> Close </button>    
+
+	<button mat-raised-button color="primary"
+	(click)="onConfirmButtonClick()"
+	[disabled]="!imageSelected">
+	 Confirm </button>    
+</mat-dialog-actions>

@@ -20,7 +20,7 @@ enum CombineMethod
 export class AdvService 
 {
 	perturbationAmplification:number=0
-	perturbationCanvasSize:number = 224 //TODO: Tie this to the one defined in the selection component
+	perturbationCanvasSize:number = 250 //TODO: Tie this to the one defined in the selection component
 
 	constructor(private imgService:ImageService, private modelService:ModelService, private transferService:TransferService) {}
 

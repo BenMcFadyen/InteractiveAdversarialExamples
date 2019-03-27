@@ -4,6 +4,8 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+
+import { ImageSelectDialogComponent } from '../../dialogs/image-select-dialog/image-select-dialog.component';
 import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
 import { TransferService } from '../../services/transfer.service';
 import { IMAGENET_CLASSES } from '../../classes/ImageNetClasses';
@@ -42,8 +44,8 @@ export class SelectionComponent implements OnInit
 	private imageNetClasses: string[]
 	private filteredImageNetClasses: Observable<string[]>;	
 
-	readonly canvasSize:number = 224
-	readonly differenceCanvasSize:number = 224
+	readonly canvasSize:number = 250
+	readonly differenceCanvasSize:number = 250
 	readonly topX = 3
 
 
@@ -92,14 +94,23 @@ export class SelectionComponent implements OnInit
 
 		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
+		
+		if(tf.getBackend() == 'cpu')
+		{
+			alert('WebGL is not supported on this device')
+			console.error('WebGL is not supported on this device')
+		}
+
 	}
+
+
 
 	/** Opens a dialog where the user can select which models they would like to load */
 	private openModelSelectDialog()
 	{
 		const dialogConfig = new MatDialogConfig()
 
-        dialogConfig.disableClose = true
+        dialogConfig.disableClose = false
         dialogConfig.autoFocus = true
         dialogConfig.hasBackdrop = true
 		dialogConfig.minWidth = 1000
@@ -353,33 +364,59 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-		this.transferService.setModelPredictions([
 
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),		
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-			new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),																				
-			])
+		this.openImageSelectDialog()
+
+		// this.transferService.setModelPredictions([
+
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),		
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
+		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),																				
+		// 	])
 	}
+
+	/** Opens a dialog where the user can select an image*/
+	private openImageSelectDialog()
+	{
+		const dialogConfig = new MatDialogConfig()
+
+        dialogConfig.disableClose = false
+        dialogConfig.autoFocus = true
+        dialogConfig.hasBackdrop = true
+		dialogConfig.minWidth = 400
+
+	    //dialogConfig.data = this.modelService.allModelStats
+	  
+  		const dialogRef = this.dialog.open(ImageSelectDialogComponent, dialogConfig)
+
+	    dialogRef.afterClosed().subscribe((selectedImgUrl)=> 
+    	{
+    		if(selectedImgUrl !=null)
+    		{
+    			this.imgURL = selectedImgUrl
+    		}
+    	});  	
+	} 		
 
 	private onPredictionModelsChange()
 	{
