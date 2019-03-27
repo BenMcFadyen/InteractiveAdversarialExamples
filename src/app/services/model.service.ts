@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ModelData } from './ModelData';
-import { ModelStats } from './ModelStats';
+import { ModelData } from './../classes/ModelData';
+import { ModelStats } from './../classes/ModelStats';
 import { ImageService } from './image.service';
-import { Prediction } from './Prediction';
+import { Prediction } from './../classes/Prediction';
 import * as tf from '@tensorflow/tfjs';
-import {IMAGENET_CLASSES} from './ImageNetClasses';
+import {IMAGENET_CLASSES} from './../classes/ImageNetClasses';
 
 
 @Injectable({

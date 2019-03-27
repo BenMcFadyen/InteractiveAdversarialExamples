@@ -4,15 +4,15 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { ModelSelectDialogComponent } from '../model-select-dialog/model-select-dialog.component';
-import { TransferService } from '../transfer.service';
-import { IMAGENET_CLASSES } from '../ImageNetClasses';
-import { ModelPrediction } from '../ModelPrediction';
-import { ModelService } from '../model.service';
-import { ImageService } from '../image.service';
-import { AdvService } from '../adv.service';
-import { Prediction } from '../Prediction';
-import { ModelData } from '../ModelData';
+import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
+import { TransferService } from '../../services/transfer.service';
+import { IMAGENET_CLASSES } from '../../classes/ImageNetClasses';
+import { ModelPrediction } from '../../classes/ModelPrediction';
+import { ModelService } from '../../services/model.service';
+import { ImageService } from '../../services/image.service';
+import { AdvService } from '../../services/adv.service';
+import { Prediction } from '../../classes/Prediction';
+import { ModelData } from '../../classes/ModelData';
 
 import * as tf from '@tensorflow/tfjs';
 

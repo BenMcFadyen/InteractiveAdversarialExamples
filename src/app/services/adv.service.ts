@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ImageService } from './image.service';
 import { ModelService } from './model.service';
-import { ModelData } from './ModelData';
+import { ModelData } from './../classes/ModelData';
 import { TransferService } from './transfer.service';
 
 import * as tf from '@tensorflow/tfjs';
-import {IMAGENET_CLASSES} from './ImageNetClasses';
+import {IMAGENET_CLASSES} from './../classes/ImageNetClasses';
 
 enum CombineMethod 
 {

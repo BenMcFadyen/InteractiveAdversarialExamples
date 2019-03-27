@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Prediction } from './Prediction';
-import { ModelPrediction } from './ModelPrediction';
+import { Prediction } from './../classes/Prediction';
+import { ModelPrediction } from './../classes/ModelPrediction';
 import { BehaviorSubject } from 'rxjs';
 
 import * as tf from '@tensorflow/tfjs';

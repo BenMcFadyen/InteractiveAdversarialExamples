@@ -4,12 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavComponent } from './nav/nav.component';
-import { SelectionComponent } from './selection/selection.component';
-import { DisplayComponent } from './display/display.component';
-import { AboutComponent } from './about/about.component';
-import { HomeComponent } from './home/home.component';
-import { ModelSelectDialogComponent } from './model-select-dialog/model-select-dialog.component';
+import { HomeComponent } from './components/home/home.component';
+
+import { NavComponent } from './components/nav/nav.component';
+import { SelectionComponent } from './components/selection/selection.component';
+import { DisplayComponent } from './components/display/display.component';
+import { AboutComponent } from './components/about/about.component';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material';
@@ -18,7 +18,11 @@ import { MatInputModule } from '@angular/material';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMaterialModule } from './material-module';
-import { ModelsLoadedDialogComponent } from './models-loaded-dialog/models-loaded-dialog.component';
+
+import { ImageSelectDialogComponent } from './dialogs/image-select-dialog/image-select-dialog.component';
+import { ModelSelectDialogComponent } from './dialogs/model-select-dialog/model-select-dialog.component';
+import { ModelsLoadedDialogComponent } from './dialogs/models-loaded-dialog/models-loaded-dialog.component';
+import { ModelSelectDisclaimerDialogComponent } from './dialogs/model-select-disclaimer-dialog/model-select-disclaimer-dialog.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,8 @@ import { ModelsLoadedDialogComponent } from './models-loaded-dialog/models-loade
     HomeComponent,
     ModelSelectDialogComponent,
     ModelsLoadedDialogComponent,
+    ModelSelectDisclaimerDialogComponent,
+    ImageSelectDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +50,12 @@ import { ModelsLoadedDialogComponent } from './models-loaded-dialog/models-loade
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ModelSelectDialogComponent, ModelsLoadedDialogComponent],
+  entryComponents:
+   [  
+    ModelSelectDialogComponent,
+    ModelsLoadedDialogComponent,
+    ImageSelectDialogComponent,
+    ModelSelectDisclaimerDialogComponent,
+   ],
 })
 export class AppModule { }

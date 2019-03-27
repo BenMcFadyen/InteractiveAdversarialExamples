@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
-import { ModelService } from '../model.service';
+import { ModelService } from '../../services/model.service';
 import { ModelsLoadedDialogComponent } from '../models-loaded-dialog/models-loaded-dialog.component';
 
 
@@ -27,17 +27,14 @@ export class ModelSelectDialogComponent implements OnInit
   				@Inject(MAT_DIALOG_DATA) data) 
   	{
     	this.modelData = data;
-
-    	console.log(data)
     	this.checkUpdateModelLoadStatus()
-
   	}
 
     ngOnInit() 
     {
-
     }
 
+    // disables model selection if they have already been loaded, unchecks any 'requestLoads' that never actually loaded
     checkUpdateModelLoadStatus()
     {
     	for(let i = 0; i < this.modelData.length; i++)
@@ -45,8 +42,6 @@ export class ModelSelectDialogComponent implements OnInit
     		this.modelData[i].requestLoad = false
     		this.modelData[i]["loaded"] = this.modelService.hasModelBeenLoaded(this.modelData[i].name)
     	}
-
-    	console.log(this.modelData)
     }
 
 	onCloseButtonPress() 

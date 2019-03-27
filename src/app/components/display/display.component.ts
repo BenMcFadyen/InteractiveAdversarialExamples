@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Prediction } from '../Prediction';
-import { ModelPrediction } from '../ModelPrediction';
-import { ImageService } from '../image.service';
-import { AdvService } from '../adv.service';
+import { Prediction } from '../../classes/Prediction';
+import { ModelPrediction } from '../../classes/ModelPrediction';
+import { ImageService } from '../../services/image.service';
+import { AdvService } from '../../services/adv.service';
 
 import * as tf from '@tensorflow/tfjs';
 
-import { TransferService } from '../transfer.service';
+import { TransferService } from '../../services/transfer.service';
 
 @Component({
   selector: 'app-display',
