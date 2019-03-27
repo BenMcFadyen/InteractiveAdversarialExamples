@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
 import { ModelService } from '../../services/model.service';
 import { ModelsLoadedDialogComponent } from '../models-loaded-dialog/models-loaded-dialog.component';
+import { ModelSelectDisclaimerDialogComponent } from '../model-select-disclaimer-dialog/model-select-disclaimer-dialog.component';
 
 
 @Component({
@@ -20,10 +21,12 @@ export class ModelSelectDialogComponent implements OnInit
 	modelsToLoad:string[] = []
 	modelsLoaded:string[] = []
 
+	disclaimerShown:boolean = false
+
 
   	constructor(private modelService: ModelService,
 				public dialog: MatDialog,		
-  				public dialogRef: MatDialogRef<ModelSelectDialogComponent>, 
+  				public modelSelectDialogRef: MatDialogRef<ModelSelectDialogComponent>, 
   				@Inject(MAT_DIALOG_DATA) data) 
   	{
     	this.modelData = data;
@@ -46,7 +49,7 @@ export class ModelSelectDialogComponent implements OnInit
 
 	onCloseButtonPress() 
 	{
-	    this.dialogRef.close();
+	    this.modelSelectDialogRef.close();
 	}
 
 	//TODO COMMENT THIS
@@ -91,13 +94,13 @@ export class ModelSelectDialogComponent implements OnInit
 				{
 					this.modelsLoading = false;
 
-					const dialogRef = this.openModelsLoadedDialog()
+					const modelsLoadedDialogRef = this.openModelsLoadedDialog()
 
-					dialogRef.afterClosed().subscribe(closeRequest => 
+					modelsLoadedDialogRef.afterClosed().subscribe(closeRequest => 
 					{
 						if(closeRequest == null || closeRequest == 'close')
 						{
-				   			this.dialogRef.close(this.modelsLoaded)
+				   			this.modelSelectDialogRef.close(this.modelsLoaded)
 						}
 
 						return					
@@ -119,7 +122,22 @@ export class ModelSelectDialogComponent implements OnInit
         dialogConfig.minWidth = 325
 
   		return this.dialog.open(ModelsLoadedDialogComponent, dialogConfig)
-	} 		
+	} 	
+
+	private openModelSelectDisclaimerDialog()
+	{
+		const dialogConfig = new MatDialogConfig()
+
+        dialogConfig.disableClose = false
+        dialogConfig.autoFocus = true
+        dialogConfig.hasBackdrop = true
+        dialogConfig.minWidth = 325
+        dialogConfig.maxWidth = 500
+
+  		return this.dialog.open(ModelSelectDisclaimerDialogComponent, dialogConfig)
+	} 				
+
+
 
 	onModelSelectChange(val)
 	{
@@ -138,6 +156,19 @@ export class ModelSelectDialogComponent implements OnInit
 		}
 
 		this.totalSize = Math.round(this.totalSize * 100) / 100
+
+
+		if(!this.disclaimerShown && this.modelsToLoad.length >= 3)
+		{
+			let modelSelectDisclaimerDialogRef = this.openModelSelectDisclaimerDialog()
+
+			modelSelectDisclaimerDialogRef.afterClosed().subscribe(() => 
+			{
+				this.disclaimerShown = true;			
+			})			
+		}
+
+
 	}
 
 

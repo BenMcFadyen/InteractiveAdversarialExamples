@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-model-select-disclaimer-dialog',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModelSelectDisclaimerDialogComponent implements OnInit {
 
-  constructor() { }
+	constructor(public dialogRef: MatDialogRef<ModelSelectDisclaimerDialogComponent>) 
+	{ 
 
-  ngOnInit() {
-  }
+	}
 
+	ngOnInit() 
+	{
+
+	}
+
+	onOkButtonClick()
+	{
+		this.dialogRef.close()
+	}
+
+//
 }
