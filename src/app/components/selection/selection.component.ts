@@ -8,13 +8,17 @@ import { map, startWith } from 'rxjs/operators';
 import { ImageSelectDialogComponent } from '../../dialogs/image-select-dialog/image-select-dialog.component';
 import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
 import { TransferService } from '../../services/transfer.service';
-import { IMAGENET_CLASSES } from '../../classes/ImageNetClasses';
-import { ModelPrediction } from '../../classes/ModelPrediction';
+import { HelperService } from '../../services/helper.service';
 import { ModelService } from '../../services/model.service';
 import { ImageService } from '../../services/image.service';
 import { AdvService } from '../../services/adv.service';
+
+import { IMAGENET_CLASSES } from '../../classes/ImageNetClasses';
+import { ModelPrediction } from '../../classes/ModelPrediction';
 import { Prediction } from '../../classes/Prediction';
 import { ModelData } from '../../classes/ModelData';
+
+
 
 import * as tf from '@tensorflow/tfjs';
 
@@ -73,7 +77,8 @@ export class SelectionComponent implements OnInit
 		  		private imgService: ImageService,
 		  		private transferService: TransferService,
 		  		private advService: AdvService,
-		  		private dialog: MatDialog)
+		  		private dialog: MatDialog,
+		  		private helper:HelperService)
 	{
 
 	}
@@ -81,6 +86,9 @@ export class SelectionComponent implements OnInit
 	ngOnInit() 
 	{
 		this.createImageNetArray()
+
+		//randomise imagenet order
+		this.helper.shuffleArray(this.imageNetClasses)
 
 		/** Updates the tf memory stats once every second */
 		setInterval(()=> { this.updateMemory() }, 1 * 1000);
@@ -95,11 +103,11 @@ export class SelectionComponent implements OnInit
 		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
 		
-		if(tf.getBackend() == 'cpu')
-		{
-			alert('WebGL is not supported on this device')
-			console.error('WebGL is not supported on this device')
-		}
+		// if(tf.getBackend() == 'cpu')
+		// {
+		// 	alert('WebGL is not supported on this device')
+		// 	console.error('WebGL is not supported on this device')
+		// }
 
 	}
 
@@ -168,7 +176,6 @@ export class SelectionComponent implements OnInit
 		if(!this.imgService.isCanvasBlank(this.canvasAdversarial))
 			allModelAdversarialPredictions = this.getAllPredictions(allPredictionModelObjects, this.canvasAdversarial, this.topX) 
 	
-
 		let allModelsAllPredictions: ModelPrediction[] = []
 
 		// compile the model predictions
@@ -194,7 +201,7 @@ export class SelectionComponent implements OnInit
 		let modelOutput = this.modelService.tryPredict(modelObject, canvas, undefined)
 		let predictions = this.modelService.decodeOutput(modelObject, modelOutput, topX)
 		modelOutput.dispose()
-		this.logTime(t0, performance.now(), 'Prediction complete')
+		this.helper.logTime(t0, performance.now(), 'Prediction complete')
 
 		return predictions
 	}
@@ -256,7 +263,7 @@ export class SelectionComponent implements OnInit
 		{	
 			return this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize).then(()=>
 			{
-				this.logTime(t0, performance.now(), 'Adversarial example generated')
+				this.helper.logTime(t0, performance.now(), 'Adversarial example generated')
 				// cleanup img tensors
 				img3.dispose()
 				img4.dispose()
@@ -364,35 +371,8 @@ export class SelectionComponent implements OnInit
 
 	private onSelectFileButtonClick()
 	{
-
 		this.openImageSelectDialog()
-
-		// this.transferService.setModelPredictions([
-
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),		
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),
-		// 	new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)]),																				
-		// 	])
+		// this.transferService.setModelPredictions([new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)])])
 	}
 
 	/** Opens a dialog where the user can select an image*/
@@ -441,7 +421,6 @@ export class SelectionComponent implements OnInit
 			reader.onload = (event:any) => {this.imgURL = event.target.result;}
 		}
 	}	
-
 
 
 	/** Reset the adversarial and differnce/perturbation canvas' and clears any predictions */
@@ -535,16 +514,6 @@ export class SelectionComponent implements OnInit
 			this.imageNetClasses.push(IMAGENET_CLASSES[i])
 	}	
 
-
-
-	/** Log the time taken to perform complete a given action */
-	private logTime(t0:number, t1:number, message: string)
-	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
-	}
-
-
-
 	/** Updates the memory variables provided by tf.memory() */
 	private updateMemory()
 	{
@@ -552,8 +521,6 @@ export class SelectionComponent implements OnInit
 		this.numBytes = Math.round((mem.numBytes / 1000000))
 		this.numTensors = mem.numTensors
 	}	
-
-
 
 
 	logslider(position) 
@@ -571,8 +538,6 @@ export class SelectionComponent implements OnInit
 
 		return Math.exp(minv + scale*(position-minp));
 	}
-
-
 
 
 

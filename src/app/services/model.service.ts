@@ -3,6 +3,8 @@ import { ModelData } from './../classes/ModelData';
 import { ModelStats } from './../classes/ModelStats';
 import { ImageService } from './image.service';
 import { Prediction } from './../classes/Prediction';
+import { HelperService } from '../services/helper.service';
+
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './../classes/ImageNetClasses';
 
@@ -60,7 +62,8 @@ export class ModelService
 		this.INCEPTIONV3_STATS,
 	]
 
-	constructor(private imageService: ImageService)
+	constructor(private imageService: ImageService, 
+				private helper:HelperService)
 	{
 
 	}
@@ -84,7 +87,7 @@ export class ModelService
 		 	{
 		 		currentModel.model = loadedModel
 		 		currentModel.loaded = true
-				this.logTime(t0_load, performance.now(), 'Successfully loaded: ' +  currentModel.name)
+				this.helper.logTime(t0_load, performance.now(), 'Successfully loaded: ' +  currentModel.name)
 
 				let t0_warmPredict = performance.now()
 
@@ -92,7 +95,7 @@ export class ModelService
 				tf.tidy(()=>
 				{
 					currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
-					this.logTime(t0_warmPredict, performance.now(), 'Successfully warmed prediction: ' +  currentModel.name)					
+					this.helper.logTime(t0_warmPredict, performance.now(), 'Successfully warmed prediction: ' +  currentModel.name)					
 				})
 
 
@@ -113,7 +116,7 @@ export class ModelService
 					    const gradientFunction = tf.grad(lossFunction)
 					    let gradient = gradientFunction(img3)
 
-						this.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
+						this.helper.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
 					})	
 				}		
 				return	
@@ -226,12 +229,12 @@ export class ModelService
 	decodeOutput(model:ModelData, modelOutput, topX: number): Prediction[]
 	{
 		let predictions = new Array<Prediction>()
-		let modelOutputArray = Array.from(modelOutput.arraySync())
+		let modelOutputArray: number[] = Array.from(modelOutput.arraySync())
 
 		// Create the array in format: {ClassName, Confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
 		{
-			predictions[i] = (new Prediction(model.classLabels[i],  this.formatNumber(modelOutputArray[i])))
+			predictions[i] = (new Prediction(model.classLabels[i],  this.helper.roundNumber(modelOutputArray[i], 2)))
 		}
 
 		// Sort predictions DSC by confidence
@@ -246,16 +249,5 @@ export class ModelService
 		return predictions
 	}
 
-	/** Round a number to 2 dp */
-	formatNumber(num):number 
-	{
-		return Math.round(num * 100) / 100
-	}
-
-	/** Log the time taken to perform complete a given action */
-	logTime(t0:number, t1:number, message: string)
-	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
-	}
-
+//
 }
