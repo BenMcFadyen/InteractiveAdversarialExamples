@@ -4,12 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-
 import { NavComponent } from './components/nav/nav.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { DisplayComponent } from './components/display/display.component';
 import { AboutComponent } from './components/about/about.component';
+import { HomeComponent } from './components/home/home.component';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material';

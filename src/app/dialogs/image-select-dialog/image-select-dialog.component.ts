@@ -13,7 +13,7 @@ import { HelperService } from '../../services/helper.service';
 })
 export class ImageSelectDialogComponent implements OnInit 
 {
-	private basePath: string = 'assets/images/'
+	private basePath: string = './assets/images/'
 
 	private subFolderPaths: string[] = 
 	[

@@ -38,7 +38,7 @@ export class SelectionComponent implements OnInit
 	private epsilon = new FormControl({value: 3, disabled: true});
 
 
-	private imgURL: string = 'assets/images/animals/lion.jpg'
+	private imgURL: string = './assets/images/animals/lion.jpg'
 	private numBytes:number
 	private numTensors:number
 

@@ -24,7 +24,7 @@ export class ModelService
 	readonly INCEPTIONV3_STATS 	=  <ModelStats> {name: 'InceptionV3',  	layers: 134, size: 94.0,  top1: 77.9, top5: 93.7, parameters: '23,851,784', requestLoad:false}
 
 
- 	// name, stats, height, width, channels, classLabels, availableForAdversarial, softmax, predictionOutputLayer, batchInput, normalistImageFirst?
+ 	// name, stats, height, width, channels, classLabels, 										availForAdv, softmax, predictionOutputLayer, batchInput, normalistImageFirst?
 	MobileNet 	 = new ModelData('MobileNet', 	this.MOBILETNET_STATS,	224, 224, 3, IMAGENET_CLASSES, true, false, 'conv_preds', true) //do not apply softmax, batch = true
 	MobileNetV2  = new ModelData('MobileNetV2',	this.MOBILENETV2_STATS, 224, 224, 3, IMAGENET_CLASSES, true, false, null, true)
 	NASNetMobile = new ModelData('NASNetMobile',this.NASNETMOBILE_STATS,224, 224, 3, IMAGENET_CLASSES, false, false, null, true)
