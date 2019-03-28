@@ -131,27 +131,22 @@ export class TransferService
 			{
 				// if adv_top1 == target, colour = green 0
 				if(modelPrediction.adversarialPredictions[0].className == modelPrediction.targetClass)
-				{
 					modelPrediction.adversarialPredictions[0].colour = 'green'		
-				}
 				else if(modelPrediction.adversarialPredictions[0].className != modelPrediction.originalPredictions[0].className)
-				{
 					modelPrediction.adversarialPredictions[0].colour = 'orange'
-				}
+				
 
 				// if adv_top1 == original_top1, colour = red 
-				if(modelPrediction.adversarialPredictions[0].className == modelPrediction.originalPredictions[0].className)
-				{
+				if(modelPrediction.adversarialPredictions[0].className == modelPrediction.originalPredictions[0].className)		
 					modelPrediction.adversarialPredictions[0].colour = 'red'
-				}
+				
 
 				// if adv_top5/x == target, colour = orange  (not top 1)
 				for(let i = 1; (i <  5 && i < modelPrediction.adversarialPredictions.length); i++)
 				{
 					if(modelPrediction.adversarialPredictions[i].className == modelPrediction.targetClass)
-					{
 						modelPrediction.adversarialPredictions[i].colour = 'orange'
-					}		
+							
 				}
 
 	  		}
@@ -173,17 +168,15 @@ export class TransferService
 				for(let i = 1; (i <  5 && i < modelPrediction.adversarialPredictions.length); i++)
 				{
 					if(modelPrediction.adversarialPredictions[i].className == modelPrediction.originalPredictions[0].className)
-					{
 						modelPrediction.adversarialPredictions[i].colour = 'orange'
-					}
 					else
-					{
 						modelPrediction.adversarialPredictions[i].colour = null
-					}	
 				}
 	  		}
 	  	}
 	}
+
+
 
 //
 }
