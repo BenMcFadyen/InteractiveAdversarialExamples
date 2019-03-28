@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import {PageEvent} from '@angular/material';
+import { PageEvent } from '@angular/material';
+import { FormControl } from '@angular/forms';
+
+import { ImageFileNames } from '../../classes/ImageFileNames';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-image-select-dialog',
@@ -10,85 +14,86 @@ import {PageEvent} from '@angular/material';
 export class ImageSelectDialogComponent implements OnInit 
 {
 	private basePath: string = 'assets/images/'
+
+	private subFolderPaths: string[] = 
+	[
+		'animals/',
+		'objects/',
+		'food/',		
+	]
+
 	private fileExtension:string = '.jpg'
 	private pageNumber = 0
 
 	private imageSelected = false
 	private selectedImgUrl:string = ''
 
-	images: string[][]
+	private imageFileNames = new ImageFileNames()
 
-	imageNames:string[] = 
+
+  	private tabs = ['Animals', 'Objects', 'Food'];
+ 	private selected = new FormControl(0);
+
+
+	private groups:string[][] = 
 	[
-		'boxer', 
-		'bubble', 
-		'car', 
-		'cat299', 
-		'chainsaw', 
-		'elephant', 
-		'elephant2',
-		'fountain_pen', 	
-		'goldfish', 
-		'hamster', 
-		'jay', 
-		'jay2', 	
-		'laptop', 
-		'lemon', 
-		'lion', 
-		'lion2',
-		'moped',
-		'mushroom',
-		'ostrich',
-		'pencil',
-		'pooltable',
-		'pooltable2',
-		'pug',
-		'scorpion',														
-		'scuba',		
-		'sealion',		
-		'sealion2',		
-		'snake',		
-		'snake2',		
-		'stingray',												
-		'stingray2',												
-		'strawberry',												
-		'tarantula',												
-		'vase',												
-		'volcano',												
-		'wolfspider',												
+		this.imageFileNames.animals,
+		this.imageFileNames.objects,
+		this.imageFileNames.food,
 	]
 
-	constructor(public dialogRef: MatDialogRef<ImageSelectDialogComponent>) 
+	imageUrls: string[][]
+
+	constructor(public dialogRef: MatDialogRef<ImageSelectDialogComponent>,
+				private helper:HelperService) 
 	{ 
 
 	}
 
 	ngOnInit() 
 	{
+		//randomise the image order
+		this.helper.shuffleArray(this.imageFileNames.animals)
+		this.helper.shuffleArray(this.imageFileNames.objects)
+		this.helper.shuffleArray(this.imageFileNames.food)
+
 		this.updateImageArray(0)
 	}
 
 	updateImageArray(startIndex = 0)
 	{
+		let groupIndex = this.selected.value
+
 		let row = 3
 		let column = 3
 		let index = startIndex*9;
 		let fullUrl = ''
 
-		this.images = []
+		this.imageUrls = []
 
 		for(let i = 0; i < row; i++)
 		{
-			this.images[i] = []
+			this.imageUrls[i] = []
 
 			for(let j = 0; j < column; j++)
 			{	
-				fullUrl = this.basePath + this.imageNames[index] + this.fileExtension
-				this.images[i][j] = fullUrl
+				//eof
+				if(this.groups[groupIndex][index] == null)
+					return 
+
+				fullUrl = this.basePath + this.subFolderPaths[groupIndex] + this.groups[groupIndex][index] + this.fileExtension
+				this.imageUrls[i][j] = fullUrl
 				index++
 			}
 		}
 
+	}
+
+	onTabSwitch()
+	{
+		this.imageSelected = false
+		this.selectedImgUrl = null		
+		this.updateImageArray(0)		
 	}
 
 	onPageUpdate(event)
@@ -111,9 +116,15 @@ export class ImageSelectDialogComponent implements OnInit
 
 	onImgClick(selectedImgUrl)
 	{
+		if(this.selectedImgUrl == selectedImgUrl)
+		{
+			this.imageSelected = false
+			this.selectedImgUrl = null
+			return
+		}
+
 		this.imageSelected = true
 		this.selectedImgUrl = selectedImgUrl
-		//console.log('Selected: ' + selectedImgUrl)
 	}
 
 //

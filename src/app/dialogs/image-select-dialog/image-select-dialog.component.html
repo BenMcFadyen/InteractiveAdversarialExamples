@@ -1,21 +1,27 @@
 <h1 mat-dialog-title> Image Selection</h1>
-	<mat-dialog-content>
 
-		<div class="images" *ngFor="let row of images">
-			<div class="row" *ngFor="let imgUrl of row">
-					<img id = "imageSelectImg" 
-					[ngClass]="{'notSelected': imageSelected && imgUrl!=selectedImgUrl,
-										  'selected': imageSelected && imgUrl==selectedImgUrl  }"
-					[src]="imgUrl" height="200" width="200" (click)="onImgClick(imgUrl)">
+<mat-dialog-content>
+	<mat-tab-group [selectedIndex]="selected.value"
+					(selectedIndexChange)="selected.value = $event"
+	               (selectedTabChange)="onTabSwitch()">
+	  <mat-tab [class]="test" *ngFor="let tab of tabs; let index = index" [label]="tab">
+			<div class="images" *ngFor="let row of imageUrls">
+				<div class="row" *ngFor="let imgUrl of row">
+						<img id = "imageSelectImg" 
+						[ngClass]="{'notSelected': imageSelected && imgUrl!=selectedImgUrl,
+											  'selected': imageSelected && imgUrl==selectedImgUrl  }"
+						[src]="imgUrl" height="150" width="150" (click)="onImgClick(imgUrl)">
+				</div>
 			</div>
-		</div>
+
+		<mat-paginator [length]="groups[index].length"
+	              [pageSize]="9"
+	              (page)="onPageUpdate($event)">
+		</mat-paginator>
+		
+	  </mat-tab>
+	</mat-tab-group>
 </mat-dialog-content>
-
-
-<mat-paginator [length]="imageNames.length"
-              [pageSize]="9"
-              (page)="onPageUpdate($event)">
-</mat-paginator>
 
 <mat-dialog-actions>
 	<button mat-raised-button color="blank"

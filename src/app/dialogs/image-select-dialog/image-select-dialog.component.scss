@@ -1,4 +1,21 @@
 
+h1
+{
+	margin-bottom: 0px;
+}
+
+.mat-tab-group
+{
+	::ng-deep .mat-tab-label
+	{
+	    min-width: 150px;
+	    width:150px;
+	}
+}
+
+
+
+
 .mat-dialog-content
 {
 	.images
@@ -35,4 +52,5 @@
   flex-direction: row;
   flex-wrap:nowrap;
   justify-content:space-between;
+  padding:0px;
 }
