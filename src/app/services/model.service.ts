@@ -138,7 +138,7 @@ export class ModelService
 
 		try 
 		{
-			return await tf.loadLayersModel('/assets/models/' + modelObject.name + '/model.json').then(loadedModel=> {return loadedModel})
+			return await tf.loadLayersModel('./assets/models/' + modelObject.name + '/model.json').then(loadedModel=> {return loadedModel})
 		}
 		catch(e) 
 		{

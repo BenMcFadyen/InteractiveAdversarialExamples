@@ -31,22 +31,22 @@ import * as tf from '@tensorflow/tfjs';
 
 export class SelectionComponent implements OnInit 
 {
-	private adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
-	private predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
-	private attackMethod = new FormControl({value: '', disabled: true}, [Validators.required]);
-	private targetClass = new FormControl({value: '', disabled: false}, [Validators.required]);
-	private epsilon = new FormControl({value: 3, disabled: true});
+	adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
+	predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
+	attackMethod = new FormControl({value: '', disabled: true}, [Validators.required]);
+	targetClass = new FormControl({value: '', disabled: false}, [Validators.required]);
+	epsilon = new FormControl({value: 3, disabled: true});
 
 
-	private imgURL: string = './assets/images/animals/lion.jpg'
-	private numBytes:number
-	private numTensors:number
+	imgURL: string = './assets/images/animals/lion.jpg'
+	numBytes:number
+	numTensors:number
 
-	private topPrediction:string
-	private targetClassPredDisplay: string
+	topPrediction:string
+	targetClassPredDisplay: string
 
-	private imageNetClasses: string[]
-	private filteredImageNetClasses: Observable<string[]>;	
+	imageNetClasses: string[]
+	filteredImageNetClasses: Observable<string[]>;	
 
 	readonly canvasSize:number = 250
 	readonly differenceCanvasSize:number = 250
@@ -54,24 +54,24 @@ export class SelectionComponent implements OnInit
 
 
 
-	private epsilonMax:number = 10;
-	private epsilonStep:number = 0.25;
+	epsilonMax:number = 10;
+	epsilonStep:number = 0.25;
 
-	private perturbationAmplification:number=25
+	perturbationAmplification:number=25
 
 
-	private availableAttackMethods: string[] = 
+	availableAttackMethods: string[] = 
 	[
 		'FGSM',
 		'T-FGSM'
 	]
 
-	private loadedModels: string[] = []
-	private loadedAdversarialModels: string[] = []
+	loadedModels: string[] = []
+	loadedAdversarialModels: string[] = []
 
-	private canvasOriginal:string = 'canvasOriginal'
-	private canvasDifference:string = 'canvasDifference'		
-	private canvasAdversarial:string = 'canvasAdversarial'
+	canvasOriginal:string = 'canvasOriginal'
+	canvasDifference:string = 'canvasDifference'		
+	canvasAdversarial:string = 'canvasAdversarial'
 
   	constructor(private modelService: ModelService,
 		  		private imgService: ImageService,
@@ -114,11 +114,11 @@ export class SelectionComponent implements OnInit
 
 
 	/** Opens a dialog where the user can select which models they would like to load */
-	private openModelSelectDialog()
+	openModelSelectDialog()
 	{
 		const dialogConfig = new MatDialogConfig()
 
-        dialogConfig.disableClose = false
+        dialogConfig.disableClose = true
         dialogConfig.autoFocus = true
         dialogConfig.hasBackdrop = true
 		dialogConfig.minWidth = 1000
@@ -140,7 +140,6 @@ export class SelectionComponent implements OnInit
     			// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
     			for(let loadedModel of modelsLoaded)
     			{
-
     				// only allow models flagged as ok for adversarial image generation
     				let modelObject = this.modelService.getModelDataObjectFromName(loadedModel)
     				if(modelObject.availableForAdversarialGeneration)
@@ -157,7 +156,7 @@ export class SelectionComponent implements OnInit
 	* 	Also predict the adversarial image if this has been drawn to the canvas
 	*	Sends prediction results to be displayed by the Display component.
 	*/
-	private predictAllSelectedModels()
+	predictAllSelectedModels()
 	{
 		let canvasSize = this.canvasSize
 
@@ -193,7 +192,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	/** Gets [topX] predictions of the given [modelObject], for the image within [canvas], logs time taken to console */
-	private getPredictions(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3) : Prediction[]
+	getPredictions(modelObject:ModelData, canvas:string | HTMLCanvasElement, topX: number = 3) : Prediction[]
 	{
 		let t0 = performance.now();
 
@@ -207,7 +206,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	/** Gets [topX] predictions of the given [modelObjects], for the image within [canvas], logs time taken to console */
-	private getAllPredictions(modelObjects:ModelData[], canvas:string | HTMLCanvasElement, topX:number = 3) : Prediction[][]
+	getAllPredictions(modelObjects:ModelData[], canvas:string | HTMLCanvasElement, topX:number = 3) : Prediction[][]
 	{
 		let allPredictions:Prediction[][] = []
 
@@ -220,7 +219,7 @@ export class SelectionComponent implements OnInit
 	}	
 
 	/** Generates an adversarial image as per the selected parameters*/
-	private async executeAttackMethod()
+	async executeAttackMethod()
 	{
 		this.validateGeneration()
 		var adversarialPredictionModelObject = this.modelService.getModelDataObjectFromName(this.adversarialModel.value)
@@ -234,7 +233,7 @@ export class SelectionComponent implements OnInit
 	}	
 
 	/** Generate an adversarial image using the given model and attack method, for the given source canvas, then draw it to the given target canvas */
-	private async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
+	async generateAndDrawAdversarialImage(modelObject: ModelData, selectedAttackMethod:string, sourceCanvas:string|HTMLCanvasElement, targetCanvas:string|HTMLCanvasElement, topPredictionFGSM:string = null)
 	{
 		let t0 = performance.now()
 
@@ -273,13 +272,13 @@ export class SelectionComponent implements OnInit
 		})
 	}	
 
-	private onPredictButtonClick()
+	onPredictButtonClick()
 	{	
 		this.predictAllSelectedModels()
 	}
 
 	//** Generate adversarial image, but don't predict*/
-	private async onGenerateButtonClick()	
+	async onGenerateButtonClick()	
 	{
 		this.resetCanvasAndClearPredictions()
 
@@ -288,7 +287,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	//** Set a random target class, calls attack/predict method after*/
-	private async onRandomButtonClick()
+	async onRandomButtonClick()
 	{
 		this.targetClass.setValue(this.selectRandomImageNetClass())
 
@@ -299,7 +298,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	//** Set a random target class, calls attack/predict method after*/
-	private async onEpsilonChange()
+	async onEpsilonChange()
 	{
 		let epsilon = this.epsilon.value
 
@@ -346,7 +345,7 @@ export class SelectionComponent implements OnInit
 	}	
 
 	/**  Increase the epsilon value by a factor of 10 * the slider step */
-	private onIncreaseEpsilonClick()
+	onIncreaseEpsilonClick()
 	{
 
 		let newEs = parseFloat((this.epsilon.value + (this.epsilonStep)).toFixed(3))
@@ -359,7 +358,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	/**  Decrease the epsilon value by a factor of 10 * the slider step */
-	private onDecreaseEpsilonClick()
+	onDecreaseEpsilonClick()
 	{
 		let newEs = parseFloat((this.epsilon.value - (this.epsilonStep)).toFixed(3))
 
@@ -369,14 +368,14 @@ export class SelectionComponent implements OnInit
 		this.epsilon.setValue(newEs)	
 	}
 
-	private onSelectFileButtonClick()
+	onSelectFileButtonClick()
 	{
 		this.openImageSelectDialog()
 		// this.transferService.setModelPredictions([new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)])])
 	}
 
 	/** Opens a dialog where the user can select an image*/
-	private openImageSelectDialog()
+	openImageSelectDialog()
 	{
 		const dialogConfig = new MatDialogConfig()
 
@@ -398,7 +397,7 @@ export class SelectionComponent implements OnInit
     	});  	
 	} 		
 
-	private onPredictionModelsChange()
+	onPredictionModelsChange()
 	{
 		// This lets the display componenet that predictions should be cleared
 		this.transferService.setModelPredictions(null)
@@ -406,7 +405,7 @@ export class SelectionComponent implements OnInit
 	}
 
 	/** Called when the user selects an img file */
-	private onSelectFile(event) 
+	onSelectFile(event) 
 	{ 	
 	    const file = event.target.files[0]
 		
@@ -424,7 +423,7 @@ export class SelectionComponent implements OnInit
 
 
 	/** Reset the adversarial and differnce/perturbation canvas' and clears any predictions */
-	private resetCanvasAndClearPredictions()
+	resetCanvasAndClearPredictions()
 	{
 		this.imgService.resetCanvas(this.canvasAdversarial)
 		this.imgService.resetCanvas(this.canvasDifference)
@@ -437,7 +436,7 @@ export class SelectionComponent implements OnInit
 	/** Validate that the parameters required for prediction are set 
 	* 	Also handled by the client side HTML disable validation
 	*/
-	private validatePrediction()
+	validatePrediction()
 	{
 		if(this.imgURL == null)
 			throw 'no valid image source found'
@@ -449,7 +448,7 @@ export class SelectionComponent implements OnInit
 	/** Validate that the parameters required for adversarial image generation are set 
 	* 	Also handled by the client side HTML disable validation
 	*/
-	private validateGeneration()
+	validateGeneration()
 	{
 		if(this.imgURL == null)
 			throw 'no valid image source found'
@@ -484,7 +483,7 @@ export class SelectionComponent implements OnInit
 	
 	/** Called when an img is loaded (user selection/on initial load)
 	*   Draws the image to canvas' */
-	private onIMGLoad()
+	onIMGLoad()
 	{
 		let img = <HTMLImageElement> document.getElementById('fileSelectImg')
 
@@ -494,20 +493,20 @@ export class SelectionComponent implements OnInit
 
 
 	/** Used to filter the imageNetClasses for autocompletion*/
-	private _filter(value: string): string[] 
+	_filter(value: string): string[] 
 	{
 		return this.imageNetClasses.filter(imageNetClass => imageNetClass.toLowerCase().includes(value.toLowerCase()));
 	}	
 
 	/** Selects a random class from the imagenet array: */
-	private selectRandomImageNetClass()
+	selectRandomImageNetClass()
 	{
 		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
 		return this.imageNetClasses[randomNumber] 
 	}
 
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */
-	private createImageNetArray()
+	createImageNetArray()
 	{
 		this.imageNetClasses = new Array()
 		for(var i = 0; i < 1000; i++)
@@ -515,7 +514,7 @@ export class SelectionComponent implements OnInit
 	}	
 
 	/** Updates the memory variables provided by tf.memory() */
-	private updateMemory()
+	updateMemory()
 	{
 		let mem = tf.memory()
 		this.numBytes = Math.round((mem.numBytes / 1000000))

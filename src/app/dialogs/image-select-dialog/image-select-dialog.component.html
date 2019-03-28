@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
 	<mat-tab-group [selectedIndex]="selected.value"
-					(selectedIndexChange)="selected.value = $event"
+					(selectedIndexChange)="selected.setValue($event)"
 	               (selectedTabChange)="onTabSwitch()">
 	  <mat-tab [class]="test" *ngFor="let tab of tabs; let index = index" [label]="tab">
 			<div class="images" *ngFor="let row of imageUrls">

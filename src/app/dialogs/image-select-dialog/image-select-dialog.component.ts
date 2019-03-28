@@ -13,29 +13,27 @@ import { HelperService } from '../../services/helper.service';
 })
 export class ImageSelectDialogComponent implements OnInit 
 {
-	private basePath: string = './assets/images/'
+	basePath: string = './assets/images/'
 
-	private subFolderPaths: string[] = 
+	subFolderPaths: string[] = 
 	[
 		'animals/',
 		'objects/',
 		'food/',		
 	]
 
-	private fileExtension:string = '.jpg'
-	private pageNumber = 0
+	fileExtension:string = '.jpg'
+	pageNumber = 0
 
-	private imageSelected = false
-	private selectedImgUrl:string = ''
+	imageSelected = false
+	selectedImgUrl:string = ''
 
-	private imageFileNames = new ImageFileNames()
+	imageFileNames = new ImageFileNames()
 
+  	tabs = ['Animals', 'Objects', 'Food'];
+ 	selected = new FormControl(0);
 
-  	private tabs = ['Animals', 'Objects', 'Food'];
- 	private selected = new FormControl(0);
-
-
-	private groups:string[][] = 
+	groups:string[][] = 
 	[
 		this.imageFileNames.animals,
 		this.imageFileNames.objects,
