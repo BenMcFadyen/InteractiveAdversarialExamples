@@ -52,11 +52,9 @@ export class ModelSelectDialogComponent implements OnInit
 	    this.modelSelectDialogRef.close();
 	}
 
-	//TODO COMMENT THIS
+	/** Load the selected models*/
 	onLoadButtonPress() 
-	{
-		// TODO: Format Model stats (commas)
-		
+	{		
 		let modelsLoaded = 0
 		this.modelLoadProgress = 0
 
@@ -111,7 +109,6 @@ export class ModelSelectDialogComponent implements OnInit
 	}
 
 
-
 	private openModelsLoadedDialog()
 	{
 		const dialogConfig = new MatDialogConfig()
@@ -136,7 +133,6 @@ export class ModelSelectDialogComponent implements OnInit
 
   		return this.dialog.open(ModelSelectDisclaimerDialogComponent, dialogConfig)
 	} 				
-
 
 
 	onModelSelectChange(val)
@@ -167,18 +163,8 @@ export class ModelSelectDialogComponent implements OnInit
 				this.disclaimerShown = true;			
 			})			
 		}
-
-
 	}
 
 
-
-	//TODO: Move this into a helper service (duplicated 3 times)
-	/** Log the time taken to perform complete a given action */
-	logTime(t0:number, t1:number, message: string)
-	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
-	}
-
-	// 
+// 
 }

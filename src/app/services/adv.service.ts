@@ -152,7 +152,6 @@ export class AdvService
 	}
 
 	/**
-	* TODO..
 	* @param {epsilon} determines the amount of perturbation applied
 	* @return {tf.Tensor} perturbed img tensor
 	*/
@@ -196,7 +195,7 @@ export class AdvService
 		
 	}	
 
-	/** Experimental (not used) */	
+	/** Experimental*/	
 	// reverseSoftmax(softmaxNums, constant)
 	// {
 	// 	softmaxNums = softmaxNums.dataSync()
