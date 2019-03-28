@@ -38,7 +38,7 @@ export class SelectionComponent implements OnInit
 	private epsilon = new FormControl({value: 3, disabled: true});
 
 
-	private imgURL: string = 'assets/images/lion.jpg'
+	private imgURL: string = 'assets/images/animals/lion.jpg'
 	private numBytes:number
 	private numTensors:number
 
@@ -91,7 +91,7 @@ export class SelectionComponent implements OnInit
 		this.helper.shuffleArray(this.imageNetClasses)
 
 		/** Updates the tf memory stats once every second */
-		setInterval(()=> { this.updateMemory() }, 1 * 1000);
+		//setInterval(()=> { this.updateMemory() }, 1 * 1000);
 
 		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
 
@@ -103,11 +103,11 @@ export class SelectionComponent implements OnInit
 		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
 		
-		// if(tf.getBackend() == 'cpu')
-		// {
-		// 	alert('WebGL is not supported on this device')
-		// 	console.error('WebGL is not supported on this device')
-		// }
+		if(tf.getBackend() == 'cpu')
+		{
+			alert('WebGL is required and is not supported on this device')
+			console.error('WebGL is required and is not supported on this device')
+		}
 
 	}
 
