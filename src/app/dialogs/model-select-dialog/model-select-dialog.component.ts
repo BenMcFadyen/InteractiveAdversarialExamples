@@ -154,15 +154,15 @@ export class ModelSelectDialogComponent implements OnInit
 		this.totalSize = Math.round(this.totalSize * 100) / 100
 
 
-		if(!this.disclaimerShown && this.modelsToLoad.length >= 3)
-		{
-			let modelSelectDisclaimerDialogRef = this.openModelSelectDisclaimerDialog()
+		// if(!this.disclaimerShown && this.modelsToLoad.length >= 3)
+		// {
+		// 	let modelSelectDisclaimerDialogRef = this.openModelSelectDisclaimerDialog()
 
-			modelSelectDisclaimerDialogRef.afterClosed().subscribe(() => 
-			{
-				this.disclaimerShown = true;			
-			})			
-		}
+		// 	modelSelectDisclaimerDialogRef.afterClosed().subscribe(() => 
+		// 	{
+		// 		this.disclaimerShown = true;			
+		// 	})			
+		// }
 	}
 
 
