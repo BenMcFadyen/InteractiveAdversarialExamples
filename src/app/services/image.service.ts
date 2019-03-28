@@ -16,6 +16,8 @@ export class ImageService
 	isCanvasBlank(canvasIDorObject:string | HTMLCanvasElement,)
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
+		if(canvas == null)
+			return true
 		return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
 	}		
 
@@ -48,6 +50,8 @@ export class ImageService
 	async drawTensorToCanvas(canvasIDorObject:string | HTMLCanvasElement, tensor:tf.Tensor3D | tf.Tensor4D, height: number = null, width:number = null )
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
+		if(canvas == null)
+			return
 		let context = canvas.getContext('2d');
 		let alignCorners = false
 
@@ -202,6 +206,10 @@ export class ImageService
 	resetCanvas(canvasIDorObject:string | HTMLCanvasElement)
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
+
+		if(canvas == null)
+			return
+
 		const context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}

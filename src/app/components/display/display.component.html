@@ -1,18 +1,18 @@
 <html>
 <body>
 
-<div class="flexContainer">
+<div clas ="flexContainer">
 
 	<div class="cardContainer">
 
-		<div [ngClass]="cardContainer" >			
+		<div class="cardContainer" >			
 			<mat-card class = "original">
 				<mat-card-title> Original Image </mat-card-title>
 				<canvas id = "canvasOriginal" width="224" height = "224"> </canvas>
 			</mat-card>
 		</div>
 
-		<div [ngClass]="cardContainer" [hidden]="adversarialCanvasIsBlank()">			
+		<div id="cardContainer" [hidden]="adversarialCanvasIsBlank()">			
 			<mat-card class = "difference">
 				<mat-card-title> Perturbation </mat-card-title>
 	    		<mat-card-subtitle>(amplified)</mat-card-subtitle>
@@ -37,7 +37,7 @@
 			</mat-card>
 		</div>
 
-		<div [ngClass]="cardContainer" [hidden]="adversarialCanvasIsBlank()">
+		<div id="cardContainer" [hidden]="adversarialCanvasIsBlank()">
 			<mat-card class = "adversarial">
 				<mat-card-title> Adversarial Image </mat-card-title>
 	    	<mat-card-subtitle>{{(adversarialImageModelNameSource)}}</mat-card-subtitle>
