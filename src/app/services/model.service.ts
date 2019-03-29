@@ -146,6 +146,21 @@ export class ModelService
 		}	
 	}
 
+
+	/** Returns a list of all loaded model names */ 
+	getAllLoadedModelNames():string[]
+	{
+		let loadedModels:string[] = []
+
+		for(let modelObject of this.allModels)
+		{
+			if(modelObject.loaded)
+				loadedModels.push()
+		}
+
+		return loadedModels
+	}
+
 	/** returns true if given model name has been loaded already*/
 	hasModelBeenLoaded(modelName:string):boolean
 	{
