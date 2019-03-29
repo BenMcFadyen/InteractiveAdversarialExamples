@@ -31,6 +31,8 @@ import * as tf from '@tensorflow/tfjs';
 
 export class SelectionComponent implements OnInit 
 {
+	debugMode = false;
+
 	adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
 	predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
 	attackMethod = new FormControl({value: '', disabled: true}, [Validators.required]);
@@ -90,8 +92,12 @@ export class SelectionComponent implements OnInit
 		//randomise imagenet order
 		this.helper.shuffleArray(this.imageNetClasses)
 
-		/** Updates the tf memory stats once every second */
-		//setInterval(()=> { this.updateMemory() }, 1 * 1000);
+		if(this.debugMode)
+		{
+			/** Updates the tf memory stats once every second */
+			setInterval(()=> { this.updateMemory() }, 1 * 1000);
+		}
+	
 
 		this.filteredImageNetClasses = this.targetClass.valueChanges.pipe(startWith(''),map(value => this._filter(value)));
 
@@ -283,7 +289,9 @@ export class SelectionComponent implements OnInit
 		this.resetCanvasAndClearPredictions()
 
 		await this.executeAttackMethod()
-		//this.predictAllSelectedModels() //TODO: Should prediction happen here? any reason not too?
+
+		// if possible, also predict after generation
+		this.predictAllSelectedModels() 
 	}
 
 	//** Set a random target class, calls attack/predict method after*/

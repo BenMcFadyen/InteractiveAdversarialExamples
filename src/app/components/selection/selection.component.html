@@ -124,7 +124,7 @@
 
 		<button class ="modelSelection" mat-raised-button  color="blank" (click)="openModelSelectDialog()"> Model Selection</button>
 
-		<div class = "tfMemoryState">
+		<div class = "tfMemoryState" *ngIf="debugMode">
 			<p> Tensors: {{numTensors}} </p>
 			<p> Memory Allocated: {{numBytes}} (MB) </p>
 		</div>
