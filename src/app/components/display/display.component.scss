@@ -17,7 +17,7 @@ html, body
 
 .mat-divider
 {
-	margin-top:20px;
+	margin-top:10px;
 	border-width:2px;
 }  
 
@@ -53,7 +53,7 @@ html, body
 
 	.mat-card-content
 	{
-		margin:0px;
+		margin:0px;		
 	}
 
 	.mat-card-actions
@@ -64,7 +64,9 @@ html, body
 
 		.mat-slider 
 		{		
-			width:80%
+			height:30px;
+			width:80%;
+			padding:0px;
 		}		
 	}
 }
