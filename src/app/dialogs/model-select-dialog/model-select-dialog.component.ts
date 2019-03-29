@@ -4,6 +4,7 @@ import { ModelService } from '../../services/model.service';
 import { ModelsLoadedDialogComponent } from '../models-loaded-dialog/models-loaded-dialog.component';
 import { ModelSelectDisclaimerDialogComponent } from '../model-select-disclaimer-dialog/model-select-disclaimer-dialog.component';
 
+import { ModelStats } from '../../classes/ModelStats';
 
 @Component({
   selector: 'app-model-select-dialog',
@@ -13,7 +14,7 @@ import { ModelSelectDisclaimerDialogComponent } from '../model-select-disclaimer
 
 export class ModelSelectDialogComponent implements OnInit 
 {
-	modelData = []
+	modelData:any[] = []
 	columnsToDisplay = ['name', 'size', 'layers', 'top1', 'top5', 'parameters', 'requestLoad'];
 	totalSize = 0.0
 	modelsLoading = false;
@@ -98,6 +99,12 @@ export class ModelSelectDialogComponent implements OnInit
 				{
 					this.modelsLoading = false;
 
+					// if all models are loaded, disable the 'select additional models button'
+					if(this.areAllModelsLoaded())
+					{
+						
+					}
+
 					const modelsLoadedDialogRef = this.openModelsLoadedDialog()
 
 					modelsLoadedDialogRef.afterClosed().subscribe(closeRequest => 
@@ -112,6 +119,18 @@ export class ModelSelectDialogComponent implements OnInit
 				}
 			})
 		}
+	}
+
+	/** returns true if ALL models have been loaded */
+	areAllModelsLoaded()
+	{
+		for(let model of this.modelData)
+		{
+			if(!model.loaded)
+				return false
+		}
+
+		return true
 	}
 
 

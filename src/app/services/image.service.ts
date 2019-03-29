@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import * as tf from '@tensorflow/tfjs';
 
+import { ImageFileNames } from './../classes/ImageFileNames';
+import { HelperService } from './../services/helper.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService 
 {
-	constructor() 
+	animalImageUrls: string[] = []
+	objectImageUrls: string[] = []
+	foodImageUrls: string[] = []
+
+	imageSelectImagePathsInitialised = false
+
+
+	constructor(private helper:HelperService) 
 	{
 		
 	}
@@ -213,6 +223,49 @@ export class ImageService
 		const context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}
+
+	initialiseImageSelectImagePaths()
+	{
+
+		if(this.imageSelectImagePathsInitialised)
+			return
+
+		let imageFileNames = new ImageFileNames()
+		let basePath: string = './assets/images/'
+		let fileExtension:string = '.jpg'
+
+		let imageGroupArray = [this.animalImageUrls, this.objectImageUrls, this.foodImageUrls]
+		let imageGroupArraySource = [imageFileNames.animals, imageFileNames.objects, imageFileNames.food]
+		let imageGroupFilePath = ['animals/', 'objects/', 'food/']
+
+		for(let i = 0; i < imageGroupArraySource.length; i++)
+		{
+			for(let fileName of imageGroupArraySource[i])
+			{
+				let url = basePath + imageGroupFilePath[i] + fileName + fileExtension
+				imageGroupArray[i].push(url)
+			}			
+		}
+
+		this.helper.shuffleArray(this.animalImageUrls)
+		this.helper.shuffleArray(this.objectImageUrls)
+		this.helper.shuffleArray(this.foodImageUrls)	
+			
+		this.imageSelectImagePathsInitialised = true
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //
 }

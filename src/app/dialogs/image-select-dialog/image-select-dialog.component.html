@@ -14,9 +14,9 @@
 				</div>
 			</div>
 
-		<mat-paginator [length]="groups[index].length"
-	              [pageSize]="9"
-	              (page)="onPageUpdate($event)">
+		<mat-paginator  [length]="imageUrlArrays[index].length"
+						[pageSize]="9"
+						(page)="pageNumber = onPageUpdate($event)">
 		</mat-paginator>
 		
 	  </mat-tab>
