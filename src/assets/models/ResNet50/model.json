@@ -6541,7 +6541,6 @@
               "name": "fc1000",
               "trainable": true,
               "units": 1000,
-              "activation": "softmax",
               "use_bias": true,
               "kernel_initializer": {
                 "class_name": "VarianceScaling",
