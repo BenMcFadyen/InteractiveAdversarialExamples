@@ -116,9 +116,12 @@ export class SelectionComponent implements OnInit
 
 
 		// check if any models have already been loaded (user switched route and has returned to this route)
+		// else -> open the model select dialog (as no models are loaded)
 		let loadedModels = this.modelService.getAllLoadedModelNames()
 		if(loadedModels.length > 0)
 			this.setLocalModelVars(loadedModels)
+		// else
+		// 	this.openModelSelectDialog()
 
 	}
 

@@ -99,7 +99,8 @@
 
 		<div class="epsilonSelect">
 
-			<p> ϵ: {{epsilon.value}} </p>
+
+			<p class="mat-body-2"> ϵ: {{epsilon.value}} </p>
 			<mat-slider
 			 	[formControl]="epsilon" 
 				thumbLabel 
@@ -125,8 +126,8 @@
 		<button class ="modelSelection" mat-raised-button  color="blank" (click)="openModelSelectDialog()"> Model Selection</button>
 
 		<div class = "tfMemoryState" *ngIf="debugMode">
-			<p> Tensors: {{numTensors}} </p>
-			<p> Memory Allocated: {{numBytes}} (MB) </p>
+			<p class="mat-body-2"> Tensors: {{numTensors}} </p>
+			<p class="mat-body-2"> Memory Allocated: {{numBytes}} (MB) </p>
 		</div>
 
 	</div>
