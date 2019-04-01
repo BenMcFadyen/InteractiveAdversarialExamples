@@ -108,12 +108,17 @@ export class SelectionComponent implements OnInit
 
 		this.transferService.currentPerturbationAmplificationSource.subscribe(perturbationAmplification => this.perturbationAmplification = perturbationAmplification)
 
-		
 		if(tf.getBackend() == 'cpu')
 		{
 			alert('WebGL is required and is not supported on this device')
 			console.error('WebGL is required and is not supported on this device')
 		}
+
+
+		// check if any models have already been loaded (user switched route and has returned to this route)
+		let loadedModels = this.modelService.getAllLoadedModelNames()
+		if(loadedModels.length > 0)
+			this.setLocalModelVars(loadedModels)
 
 	}
 
@@ -135,27 +140,40 @@ export class SelectionComponent implements OnInit
 
 	    dialogRef.afterClosed().subscribe(modelsLoaded => 
     	{
-    		if(modelsLoaded != null)
-    		{
-    			this.adversarialModel.enable()
-    			this.predictionModels.enable()
-    			this.attackMethod.enable()
-    			this.epsilon.enable()
-
-    			// currently it is possible to close the dialog, then load a different model
-    			// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
-    			for(let loadedModel of modelsLoaded)
-    			{
-    				// only allow models flagged as ok for adversarial image generation
-    				let modelObject = this.modelService.getModelDataObjectFromName(loadedModel)
-    				if(modelObject.availableForAdversarialGeneration)
-    					this.loadedAdversarialModels.push(loadedModel)
-
-    				this.loadedModels.push(loadedModel) 
-    			}
-    		}
+			this.setLocalModelVars(modelsLoaded)	
     	});  	
 	} 	
+
+
+
+	setLocalModelVars(modelsLoaded:string[])
+	{
+
+		if(modelsLoaded ==  null || !(modelsLoaded.length > 0))
+			return 
+
+		// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
+		for(let loadedModel of modelsLoaded)
+		{
+			// only allow models flagged as ok for adversarial image generation
+			let modelObject = this.modelService.getModelDataObjectFromName(loadedModel)
+			if(modelObject.availableForAdversarialGeneration)
+				this.loadedAdversarialModels.push(loadedModel)
+
+			this.loadedModels.push(loadedModel) 
+		}
+
+
+		// just in case something went wrong with above, ensure that atleast one model has been loaded
+		if(this.loadedModels.length >= 1)
+		{
+			this.adversarialModel.enable()
+			this.predictionModels.enable()
+			this.attackMethod.enable()
+			this.epsilon.enable()
+		}
+
+	}
 
 
 	/** Predict the original image using the model(s) which have been selected by the user

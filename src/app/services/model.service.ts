@@ -155,7 +155,7 @@ export class ModelService
 		for(let modelObject of this.allModels)
 		{
 			if(modelObject.loaded)
-				loadedModels.push()
+				loadedModels.push(modelObject.name)
 		}
 
 		return loadedModels
