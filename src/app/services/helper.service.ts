@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 
 export class HelperService
 {
+	wantLogTime:boolean = false
 
 	constructor() 
 	{ 
@@ -15,7 +16,8 @@ export class HelperService
 	/** Log the time taken to perform complete a given action */
 	logTime(t0:number, t1:number, message: string)
 	{
-		console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
+		if(this.wantLogTime)
+			console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
 	}
 
 	//** round a number to: [precison] dp */
