@@ -31,7 +31,7 @@ import * as tf from '@tensorflow/tfjs';
 
 export class SelectionComponent implements OnInit 
 {
-	debugMode = false;
+	debugMode = true;
 
 	adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
 	predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
@@ -65,7 +65,8 @@ export class SelectionComponent implements OnInit
 	availableAttackMethods: string[] = 
 	[
 		'FGSM',
-		'T-FGSM'
+		'T-FGSM',
+		'DeepFool',
 	]
 
 	loadedModels: string[] = []
@@ -115,11 +116,32 @@ export class SelectionComponent implements OnInit
 		}
 
 
-		// check if any models have already been loaded (user switched route and has returned to this route)
-		// else -> open the model select dialog (as no models are loaded)
-		let loadedModels = this.modelService.getAllLoadedModelNames()
-		if(loadedModels.length > 0)
-			this.setLocalModelVars(loadedModels)
+
+
+
+
+		//TODO: TEMP change while testing deepfool
+		this.modelService.loadModel('MobileNet').then(()=>
+		{
+			// check if any models have already been loaded (user switched route and has returned to this route)
+			// else -> open the model select dialog (as no models are loaded)
+			let loadedModels = this.modelService.getAllLoadedModelNames()
+			if(loadedModels.length > 0)
+				this.setLocalModelVars(loadedModels)
+
+
+			let mnet = this.modelService.getModelDataObjectFromName('MobileNet')
+
+			this.predictionModels.setValue(['MobileNet'])
+			this.adversarialModel.setValue('MobileNet')
+
+			this.attackMethod.setValue('DeepFool')
+
+			this.onGenerateButtonClick()
+
+		})
+
+
 		// else
 		// 	this.openModelSelectDialog()
 
@@ -281,6 +303,17 @@ export class SelectionComponent implements OnInit
 			case 'T-FGSM':
 				var attackMethodFunctionResult = this.advService.Targeted_FGSM(modelObject, this.targetClass.value, img3, img4, this.epsilon.value, true, this.perturbationAmplification);
 				this.targetClassPredDisplay = this.targetClass.value // passed to the transfer service, and used to ensure predictions are colour properly:  TODO: Re-factor, hacky						
+				break;
+
+
+			case 'DeepFool':
+
+				if(topPredictionFGSM == null)
+					throw 'DeepFool cannot be executed without a prediction'
+
+				var attackMethodFunctionResult = this.advService.DeepFool(
+					modelObject, topPredictionFGSM, img3, img4, 100, 10, 2, true, this.perturbationAmplification);
+
 				break;
 		}
 
@@ -500,7 +533,7 @@ export class SelectionComponent implements OnInit
 		*	 Prediction models: B & C
 		* The below ensures that the top1 prediction of Model A is used for FGSM
 		*/
-		if(this.attackMethod.value == 'FGSM' && this.topPrediction == null)
+		if(this.attackMethod.value == 'FGSM' || this.attackMethod.value == 'DeepFool' && this.topPrediction == null)
 		{
 			console.log('FGSM selected, but no prediction, making prediction with model: ' + this.adversarialModel.value)
 			let adversarialModelObject = this.modelService.getModelDataObjectFromName(this.adversarialModel.value)
