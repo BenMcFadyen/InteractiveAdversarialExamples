@@ -57,6 +57,20 @@ export class ImageService
         })
 	}	
 
+	/**
+	* Normalise a tensor from pixel values between [-1,1] to [0-255]
+	*/
+	reverseIMGTensorNormalisation(tensor: tf.Tensor)
+	{
+		return tf.tidy(()=>
+		{
+	  	  	let normalisationOffset = tf.scalar(127.5);
+	        var reverseNormalised = tensor.toFloat().mul(normalisationOffset).add(normalisationOffset);
+
+	        return reverseNormalised
+        })
+	}		
+
 	async drawTensorToCanvas(canvasIDorObject:string | HTMLCanvasElement, tensor:tf.Tensor3D | tf.Tensor4D, height: number = null, width:number = null )
 	{
 		let canvas = this.getCanvasObject(canvasIDorObject)
