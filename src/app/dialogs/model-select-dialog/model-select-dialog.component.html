@@ -79,7 +79,7 @@
       (click)="onLoadButtonPress()"
       [disabled]= "modelsLoading"> Load </button>
 
-      <p class= "memory" body-1> Total Size: {{totalSize}} (MB)</p>
+      <p class= "memory body-1"> Total Size: {{totalSize}} (MB)</p>
       <mat-progress-bar *ngIf="modelsLoading"
        mode="buffer" 
        value="{{modelLoadProgress}}">
