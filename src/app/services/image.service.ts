@@ -19,7 +19,15 @@ export class ImageService
 
 	constructor(private utils:UtilsService) 
 	{
-		
+		if(!this.imageSelectImagePathsInitialised)
+			this.initialiseImageSelectImagePaths()
+	}
+
+	getRandomImageUrl()
+	{
+		let allImageUrls = this.animalImageUrls.concat(this.objectImageUrls).concat(this.foodImageUrls) 
+		let rnd = Math.floor((Math.random() * allImageUrls.length)); //Random number between 0 & imgCount
+		return allImageUrls[rnd]
 	}
 
 	/** Returns true if the given canvas is blank */
@@ -46,12 +54,12 @@ export class ImageService
 	/**
 	* Normalise a tensor from pixel values between [0-255] to [-1,1]
 	*/
-	normaliseIMGTensor(tensor: tf.Tensor)
+	normaliseIMGTensor(tensor: tf.Tensor3D)
 	{
 		return tf.tidy(()=>
 		{
 	  	  	let normalisationOffset = tf.scalar(127.5);
-	        var normalised = tensor.toFloat().sub(normalisationOffset).div(normalisationOffset);
+	        var normalised = <tf.Tensor3D> tensor.toFloat().sub(normalisationOffset).div(normalisationOffset);
 
 	        return normalised
         })
@@ -60,12 +68,12 @@ export class ImageService
 	/**
 	* Normalise a tensor from pixel values between [-1,1] to [0-255]
 	*/
-	reverseIMGTensorNormalisation(tensor: tf.Tensor)
+	reverseIMGTensorNormalisation(tensor: tf.Tensor3D)
 	{
 		return tf.tidy(()=>
 		{
 	  	  	let normalisationOffset = tf.scalar(127.5);
-	        var reverseNormalised = tensor.toFloat().mul(normalisationOffset).add(normalisationOffset);
+	        var reverseNormalised = <tf.Tensor3D> tensor.toFloat().mul(normalisationOffset).add(normalisationOffset);
 
 	        return reverseNormalised
         })
