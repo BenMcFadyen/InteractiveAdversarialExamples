@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 
+import * as tf from '@tensorflow/tfjs';
+
 @Injectable({
   providedIn: 'root'
 })
 
 export class UtilsService
 {
-	wantLogTime:boolean = true
+	wantLogMessages:boolean = true
 
 	constructor() 
 	{ 
@@ -16,7 +18,7 @@ export class UtilsService
 	/** Log the time taken to perform complete a given action */
 	logTime(t0:number, t1:number, message: string)
 	{
-		if(this.wantLogTime)
+		if(this.wantLogMessages)
 			console.log(message + ', time taken: ' + ((t1 - t0)/1000).toFixed(2) + " (ms).")
 	}
 
@@ -41,4 +43,27 @@ export class UtilsService
 	        array[j] = temp;
 	    }
 	}
+
+
+	printTensorData(name:string, tensor:any)
+	{
+		if(!this.wantLogMessages)
+			return
+
+		console.log(name)
+		console.log(tensor)
+
+		if(tensor instanceof tf.Tensor)
+		{
+			console.log(tensor.dataSync())
+			console.log('Sum: ' + tf.sum(tensor.dataSync()).dataSync())
+		}
+		else
+		{
+			console.log('Sum: ' + tf.sum(tensor))			
+		}
+
+		console.log('         ')
+
+	}	
 }
