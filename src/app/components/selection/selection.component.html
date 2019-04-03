@@ -121,7 +121,8 @@
 
 		 		<button class ="lowerEpsilon" mat-raised-button color="blank" (click)="onDecreaseEpsilonClick()"
 		 		[disabled]=" loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
-							(attackMethod.value=='T-FGSM' && !targetClass.valid)">
+		 					attackMethod.value=='DeepFool' ||
+							(attackMethod.value=='T-FGSM' && !targetClass.valid) ">
 				 ▼ </button>
 		 	</div>
 
