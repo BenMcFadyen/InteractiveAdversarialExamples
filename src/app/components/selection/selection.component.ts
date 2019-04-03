@@ -54,7 +54,7 @@ export class SelectionComponent implements OnInit
 	readonly differenceCanvasSize:number = 250
 	readonly topX = 3
 
-
+	generationInProgress = false;
 
 	epsilonMax:number = 10;
 	epsilonStep:number = 0.25;
@@ -115,36 +115,21 @@ export class SelectionComponent implements OnInit
 			console.error('WebGL is required and is not supported on this device')
 		}
 
+		// //* Loads/Warms MobileNet on launch -> speed up debugging */
+		// this.modelService.loadModel('MobileNet').then(()=>
+		// {
+		// 	// check if any models have already been loaded (user switched route and has returned to this route)
+		// 	// else -> open the model select dialog (as no models are loaded)
+		// 	let loadedModels = this.modelService.getAllLoadedModelNames()
+		// 	if(loadedModels.length > 0)
+		// 		this.setLocalModelVars(loadedModels)
 
-
-
-
-
-		//TODO: TEMP change while testing deepfool
-		this.modelService.loadModel('MobileNet').then(()=>
-		{
-			// check if any models have already been loaded (user switched route and has returned to this route)
-			// else -> open the model select dialog (as no models are loaded)
-			let loadedModels = this.modelService.getAllLoadedModelNames()
-			if(loadedModels.length > 0)
-				this.setLocalModelVars(loadedModels)
-
-
-			let mnet = this.modelService.getModelDataObjectFromName('MobileNet')
-
-			this.predictionModels.setValue(['MobileNet'])
-			this.adversarialModel.setValue('MobileNet')
-
-			this.attackMethod.setValue('DeepFool')
-
-			this.onGenerateButtonClick()
-
-		})
-
-
-		// else
-		// 	this.openModelSelectDialog()
-
+		// 	let mnet = this.modelService.getModelDataObjectFromName('MobileNet')
+		// 	this.predictionModels.setValue(['MobileNet'])
+		// 	this.adversarialModel.setValue('MobileNet')
+		// 	this.attackMethod.setValue('DeepFool')
+		// 	this.onGenerateButtonClick()
+		// })
 	}
 
 
@@ -311,8 +296,12 @@ export class SelectionComponent implements OnInit
 				if(topPredictionFGSM == null)
 					throw 'DeepFool cannot be executed without a prediction'
 
+				let steps = 20
+				let subSample = 3
+				let p = 2 // Always 2
+
 				var attackMethodFunctionResult = this.advService.DeepFool(
-					modelObject, topPredictionFGSM, img3, img4, 100, 10, 2, true, this.perturbationAmplification);
+					modelObject, topPredictionFGSM, img3, img4, steps, subSample, p, true, this.perturbationAmplification);
 
 				break;
 		}
@@ -340,9 +329,15 @@ export class SelectionComponent implements OnInit
 	//** Generate adversarial image, but don't predict*/
 	async onGenerateButtonClick()	
 	{
+		if(this.generationInProgress) //this flag ensures the user cannot spam the generate button
+			return
+
 		this.resetCanvasAndClearPredictions()
 
+		this.generationInProgress = true
 		await this.executeAttackMethod()
+		this.generationInProgress = false
+
 
 		// if possible, also predict after generation
 		this.predictAllSelectedModels() 
@@ -364,8 +359,8 @@ export class SelectionComponent implements OnInit
 	{
 		let epsilon = this.epsilon.value
 
-		// if the user selects the max epsilon, increase the maximum (up to a limit of 150)
-		if(epsilon >= this.epsilonMax && this.epsilonMax < 150)
+		// if the user selects the max epsilon (or within 5%), increase the maximum (up to a limit of 150)
+		if(epsilon >= (this.epsilonMax - (this.epsilonMax * 0.05))  && this.epsilonMax < 150)
 		{	
 			if(this.epsilonMax == 1)
 			{
@@ -377,7 +372,7 @@ export class SelectionComponent implements OnInit
 			this.epsilonMax += 10
 			this.epsilonStep = this.epsilonMax / 400
 
-		} // if they return to a lower epsion, scale the maximum back down (allow more fine-tuning of epsilon values)
+		} // if they return to a lower epsion, scale the maximum back down (allows for more fine-tuning of epsilon values)
 		else if(epsilon < (this.epsilonMax/4)) 
 		{
 			// if the slider is in the range 0-10, and the user selects a low epsilon (say 0.5)
@@ -434,6 +429,11 @@ export class SelectionComponent implements OnInit
 	{
 		this.openImageSelectDialog()
 		// this.transferService.setModelPredictions([new ModelPrediction('B', [new Prediction('test2', 10)], null, [new Prediction('test4', 10)])])
+	}
+
+	onRandomImageButtonClick()
+	{
+		this.imgURL = this.imgService.getRandomImageUrl()
 	}
 
 	/** Opens a dialog where the user can select an image*/
@@ -563,8 +563,10 @@ export class SelectionComponent implements OnInit
 	/** Selects a random class from the imagenet array: */
 	selectRandomImageNetClass()
 	{
-		let randomNumber = Math.floor((Math.random() * 100)); //Random number between 0 & 1000
+		let randomNumber = Math.floor((Math.random() * 1000)); //Random number between 0 & 1000
+		console.log(randomNumber)
 		return this.imageNetClasses[randomNumber] 
+
 	}
 
 	/** Creates an array from the IMAGENET_CLASSES.js file, used for the model predictions. */

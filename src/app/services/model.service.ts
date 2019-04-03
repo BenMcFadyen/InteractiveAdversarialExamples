@@ -219,7 +219,7 @@ export class ModelService
 				tensor = tensor || this.imageService.getTensorFromCanvas(originalCanvasObjectorString, model.imgChannels, model.imgHeight, model.imgWidth, model.batchInput)
 
 				if(model.normaliseImage)
-					tensor = this.imageService.normaliseIMGTensor(tensor)
+					tensor = this.imageService.normaliseIMGTensor(<tf.Tensor3D> tensor)
 		
 				let modelOutput = (<tf.Tensor> model.model.predict(tensor)).flatten() as any
 
