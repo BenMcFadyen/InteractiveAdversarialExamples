@@ -101,7 +101,7 @@
 		</div>			
 
 
-		<div class="epsilonSelect">
+		<div class="epsilonSelect" *ngIf="attackMethod.value!='DeepFool'">
 
 
 			<p class="mat-body-2"> ϵ: {{epsilon.value}} </p>
@@ -121,8 +121,7 @@
 
 		 		<button class ="lowerEpsilon" mat-raised-button color="blank" (click)="onDecreaseEpsilonClick()"
 		 		[disabled]=" loadedModels.length==0 || adversarialModel.invalid || attackMethod.invalid || 
-		 					attackMethod.value=='DeepFool' ||
-							(attackMethod.value=='T-FGSM' && !targetClass.valid) ">
+		 				 	(attackMethod.value=='T-FGSM' && !targetClass.valid)">
 				 ▼ </button>
 		 	</div>
 
