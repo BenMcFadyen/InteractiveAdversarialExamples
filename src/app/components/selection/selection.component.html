@@ -16,6 +16,10 @@
 			<button mat-raised-button color="primary" (click)="onSelectFileButtonClick()"> 
 		  		Select
 			</button>	  		
+
+			<button mat-raised-button class="randomButton" color="accent" (click)="onRandomImageButtonClick()"> 
+		  		🎲
+			</button>	  				
 		</div>
 
 		<div class = "adversarialModelSelection buttonLayout">
@@ -91,8 +95,8 @@
 					<mat-error *ngIf="targetClass.hasError('required')"> Please select a target class </mat-error>
 			</mat-form-field>
 
-			<button mat-raised-button color="accent" (click)="onRandomButtonClick()"> 
-		  	Random
+			<button mat-raised-button class="randomButton" color="accent" (click)="onRandomButtonClick()"> 
+		  	🎲
 			</button>	  	
 		</div>			
 
