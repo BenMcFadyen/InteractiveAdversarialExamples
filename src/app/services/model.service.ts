@@ -3,7 +3,7 @@ import { ModelData } from './../classes/ModelData';
 import { ModelStats } from './../classes/ModelStats';
 import { ImageService } from './image.service';
 import { Prediction } from './../classes/Prediction';
-import { HelperService } from '../services/helper.service';
+import { UtilsService } from '../services/utils.service';
 
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './../classes/ImageNetClasses';
@@ -63,7 +63,7 @@ export class ModelService
 	]
 
 	constructor(private imageService: ImageService, 
-				private helper:HelperService)
+				private utils:UtilsService)
 	{
 
 	}
@@ -87,7 +87,7 @@ export class ModelService
 		 	{
 		 		currentModel.model = loadedModel
 		 		currentModel.loaded = true
-				this.helper.logTime(t0_load, performance.now(), 'Successfully loaded: ' +  currentModel.name)
+				this.utils.logTime(t0_load, performance.now(), 'Successfully loaded: ' +  currentModel.name)
 
 				let t0_warmPredict = performance.now()
 
@@ -95,7 +95,7 @@ export class ModelService
 				tf.tidy(()=>
 				{
 					currentModel.model.predict(tf.zeros([1, currentModel.imgHeight, currentModel.imgWidth, 3]));	
-					this.helper.logTime(t0_warmPredict, performance.now(), 'Successfully warmed prediction: ' +  currentModel.name)					
+					this.utils.logTime(t0_warmPredict, performance.now(), 'Successfully warmed prediction: ' +  currentModel.name)					
 				})
 
 
@@ -116,7 +116,7 @@ export class ModelService
 					    const gradientFunction = tf.grad(lossFunction)
 					    let gradient = gradientFunction(img3)
 
-						this.helper.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
+						this.utils.logTime(t0_warmGrad, performance.now(), 'Successfully warmed gradient: ' +  currentModel.name)					
 					})	
 				}		
 				return	
@@ -249,7 +249,7 @@ export class ModelService
 		// Create the array in format: {ClassName, Confidence}
 		for(var i = 0; i < modelOutputArray.length; i++)
 		{
-			predictions[i] = (new Prediction(model.classLabels[i],  this.helper.roundNumber(modelOutputArray[i], 2)))
+			predictions[i] = (new Prediction(model.classLabels[i],  this.utils.roundNumber(modelOutputArray[i], 2)))
 		}
 
 		// Sort predictions DSC by confidence

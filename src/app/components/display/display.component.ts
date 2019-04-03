@@ -3,7 +3,7 @@ import { Prediction } from '../../classes/Prediction';
 import { ModelPrediction } from '../../classes/ModelPrediction';
 import { ImageService } from '../../services/image.service';
 import { AdvService } from '../../services/adv.service';
-import { HelperService } from '../../services/helper.service';
+import { UtilsService } from '../../services/utils.service';
 
 import * as tf from '@tensorflow/tfjs';
 
@@ -34,7 +34,7 @@ export class DisplayComponent implements OnInit
 	constructor(private tferService: TransferService,
 				private imgService: ImageService,
 				private advService: AdvService,
-				private helperService:HelperService) 
+				private utils:UtilsService) 
 	{
 	}
 

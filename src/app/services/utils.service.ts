@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 
-export class HelperService
+export class UtilsService
 {
-	wantLogTime:boolean = false
+	wantLogTime:boolean = true
 
 	constructor() 
 	{ 

@@ -3,7 +3,7 @@ import { ImageService } from './image.service';
 import { ModelService } from './model.service';
 import { ModelData } from './../classes/ModelData';
 import { TransferService } from './transfer.service';
-import { HelperService } from './helper.service';
+import { UtilsService } from './utils.service';
 
 import * as tf from '@tensorflow/tfjs';
 import {IMAGENET_CLASSES} from './../classes/ImageNetClasses';
@@ -26,7 +26,7 @@ export class AdvService
 	constructor(private imgService:ImageService, 
 				private modelService:ModelService, 
 				private transferService:TransferService,
-				private utils:HelperService) {}
+				private utils:UtilsService) {}
 
 
 	/**
@@ -385,13 +385,6 @@ export class AdvService
 			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
 			{
-
-				console.log(perturbedImgTensor)
-				console.log(perturbedImgTensor.dataSync())
-				console.log()
-				console.log(img4)
-				console.log(img4.dataSync())
-
 				img3.dispose()
 				img4.dispose()
 				return <tf.Tensor3D | tf.Tensor4D> perturbedImgTensor

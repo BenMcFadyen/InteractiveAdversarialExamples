@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as tf from '@tensorflow/tfjs';
 
 import { ImageFileNames } from './../classes/ImageFileNames';
-import { HelperService } from './../services/helper.service';
+import { UtilsService } from './../services/utils.service';
 
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ImageService
 	imageSelectImagePathsInitialised = false
 
 
-	constructor(private helper:HelperService) 
+	constructor(private utils:UtilsService) 
 	{
 		
 	}
@@ -261,9 +261,9 @@ export class ImageService
 			}			
 		}
 
-		this.helper.shuffleArray(this.animalImageUrls)
-		this.helper.shuffleArray(this.objectImageUrls)
-		this.helper.shuffleArray(this.foodImageUrls)	
+		this.utils.shuffleArray(this.animalImageUrls)
+		this.utils.shuffleArray(this.objectImageUrls)
+		this.utils.shuffleArray(this.foodImageUrls)	
 			
 		this.imageSelectImagePathsInitialised = true
 	}

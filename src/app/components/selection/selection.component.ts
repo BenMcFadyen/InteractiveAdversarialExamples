@@ -8,7 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { ImageSelectDialogComponent } from '../../dialogs/image-select-dialog/image-select-dialog.component';
 import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
 import { TransferService } from '../../services/transfer.service';
-import { HelperService } from '../../services/helper.service';
+import { UtilsService } from '../../services/utils.service';
 import { ModelService } from '../../services/model.service';
 import { ImageService } from '../../services/image.service';
 import { AdvService } from '../../services/adv.service';
@@ -31,7 +31,7 @@ import * as tf from '@tensorflow/tfjs';
 
 export class SelectionComponent implements OnInit 
 {
-	debugMode = true;
+	debugMode = false;
 
 	adversarialModel = new FormControl({value: '', disabled:true }, [Validators.required]);
 	predictionModels = new FormControl({value: '', disabled: true}, [Validators.required]);
@@ -81,7 +81,7 @@ export class SelectionComponent implements OnInit
 		  		private transferService: TransferService,
 		  		private advService: AdvService,
 		  		private dialog: MatDialog,
-		  		private helper:HelperService)
+		  		private utils:UtilsService)
 	{
 
 	}
@@ -91,7 +91,7 @@ export class SelectionComponent implements OnInit
 		this.createImageNetArray()
 
 		//randomise imagenet order
-		this.helper.shuffleArray(this.imageNetClasses)
+		this.utils.shuffleArray(this.imageNetClasses)
 
 		if(this.debugMode)
 		{
@@ -249,7 +249,7 @@ export class SelectionComponent implements OnInit
 		let modelOutput = this.modelService.tryPredict(modelObject, canvas, undefined)
 		let predictions = this.modelService.decodeOutput(modelObject, modelOutput, topX)
 		modelOutput.dispose()
-		this.helper.logTime(t0, performance.now(), 'Prediction complete')
+		this.utils.logTime(t0, performance.now(), 'Prediction complete')
 
 		return predictions
 	}
@@ -322,7 +322,7 @@ export class SelectionComponent implements OnInit
 		{	
 			return this.imgService.drawTensorToCanvas(targetCanvas, adversarialImgTensor, this.canvasSize, this.canvasSize).then(()=>
 			{
-				this.helper.logTime(t0, performance.now(), 'Adversarial example generated')
+				this.utils.logTime(t0, performance.now(), 'Adversarial example generated')
 				// cleanup img tensors
 				img3.dispose()
 				img4.dispose()

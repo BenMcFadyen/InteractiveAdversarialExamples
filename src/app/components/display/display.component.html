@@ -64,7 +64,7 @@
 	      <!-- Confidence -->
 	      <ng-container matColumnDef="confidence">
 	        <th mat-header-cell *matHeaderCellDef> Confidence </th>
-	        <td mat-cell *matCellDef="let originalPrediction"> {{helperService.roundNumber(originalPrediction.confidence * 100, 2)}}% </td>
+	        <td mat-cell *matCellDef="let originalPrediction"> {{utils.roundNumber(originalPrediction.confidence * 100, 2)}}% </td>
 	      </ng-container>
 
 		  </table>
@@ -87,7 +87,7 @@
 	      <!-- Confidence -->
 	      <ng-container matColumnDef="confidence">
 	        <th mat-header-cell *matHeaderCellDef> Confidence </th>
-	        <td mat-cell *matCellDef="let adversarialPrediction"> {{helperService.roundNumber(adversarialPrediction.confidence * 100, 2)}}% </td>
+	        <td mat-cell *matCellDef="let adversarialPrediction"> {{utils.roundNumber(adversarialPrediction.confidence * 100, 2)}}% </td>
 	      </ng-container>	      
 
 		  	</table>
