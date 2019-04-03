@@ -115,15 +115,22 @@ export class SelectionComponent implements OnInit
 			console.error('WebGL is required and is not supported on this device')
 		}
 
+		// check if any models have already been loaded (user switched route and has returned to this route)
+		// else -> open the model select dialog (as no models are loaded)
+		let loadedModels = this.modelService.getAllLoadedModelNames()
+		if(loadedModels.length > 0)
+		{
+			this.setLocalModelVars(loadedModels)
+		}
+		else
+		{
+			//open dialog here
+		}
+
+
 		// //* Loads/Warms MobileNet on launch -> speed up debugging */
 		// this.modelService.loadModel('MobileNet').then(()=>
 		// {
-		// 	// check if any models have already been loaded (user switched route and has returned to this route)
-		// 	// else -> open the model select dialog (as no models are loaded)
-		// 	let loadedModels = this.modelService.getAllLoadedModelNames()
-		// 	if(loadedModels.length > 0)
-		// 		this.setLocalModelVars(loadedModels)
-
 		// 	let mnet = this.modelService.getModelDataObjectFromName('MobileNet')
 		// 	this.predictionModels.setValue(['MobileNet'])
 		// 	this.adversarialModel.setValue('MobileNet')
@@ -154,15 +161,12 @@ export class SelectionComponent implements OnInit
     	});  	
 	} 	
 
-
-
 	setLocalModelVars(modelsLoaded:string[])
 	{
-
 		if(modelsLoaded ==  null || !(modelsLoaded.length > 0))
 			return 
 
-		// NOT possible to unload a model (yet) TODO: When added will need to check here for model unloading
+		// NOT possible to unload a model (yet) 
 		for(let loadedModel of modelsLoaded)
 		{
 			// only allow models flagged as ok for adversarial image generation
@@ -173,8 +177,7 @@ export class SelectionComponent implements OnInit
 			this.loadedModels.push(loadedModel) 
 		}
 
-
-		// just in case something went wrong with above, ensure that atleast one model has been loaded
+		// just in case something went wrong with above, ensure that atleast one model has been loaded before enabling button
 		if(this.loadedModels.length >= 1)
 		{
 			this.adversarialModel.enable()
@@ -182,9 +185,7 @@ export class SelectionComponent implements OnInit
 			this.attackMethod.enable()
 			this.epsilon.enable()
 		}
-
 	}
-
 
 	/** Predict the original image using the model(s) which have been selected by the user
 	* 	Also predict the adversarial image if this has been drawn to the canvas
