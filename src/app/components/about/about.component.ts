@@ -9,7 +9,7 @@ import { AboutDescription } from '../../Classes/AboutDescription';
 })
 export class AboutComponent implements OnInit 
 {
-	descs: AboutDescriptions = new AboutDescriptions()
+	descs: AboutDescriptions = new AboutDescriptions() 
 
 	constructor() 
 	{ 

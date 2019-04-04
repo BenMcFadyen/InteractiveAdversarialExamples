@@ -32,7 +32,7 @@
 					<mat-nav-list dense style="margin-left:15px;">
 						<mat-list-item (click)="scroll(ModelSelection)" > Model Selection </mat-list-item>
 							<mat-nav-list dense style="margin-left:15px;">
-								 <mat-list-item (click)="scroll(AdversarialModels)"> Adversarial Model </mat-list-item>
+								 <mat-list-item (click)="scroll(AdversarialModel)"> Adversarial Model </mat-list-item>
 								 <mat-list-item (click)="scroll(PredictionModels)"> Prediction Model(s) </mat-list-item>
 							</mat-nav-list>
 					</mat-nav-list>	
@@ -65,9 +65,6 @@
 
 
 
-
-
-
 		<mat-sidenav-content>
 			<div class ="mainContentContainer">
 				<h1 class="mat-display-3"> About </h1>
@@ -94,153 +91,166 @@
 						</mat-card> 
 					</div>
 
+					<!-- Nested Model cards -->
 					<div class='card' #Models>	
 						<mat-card>
 							<mat-card-title> {{descs.Models.title}} </mat-card-title>
 							<mat-card-content> {{descs.Models.content}} </mat-card-content>
-						</mat-card> 
-					</div>		
+				
+							<div class='card' #MobileNet>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.MobileNet.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.MobileNet.content}} </mat-card-content>
+								</mat-card> 
+							</div>
 
-					<div class='card' #MobileNet>	
-						<mat-card>
-							<mat-card-title> {{descs.MobileNet.title}} </mat-card-title>
-							<mat-card-content> {{descs.MobileNet.content}} </mat-card-content>
+							<div class='card' #MobileNetV2>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.MobileNetV2.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.MobileNetV2.content}} </mat-card-content>
+								</mat-card> 
+							</div>
+
+							<div class='card' #ResNet50>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.ResNet50.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.ResNet50.content}} </mat-card-content>
+								</mat-card> 
+							</div>
+
+							<div class='card' #Xception>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.Xception.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.Xception.content}} </mat-card-content>
+								</mat-card> 
+							</div>	
+
+							<div class='card' #InceptionV3>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.InceptionV3.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.InceptionV3.content}} </mat-card-content>
+								</mat-card> 
+							</div>
 						</mat-card> 
 					</div>
 
-					<div class='card' #MobileNetV2>	
-						<mat-card>
-							<mat-card-title> {{descs.MobileNetV2.title}} </mat-card-title>
-							<mat-card-content> {{descs.MobileNetV2.content}} </mat-card-content>
-						</mat-card> 
-					</div>
 
-					<div class='card' #ResNet50>	
-						<mat-card>
-							<mat-card-title> {{descs.ResNet50.title}} </mat-card-title>
-							<mat-card-content> {{descs.ResNet50.content}} </mat-card-content>
-						</mat-card> 
-					</div>
-
-					<div class='card' #Xception>	
-						<mat-card>
-							<mat-card-title> {{descs.Xception.title}} </mat-card-title>
-							<mat-card-content> {{descs.Xception.content}} </mat-card-content>
-						</mat-card> 
-					</div>	
-
-					<div class='card' #InceptionV3>	
-						<mat-card>
-							<mat-card-title> {{descs.InceptionV3.title}} </mat-card-title>
-							<mat-card-content> {{descs.InceptionV3.content}} </mat-card-content>
-						</mat-card> 
-					</div>
-
+					<!-- Nested Image Selection -->
 					<div class='card' #ImageSelection>	
 						<mat-card>
 							<mat-card-title> {{descs.ImageSelection.title}} </mat-card-title>
 							<mat-card-content> {{descs.ImageSelection.content}} </mat-card-content>
+			
+							<div class='card' #Upload>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.Upload.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.Upload.content}} </mat-card-content>
+								</mat-card> 
+							</div>
+
+							<div class='card' #Select>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.Select.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.Select.content}} </mat-card-content>
+								</mat-card> 
+							</div>			
+
+							<div class='card' #RandomOption>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.RandomOption.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.RandomOption.content}} </mat-card-content>
+								</mat-card> 
+							</div>	
 						</mat-card> 
 					</div>
 
-					<div class='card' #Upload>	
-						<mat-card>
-							<mat-card-title> {{descs.Upload.title}} </mat-card-title>
-							<mat-card-content> {{descs.Upload.content}} </mat-card-content>
-						</mat-card> 
-					</div>
 
-					<div class='card' #Select>	
-						<mat-card>
-							<mat-card-title> {{descs.Select.title}} </mat-card-title>
-							<mat-card-content> {{descs.Select.content}} </mat-card-content>
-						</mat-card> 
-					</div>			
-
-					<div class='card' #RandomOption>	
-						<mat-card>
-							<mat-card-title> {{descs.RandomOption.title}} </mat-card-title>
-							<mat-card-content> {{descs.RandomOption.content}} </mat-card-content>
-						</mat-card> 
-					</div>	
-
+					<!-- Nested Image Selection -->
 					<div class='card' #ModelSelection>	
 						<mat-card>
 							<mat-card-title> {{descs.ModelSelection.title}} </mat-card-title>
 							<mat-card-content> {{descs.ModelSelection.content}} </mat-card-content>
+				
+							<div class='card' #AdversarialModel>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.AdversarialModel.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.AdversarialModel.content}} </mat-card-content>
+								</mat-card> 
+							</div>
+
+							<div class='card' #PredictionModels>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.PredictionModels.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.PredictionModels.content}} </mat-card-content>
+								</mat-card> 
+							</div>
 						</mat-card> 
 					</div>
 
-					<div class='card' #AdversarialModel>	
-						<mat-card>
-							<mat-card-title> {{descs.AdversarialModel.title}} </mat-card-title>
-							<mat-card-content> {{descs.AdversarialModel.content}} </mat-card-content>
-						</mat-card> 
-					</div>
 
-					<div class='card' #PredictionModels>	
-						<mat-card>
-							<mat-card-title> {{descs.PredictionModels.title}} </mat-card-title>
-							<mat-card-content> {{descs.PredictionModels.content}} </mat-card-content>
-						</mat-card> 
-					</div>
-
+					<!-- Nested Attack Model -->
 					<div class='card' #AttackMethods>	
 						<mat-card>
 							<mat-card-title> {{descs.AttackMethods.title}} </mat-card-title>
 							<mat-card-content> {{descs.AttackMethods.content}} </mat-card-content>
-						</mat-card> 
-					</div>											
+									
+							<div class='card' #FGSM>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.FGSM.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.FGSM.content}} </mat-card-content>
+								</mat-card> 
+							</div>		
 
-					<div class='card' #FGSM>	
-						<mat-card>
-							<mat-card-title> {{descs.FGSM.title}} </mat-card-title>
-							<mat-card-content> {{descs.FGSM.content}} </mat-card-content>
-						</mat-card> 
-					</div>		
+							<div class='card' #T_FGSM>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.T_FGSM.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.T_FGSM.content}} </mat-card-content>
+								</mat-card> 
+							</div>	
 
-					<div class='card' #T_FGSM>	
-						<mat-card>
-							<mat-card-title> {{descs.T_FGSM.title}} </mat-card-title>
-							<mat-card-content> {{descs.T_FGSM.content}} </mat-card-content>
+							<div class='card' #DeepFool>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.DeepFool.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.DeepFool.content}} </mat-card-content>
+								</mat-card> 
+							</div>	
 						</mat-card> 
 					</div>	
 
-					<div class='card' #DeepFool>	
-						<mat-card>
-							<mat-card-title> {{descs.DeepFool.title}} </mat-card-title>
-							<mat-card-content> {{descs.DeepFool.content}} </mat-card-content>
-						</mat-card> 
-					</div>	
 
+					<!-- Nested Image Display -->
 					<div class='card' #ImageDisplay>	
 						<mat-card>
 							<mat-card-title> {{descs.ImageDisplay.title}} </mat-card-title>
 							<mat-card-content> {{descs.ImageDisplay.content}} </mat-card-content>
+			
+							<div class='card' #Perturbation>	
+							<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.Perturbation.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.Perturbation.content}} </mat-card-content>
+								</mat-card> 
+							</div>		
 						</mat-card> 
 					</div>	
 
-					<div class='card' #Perturbation>	
-						<mat-card>
-							<mat-card-title> {{descs.Perturbation.title}} </mat-card-title>
-							<mat-card-content> {{descs.Perturbation.content}} </mat-card-content>
-						</mat-card> 
-					</div>																					
-
+																			
+					<!-- Nested About -->
 					<div class='card' #AboutThisProject>	
 						<mat-card>
 							<mat-card-title> {{descs.AboutThisProject.title}} </mat-card-title>
 							<mat-card-content> {{descs.AboutThisProject.content}} </mat-card-content>
+				
+
+							<div class='card' #Related>	
+								<mat-card>
+									<mat-card-title class='nestedCardTitle'> {{descs.Related.title}} </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> {{descs.Related.content}} </mat-card-content>
+								</mat-card> 
+							</div>		
 						</mat-card> 
 					</div>																					
 
-
-					<div class='card' #Related>	
-						<mat-card>
-							<mat-card-title> {{descs.Related.title}} </mat-card-title>
-							<mat-card-content> {{descs.Related.content}} </mat-card-content>
-						</mat-card> 
-					</div>		
+				<!-- End mainContentContainer-->
 				</div>																			
 
 

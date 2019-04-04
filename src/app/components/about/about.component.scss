@@ -46,7 +46,18 @@
 
 	.card
 	{
-		margin-bottom:30px;
+		margin-bottom:50px;
+
+		.nestedCardTitle
+		{
+			font-size: 1.75em;
+
+		}
+
+		.nestedCardHeading
+		{
+			font-size: 1.25em;
+		}
 	}
 
 	.mat-display-2
