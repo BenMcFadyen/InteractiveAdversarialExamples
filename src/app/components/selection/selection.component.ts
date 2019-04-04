@@ -17,8 +17,6 @@ import { ModelPrediction } from '../../classes/ModelPrediction';
 import { Prediction } from '../../classes/Prediction';
 import { ModelData } from '../../classes/ModelData';
 
-
-
 import * as tf from '@tensorflow/tfjs';
 
 
@@ -75,6 +73,8 @@ export class SelectionComponent implements OnInit
 	canvasDifference:string = 'canvasDifference'		
 	canvasAdversarial:string = 'canvasAdversarial'
 
+	destroy = false
+
   	constructor(private modelService: ModelService,
 		  		private imgService: ImageService,
 		  		private transferService: TransferService,
@@ -82,8 +82,6 @@ export class SelectionComponent implements OnInit
 		  		private dialog: MatDialog,
 		  		private utils: UtilsService)
 	{
-
-		this.transferService.currentLandingPageDismissedSource.subscribe(landingPageDismissed => this.landingPageDismissedValueChange(landingPageDismissed))
 
 	}
 
@@ -116,6 +114,8 @@ export class SelectionComponent implements OnInit
 			console.error('WebGL is required and is not supported on this device')
 		}
 
+		this.transferService.currentLandingPageDismissedSource.subscribe(landingPageDismissed => this.landingPageDismissedValueChange(landingPageDismissed))
+
 		// //* Loads/Warms MobileNet on launch -> speed up debugging */
 		// this.modelService.loadModel('MobileNet').then(()=>
 		// {
@@ -128,6 +128,11 @@ export class SelectionComponent implements OnInit
 	}
 
 
+
+	ngOnDestroy()
+	{
+		this.destroy = true;
+	}
 
 	/** Opens a dialog where the user can select which models they would like to load */
 	openModelSelectDialog()
@@ -177,7 +182,7 @@ export class SelectionComponent implements OnInit
 
 	/** Called when the landingPageDismissed boolean value from the transfer service changes
 	* Checks if the model select dialog can be opened */
-	landingPageDismissedValueChange(landingPageDismissed)
+	async landingPageDismissedValueChange(landingPageDismissed)
 	{
 		if(landingPageDismissed)
 		{
@@ -185,10 +190,18 @@ export class SelectionComponent implements OnInit
 			// else -> open the model select dialog (as no models are loaded)
 			let loadedModels = this.modelService.getAllLoadedModelNames()
 			if(loadedModels.length > 0)
+			{
 				this.setLocalModelVars(loadedModels)
-			else			
-				this.openModelSelectDialog()	
+			}
+			else 
+			{
+				// delay by 1 second
+				await this.utils.delay(1)
 
+				//prevents the modelSelect dialog opening if the user switches route quickly
+				if(!this.destroy)
+					this.openModelSelectDialog()
+			}	
 		}
 	}	
 
