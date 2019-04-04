@@ -1,0 +1,73 @@
+.mat-list-base[dense] .mat-list-item
+{
+	//height:25px;
+	font-size: 1.25em;
+}
+
+
+.mat-list-base .mat-list-item
+{
+	//height:25px;
+	font-size: 1.25em;
+}
+
+.sidenavContainer
+{
+	position: absolute;
+	top: 64px;
+	bottom: 64px;
+	left: 0;
+	right: 0;
+
+	.mat-sidenav
+	{
+		width:400px;
+	}
+}
+
+.mat-card-title
+{
+	font-size: 2em;
+	margin-bottom:25px;
+}
+
+.mat-card-content
+{
+	font-size: 1.5em;
+}
+
+
+.mainContentContainer
+{
+	display: flex;
+	flex-direction: column;
+	align-items:center;
+	justify-content:center;
+
+	.card
+	{
+		margin-bottom:30px;
+	}
+
+	.mat-display-2
+	{
+		align-items:center;
+		margin-bottom: 30px;
+	}
+
+	.mat-display-1
+	{
+		text-align: left;
+	}	
+
+	.mat-h1
+	{
+		text-align: left;
+		margin-top:10px;
+
+	}
+
+	margin-top:50px;
+	margin-left:50px;
+	margin-right:200px;
+}

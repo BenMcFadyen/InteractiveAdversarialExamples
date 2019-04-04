@@ -1,3 +1,252 @@
-<p>
-  about works!
-</p>
+<div class ="container">
+	<mat-sidenav-container class="sidenavContainer">
+	  <mat-sidenav mode="side" opened>
+
+
+		<mat-nav-list>
+
+				<mat-list-item matSubheader (click)="scroll(WhatAreAdversarialExamples)"> What are adversarial examples? </mat-list-item>
+				<mat-list-item matSubheader (click)="scroll(HowDoesItWork)"> How does it work? </mat-list-item>
+				<mat-list-item matSubheader (click)="scroll(ModelLoading)"> Model Loading </mat-list-item>
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(Models)" > Models </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(MobileNet)"> MobileNet </mat-list-item>
+								 <mat-list-item (click)="scroll(MobileNetV2)"> MobileNetV2 </mat-list-item>
+								 <mat-list-item (click)="scroll(ResNet50)"> ResNet50 </mat-list-item>
+								 <mat-list-item (click)="scroll(Xception)"> Xception </mat-list-item>
+								 <mat-list-item (click)="scroll(InceptionV3)"> InceptionV3 </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(ImageSelection)" > Image Selection </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(Upload)"> Upload </mat-list-item>
+								 <mat-list-item (click)="scroll(Select)"> Select </mat-list-item>
+								 <mat-list-item (click)="scroll(RandomOption)"> Random Option </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>			
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(ModelSelection)" > Model Selection </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(AdversarialModels)"> Adversarial Model </mat-list-item>
+								 <mat-list-item (click)="scroll(PredictionModels)"> Prediction Model(s) </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>	
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(AttackMethods)" > Attack Methods </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(FGSM)"> Fast Gradient Sign Method </mat-list-item>
+								 <mat-list-item (click)="scroll(T_FGSM)"> Targeted Fast Gradient Sign Method </mat-list-item>
+								 <mat-list-item (click)="scroll(DeepFool)"> DeepFool </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>	
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(ImageDisplay)" > Image Display </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(Perturbation)"> Perturbation </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>	
+
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(AboutThisProject)" > About this project </mat-list-item>
+							<mat-nav-list dense style="margin-left:15px;">
+								 <mat-list-item (click)="scroll(Related)"> Related </mat-list-item>
+							</mat-nav-list>
+					</mat-nav-list>						
+			</mat-nav-list>
+		</mat-sidenav>
+
+
+
+
+
+
+		<mat-sidenav-content>
+			<div class ="mainContentContainer">
+				<h1 class="mat-display-3"> About </h1>
+
+				<div id="cardContainer">	
+					<div class='card' #WhatAreAdversarialExamples>	
+						<mat-card>
+							<mat-card-title> {{descs.WhatAreAdversarialExamples.title}} </mat-card-title>
+							<mat-card-content> {{descs.WhatAreAdversarialExamples.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #HowDoesItWork>	
+						<mat-card>
+							<mat-card-title> {{descs.HowDoesItWork.title}} </mat-card-title>
+							<mat-card-content> {{descs.HowDoesItWork.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #ModelLoading>	
+						<mat-card>
+							<mat-card-title> {{descs.ModelLoading.title}} </mat-card-title>
+							<mat-card-content> {{descs.ModelLoading.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #Models>	
+						<mat-card>
+							<mat-card-title> {{descs.Models.title}} </mat-card-title>
+							<mat-card-content> {{descs.Models.content}} </mat-card-content>
+						</mat-card> 
+					</div>		
+
+					<div class='card' #MobileNet>	
+						<mat-card>
+							<mat-card-title> {{descs.MobileNet.title}} </mat-card-title>
+							<mat-card-content> {{descs.MobileNet.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #MobileNetV2>	
+						<mat-card>
+							<mat-card-title> {{descs.MobileNetV2.title}} </mat-card-title>
+							<mat-card-content> {{descs.MobileNetV2.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #ResNet50>	
+						<mat-card>
+							<mat-card-title> {{descs.ResNet50.title}} </mat-card-title>
+							<mat-card-content> {{descs.ResNet50.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #Xception>	
+						<mat-card>
+							<mat-card-title> {{descs.Xception.title}} </mat-card-title>
+							<mat-card-content> {{descs.Xception.content}} </mat-card-content>
+						</mat-card> 
+					</div>	
+
+					<div class='card' #InceptionV3>	
+						<mat-card>
+							<mat-card-title> {{descs.InceptionV3.title}} </mat-card-title>
+							<mat-card-content> {{descs.InceptionV3.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #ImageSelection>	
+						<mat-card>
+							<mat-card-title> {{descs.ImageSelection.title}} </mat-card-title>
+							<mat-card-content> {{descs.ImageSelection.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #Upload>	
+						<mat-card>
+							<mat-card-title> {{descs.Upload.title}} </mat-card-title>
+							<mat-card-content> {{descs.Upload.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #Select>	
+						<mat-card>
+							<mat-card-title> {{descs.Select.title}} </mat-card-title>
+							<mat-card-content> {{descs.Select.content}} </mat-card-content>
+						</mat-card> 
+					</div>			
+
+					<div class='card' #RandomOption>	
+						<mat-card>
+							<mat-card-title> {{descs.RandomOption.title}} </mat-card-title>
+							<mat-card-content> {{descs.RandomOption.content}} </mat-card-content>
+						</mat-card> 
+					</div>	
+
+					<div class='card' #ModelSelection>	
+						<mat-card>
+							<mat-card-title> {{descs.ModelSelection.title}} </mat-card-title>
+							<mat-card-content> {{descs.ModelSelection.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #AdversarialModel>	
+						<mat-card>
+							<mat-card-title> {{descs.AdversarialModel.title}} </mat-card-title>
+							<mat-card-content> {{descs.AdversarialModel.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #PredictionModels>	
+						<mat-card>
+							<mat-card-title> {{descs.PredictionModels.title}} </mat-card-title>
+							<mat-card-content> {{descs.PredictionModels.content}} </mat-card-content>
+						</mat-card> 
+					</div>
+
+					<div class='card' #AttackMethods>	
+						<mat-card>
+							<mat-card-title> {{descs.AttackMethods.title}} </mat-card-title>
+							<mat-card-content> {{descs.AttackMethods.content}} </mat-card-content>
+						</mat-card> 
+					</div>											
+
+					<div class='card' #FGSM>	
+						<mat-card>
+							<mat-card-title> {{descs.FGSM.title}} </mat-card-title>
+							<mat-card-content> {{descs.FGSM.content}} </mat-card-content>
+						</mat-card> 
+					</div>		
+
+					<div class='card' #T_FGSM>	
+						<mat-card>
+							<mat-card-title> {{descs.T_FGSM.title}} </mat-card-title>
+							<mat-card-content> {{descs.T_FGSM.content}} </mat-card-content>
+						</mat-card> 
+					</div>	
+
+					<div class='card' #DeepFool>	
+						<mat-card>
+							<mat-card-title> {{descs.DeepFool.title}} </mat-card-title>
+							<mat-card-content> {{descs.DeepFool.content}} </mat-card-content>
+						</mat-card> 
+					</div>	
+
+					<div class='card' #ImageDisplay>	
+						<mat-card>
+							<mat-card-title> {{descs.ImageDisplay.title}} </mat-card-title>
+							<mat-card-content> {{descs.ImageDisplay.content}} </mat-card-content>
+						</mat-card> 
+					</div>	
+
+					<div class='card' #Perturbation>	
+						<mat-card>
+							<mat-card-title> {{descs.Perturbation.title}} </mat-card-title>
+							<mat-card-content> {{descs.Perturbation.content}} </mat-card-content>
+						</mat-card> 
+					</div>																					
+
+					<div class='card' #AboutThisProject>	
+						<mat-card>
+							<mat-card-title> {{descs.AboutThisProject.title}} </mat-card-title>
+							<mat-card-content> {{descs.AboutThisProject.content}} </mat-card-content>
+						</mat-card> 
+					</div>																					
+
+
+					<div class='card' #Related>	
+						<mat-card>
+							<mat-card-title> {{descs.Related.title}} </mat-card-title>
+							<mat-card-content> {{descs.Related.content}} </mat-card-content>
+						</mat-card> 
+					</div>		
+				</div>																			
+
+
+
+
+			</div>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>
