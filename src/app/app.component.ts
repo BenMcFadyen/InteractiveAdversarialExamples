@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LandingDialogComponent } from './dialogs/landing-dialog/landing-dialog.component';
 import { MatDialog, MatDialogConfig } from "@angular/material";
+import { TransferService } from './services/transfer.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 export class AppComponent 
 {
 
-	constructor(private dialog: MatDialog)
+	constructor(private dialog: MatDialog, private transferService:TransferService)
 	{
 		this.openLandingDialog()
 	}
@@ -31,9 +32,9 @@ export class AppComponent
 	  
   		const dialogRef = this.dialog.open(LandingDialogComponent, dialogConfig)
 
-	  //   dialogRef.afterClosed().subscribe(modelsLoaded => 
-   //  	{
-			// this.setLocalModelVars(modelsLoaded)	
-   //  	});  	
+	    dialogRef.afterClosed().subscribe(() => 
+    	{
+			this.transferService.setLandingPageDismissed(true)
+    	});  	
 	} 	
 }

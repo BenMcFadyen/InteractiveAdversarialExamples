@@ -80,8 +80,10 @@ export class SelectionComponent implements OnInit
 		  		private transferService: TransferService,
 		  		private advService: AdvService,
 		  		private dialog: MatDialog,
-		  		private utils:UtilsService)
+		  		private utils: UtilsService)
 	{
+
+		this.transferService.currentLandingPageDismissedSource.subscribe(landingPageDismissed => this.landingPageDismissedValueChange(landingPageDismissed))
 
 	}
 
@@ -113,19 +115,6 @@ export class SelectionComponent implements OnInit
 			alert('WebGL is required and is not supported on this device')
 			console.error('WebGL is required and is not supported on this device')
 		}
-
-		// check if any models have already been loaded (user switched route and has returned to this route)
-		// else -> open the model select dialog (as no models are loaded)
-		let loadedModels = this.modelService.getAllLoadedModelNames()
-		if(loadedModels.length > 0)
-		{
-			this.setLocalModelVars(loadedModels)
-		}
-		else
-		{
-			//open dialog here
-		}
-
 
 		// //* Loads/Warms MobileNet on launch -> speed up debugging */
 		// this.modelService.loadModel('MobileNet').then(()=>
@@ -185,6 +174,23 @@ export class SelectionComponent implements OnInit
 			this.epsilon.enable()
 		}
 	}
+
+	/** Called when the landingPageDismissed boolean value from the transfer service changes
+	* Checks if the model select dialog can be opened */
+	landingPageDismissedValueChange(landingPageDismissed)
+	{
+		if(landingPageDismissed)
+		{
+			// check if any models have already been loaded (user switched route and has returned to this route)
+			// else -> open the model select dialog (as no models are loaded)
+			let loadedModels = this.modelService.getAllLoadedModelNames()
+			if(loadedModels.length > 0)
+				this.setLocalModelVars(loadedModels)
+			else			
+				this.openModelSelectDialog()	
+
+		}
+	}	
 
 	/** Predict the original image using the model(s) which have been selected by the user
 	* 	Also predict the adversarial image if this has been drawn to the canvas

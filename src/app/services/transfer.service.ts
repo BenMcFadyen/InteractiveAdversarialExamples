@@ -37,10 +37,25 @@ export class TransferService
 	private perturbationSource = new BehaviorSubject(this.perturbation);
 	currentPerturbationSource = this.perturbationSource.asObservable();		
 
+	private landingPageDismissed:boolean = false
+	private landingPageDismissedSource = new BehaviorSubject(this.landingPageDismissed);
+	currentLandingPageDismissedSource = this.landingPageDismissedSource.asObservable();			
+
 	constructor() 
 	{ 
 
 	}
+
+	setLandingPageDismissed(isDismissed = true)
+	{
+		this.landingPageDismissedSource.next(isDismissed)
+	}
+
+	getLandingPageDismissed()
+	{
+		console.log('Dis' + this.landingPageDismissedSource.value)
+		return this.landingPageDismissedSource.value
+	}	
 
 	setPerturbation(perturbation: tf.Tensor3D|tf.Tensor4D)
 	{
