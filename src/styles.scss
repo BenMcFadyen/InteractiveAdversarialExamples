@@ -26,13 +26,10 @@ a
     grid-template-columns: 30% auto;    
 }
 
-
 a
 {
 	color: white;
 }
-
-
 
 section 
 {
@@ -42,3 +39,22 @@ section
 }
 
 
+
+.landingDialogBackdrop
+{
+    opacity:1;
+    background: hsla(38,24%,93%,.90);
+    //background-color: yellow;
+
+}
+
+
+.landingDialogPanel
+{
+    .mat-dialog-container
+    {
+       // opacity: 0.5;
+        box-shadow: none;
+        background: none;
+    }
+}
