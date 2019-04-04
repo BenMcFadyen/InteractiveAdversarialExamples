@@ -3,8 +3,6 @@
   display: flex;
   min-height: 75vh;
   flex-direction: row;
-
-
 }
 
 .selection 
@@ -13,14 +11,11 @@
   width:25%;
 }
 
-
 .display 
 {
   flex: -1;
   width:75%;
-
 }
-
 
 .mat-divider.mat-divider-vertical
 {
