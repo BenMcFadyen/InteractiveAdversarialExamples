@@ -4,7 +4,6 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-
 import { ImageSelectDialogComponent } from '../../dialogs/image-select-dialog/image-select-dialog.component';
 import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
 import { TransferService } from '../../services/transfer.service';
@@ -536,7 +535,7 @@ export class SelectionComponent implements OnInit
 		*/
 		if(this.attackMethod.value == 'FGSM' || this.attackMethod.value == 'DeepFool' && this.topPrediction == null)
 		{
-			console.log('FGSM selected, but no prediction, making prediction with model: ' + this.adversarialModel.value)
+			//console.log('FGSM/DeepFool selected, but no prediction, making prediction with model: ' + this.adversarialModel.value)
 			let adversarialModelObject = this.modelService.getModelDataObjectFromName(this.adversarialModel.value)
 			let predictions = this.getPredictions(adversarialModelObject, this.canvasOriginal, 1)
 			this.topPrediction = predictions[0].className
