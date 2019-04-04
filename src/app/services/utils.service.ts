@@ -15,6 +15,11 @@ export class UtilsService
 
 	}
 
+	delay(seconds: number) 
+	{
+		return new Promise(resolve => setTimeout(resolve, seconds*1000) );
+	}
+
 	/** Log the time taken to perform complete a given action */
 	logTime(t0:number, t1:number, message: string)
 	{
