@@ -11,6 +11,8 @@ export class AboutComponent implements OnInit
 {
 	descs: AboutDescriptions = new AboutDescriptions() 
 
+	nestedCardClass:string = 'card nestedCard mat-elevation-z8'
+
 	constructor() 
 	{ 
 

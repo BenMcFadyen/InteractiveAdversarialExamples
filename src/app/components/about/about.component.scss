@@ -48,10 +48,15 @@
 	{
 		margin-bottom:50px;
 
+
+		.nestedCard
+		{
+			margin-top:20px;
+		}
+
 		.nestedCardTitle
 		{
 			font-size: 1.75em;
-
 		}
 
 		.nestedCardHeading
@@ -60,10 +65,10 @@
 		}
 	}
 
-	.mat-display-2
+	.mat-display-3
 	{
 		align-items:center;
-		margin-bottom: 30px;
+		margin-bottom: 20px;
 	}
 
 	.mat-display-1

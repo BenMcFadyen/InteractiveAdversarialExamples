@@ -96,36 +96,36 @@
 						<mat-card>
 							<mat-card-title> {{descs.Models.title}} </mat-card-title>
 							<mat-card-content> {{descs.Models.content}} </mat-card-content>
-				
-							<div class='card' #MobileNet>	
+						
+							<div class='{{nestedCardClass}}' #MobileNet>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.MobileNet.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.MobileNet.content}} </mat-card-content>
 								</mat-card> 
 							</div>
 
-							<div class='card' #MobileNetV2>	
+							<div class='{{nestedCardClass}}' #MobileNetV2>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.MobileNetV2.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.MobileNetV2.content}} </mat-card-content>
 								</mat-card> 
 							</div>
 
-							<div class='card' #ResNet50>	
+							<div class='{{nestedCardClass}}' #ResNet50>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.ResNet50.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.ResNet50.content}} </mat-card-content>
 								</mat-card> 
 							</div>
 
-							<div class='card' #Xception>	
+							<div class='{{nestedCardClass}}' #Xception>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.Xception.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.Xception.content}} </mat-card-content>
 								</mat-card> 
 							</div>	
 
-							<div class='card' #InceptionV3>	
+							<div class='{{nestedCardClass}}' #InceptionV3>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.InceptionV3.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.InceptionV3.content}} </mat-card-content>
@@ -141,21 +141,21 @@
 							<mat-card-title> {{descs.ImageSelection.title}} </mat-card-title>
 							<mat-card-content> {{descs.ImageSelection.content}} </mat-card-content>
 			
-							<div class='card' #Upload>	
+							<div class='{{nestedCardClass}}' #Upload>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.Upload.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.Upload.content}} </mat-card-content>
 								</mat-card> 
 							</div>
 
-							<div class='card' #Select>	
+							<div class='{{nestedCardClass}}' #Select>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.Select.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.Select.content}} </mat-card-content>
 								</mat-card> 
 							</div>			
 
-							<div class='card' #RandomOption>	
+							<div class='{{nestedCardClass}}' #RandomOption>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.RandomOption.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.RandomOption.content}} </mat-card-content>
@@ -171,14 +171,14 @@
 							<mat-card-title> {{descs.ModelSelection.title}} </mat-card-title>
 							<mat-card-content> {{descs.ModelSelection.content}} </mat-card-content>
 				
-							<div class='card' #AdversarialModel>	
+							<<div class='{{nestedCardClass}}' #AdversarialModel>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.AdversarialModel.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.AdversarialModel.content}} </mat-card-content>
 								</mat-card> 
 							</div>
 
-							<div class='card' #PredictionModels>	
+							<div class='{{nestedCardClass}}' #PredictionModels>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.PredictionModels.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.PredictionModels.content}} </mat-card-content>
@@ -194,21 +194,21 @@
 							<mat-card-title> {{descs.AttackMethods.title}} </mat-card-title>
 							<mat-card-content> {{descs.AttackMethods.content}} </mat-card-content>
 									
-							<div class='card' #FGSM>	
+							<div class='{{nestedCardClass}}' #FGSM>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.FGSM.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.FGSM.content}} </mat-card-content>
 								</mat-card> 
 							</div>		
 
-							<div class='card' #T_FGSM>	
+							<div class='{{nestedCardClass}}' #T_FGSM>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.T_FGSM.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.T_FGSM.content}} </mat-card-content>
 								</mat-card> 
 							</div>	
 
-							<div class='card' #DeepFool>	
+							<<div class='{{nestedCardClass}}' #DeepFool>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.DeepFool.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.DeepFool.content}} </mat-card-content>
@@ -224,7 +224,7 @@
 							<mat-card-title> {{descs.ImageDisplay.title}} </mat-card-title>
 							<mat-card-content> {{descs.ImageDisplay.content}} </mat-card-content>
 			
-							<div class='card' #Perturbation>	
+							<div class='{{nestedCardClass}}' #Perturbation>	
 							<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.Perturbation.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.Perturbation.content}} </mat-card-content>
@@ -241,7 +241,7 @@
 							<mat-card-content> {{descs.AboutThisProject.content}} </mat-card-content>
 				
 
-							<div class='card' #Related>	
+							<div class='{{nestedCardClass}}' #Related>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> {{descs.Related.title}} </mat-card-title>
 									<mat-card-content class='nestedCardHeading'> {{descs.Related.content}} </mat-card-content>
