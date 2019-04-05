@@ -21,7 +21,7 @@
 
 	.mat-sidenav
 	{
-		width:400px;
+		width:415px;
 	}
 }
 
@@ -44,10 +44,28 @@
 	align-items:center;
 	justify-content:center;
 
+
+	img
+	{
+		margin-top: 20px;
+		margin-right:none;
+	}
+
 	.card
 	{
-		margin-bottom:50px;
+		.mat-card
+		{
+			display: flex;
+			flex-direction: column;
+			justify-content:center;		
 
+			img
+			{
+				align-self:center;
+			}
+		}
+
+		margin-bottom:50px;
 
 		.nestedCard
 		{
@@ -61,7 +79,7 @@
 
 		.nestedCardHeading
 		{
-			font-size: 1.25em;
+			//font-size: 1.25em;
 		}
 	}
 

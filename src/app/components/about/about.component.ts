@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AboutDescriptions } from '../../Classes/AboutDescriptions';
-import { AboutDescription } from '../../Classes/AboutDescription';
 
 @Component({
   selector: 'app-about',
@@ -9,9 +7,7 @@ import { AboutDescription } from '../../Classes/AboutDescription';
 })
 export class AboutComponent implements OnInit 
 {
-	descs: AboutDescriptions = new AboutDescriptions() 
-
-	nestedCardClass:string = 'card nestedCard mat-elevation-z8'
+	nestedCardClass:string = 'card nestedCard mat-elevation-z5'
 
 	constructor() 
 	{ 
@@ -22,8 +18,6 @@ export class AboutComponent implements OnInit
 	{
 
 	}
-
-
 
 	scroll(element: HTMLElement) 
 	{

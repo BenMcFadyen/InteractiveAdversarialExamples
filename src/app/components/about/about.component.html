@@ -2,31 +2,17 @@
 	<mat-sidenav-container class="sidenavContainer">
 	  <mat-sidenav mode="side" opened>
 
-
 		<mat-nav-list>
 
 				<mat-list-item matSubheader (click)="scroll(WhatAreAdversarialExamples)"> What are adversarial examples? </mat-list-item>
 				<mat-list-item matSubheader (click)="scroll(HowDoesItWork)"> How does it work? </mat-list-item>
-				<mat-list-item matSubheader (click)="scroll(ModelLoading)"> Model Loading </mat-list-item>
 
 					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(Models)" > Models </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
-								 <mat-list-item (click)="scroll(MobileNet)"> MobileNet </mat-list-item>
-								 <mat-list-item (click)="scroll(MobileNetV2)"> MobileNetV2 </mat-list-item>
-								 <mat-list-item (click)="scroll(ResNet50)"> ResNet50 </mat-list-item>
-								 <mat-list-item (click)="scroll(Xception)"> Xception </mat-list-item>
-								 <mat-list-item (click)="scroll(InceptionV3)"> InceptionV3 </mat-list-item>
-							</mat-nav-list>
+						<mat-list-item (click)="scroll(Models)" > Model Loading </mat-list-item>
 					</mat-nav-list>
 
 					<mat-nav-list dense style="margin-left:15px;">
 						<mat-list-item (click)="scroll(ImageSelection)" > Image Selection </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
-								 <mat-list-item (click)="scroll(Upload)"> Upload </mat-list-item>
-								 <mat-list-item (click)="scroll(Select)"> Select </mat-list-item>
-								 <mat-list-item (click)="scroll(RandomOption)"> Random Option </mat-list-item>
-							</mat-nav-list>
 					</mat-nav-list>			
 
 					<mat-nav-list dense style="margin-left:15px;">
@@ -38,7 +24,7 @@
 					</mat-nav-list>	
 
 					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(AttackMethods)" > Attack Methods </mat-list-item>
+						<mat-list-item (click)="scroll(AttackMethods)" > Attack Method Selection </mat-list-item>
 							<mat-nav-list dense style="margin-left:15px;">
 								 <mat-list-item (click)="scroll(FGSM)"> Fast Gradient Sign Method </mat-list-item>
 								 <mat-list-item (click)="scroll(T_FGSM)"> Targeted Fast Gradient Sign Method </mat-list-item>
@@ -47,18 +33,16 @@
 					</mat-nav-list>	
 
 					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(ImageDisplay)" > Image Display </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
-								 <mat-list-item (click)="scroll(Perturbation)"> Perturbation </mat-list-item>
-							</mat-nav-list>
-					</mat-nav-list>	
+						<mat-list-item (click)="scroll(Perturbation)" > Perturbation </mat-list-item>
+					</mat-nav-list>			
+
+					<mat-nav-list dense style="margin-left:15px;">
+						<mat-list-item (click)="scroll(Epsilon)" > Epsilon </mat-list-item>
+					</mat-nav-list>													
 
 
 					<mat-nav-list dense style="margin-left:15px;">
 						<mat-list-item (click)="scroll(AboutThisProject)" > About this project </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
-								 <mat-list-item (click)="scroll(Related)"> Related </mat-list-item>
-							</mat-nav-list>
 					</mat-nav-list>						
 			</mat-nav-list>
 		</mat-sidenav>
@@ -72,95 +56,100 @@
 				<div id="cardContainer">	
 					<div class='card' #WhatAreAdversarialExamples>	
 						<mat-card>
-							<mat-card-title> {{descs.WhatAreAdversarialExamples.title}} </mat-card-title>
-							<mat-card-content> {{descs.WhatAreAdversarialExamples.content}} </mat-card-content>
+							<mat-card-title> What are adversarial examples? </mat-card-title>
+							<mat-card-content> 
+
+
+							<p> 
+								An Adversarial example is an input to a machine learning model that has been maliciously crafted to cause the model to make an incorrect prediction.  
+							</p>
+
+							<p>
+								The image below shows a successfull attack using the 
+								<a style="cursor: pointer; color:purple;" (click)="scroll(DeepFool)"> DeepFool</a> attack method agaisnt the 
+								<a style="cursor: pointer; color:purple;" (click)="scroll(Xception)"> Xception</a> Model.
+							</p>
+
+							<p> 
+									 The left image shows the original image, which the model correctly predicts as being a lion. 
+							<br> The middle image shows the adversarial perturbation, which is applied to the image to form the adversarial example. 
+							<br> The right image shows the adversarial example, which the model now incorrectly classifies as a 'chow chow', a breed of dog. 
+							</p>
+
+
+						</mat-card-content>
+							<img id = "WhatAreAdversarialExamplesImage" width=80% src="./assets/about_images/what_are_adversarial_examples.png">
 						</mat-card> 
 					</div>
 
 					<div class='card' #HowDoesItWork>	
 						<mat-card>
-							<mat-card-title> {{descs.HowDoesItWork.title}} </mat-card-title>
-							<mat-card-content> {{descs.HowDoesItWork.content}} </mat-card-content>
+							<mat-card-title> How does InteractiveAdversarialExamples work? </mat-card-title>
+							<mat-card-content> 
+
+								<p>
+									InteractiveAdversarialExamples allows for the exploration of adversarial examples through real-time generation and classification. </p>
+
+								<p> A step by step guide to using the site: </p>
+							
+								<ol>
+									<li> Model Loading: Load the model (or models) you would like to use. </li> 
+									<li> Image Selection: Upload or select the  image you would like to turn into an adversarial example. </li> 
+									<li> Model Selection: Select the adversarial and prediction models you would like to use. </li> 
+									<li> Attack Method: Select the method that will be used to generate the adversarial example </li> 
+									<li> Observe the perturbation and the adversarial example. </li> 
+									<li> Observe the predictions for both the original and adversarial image. </li> 
+								</ol>
+								</mat-card-content>
+							<img id = "HowDoesItWork" width=100% src="./assets/about_images/how_does_it_work.png">						
 						</mat-card> 
 					</div>
 
-					<div class='card' #ModelLoading>	
-						<mat-card>
-							<mat-card-title> {{descs.ModelLoading.title}} </mat-card-title>
-							<mat-card-content> {{descs.ModelLoading.content}} </mat-card-content>
-						</mat-card> 
-					</div>
-
-					<!-- Nested Model cards -->
 					<div class='card' #Models>	
 						<mat-card>
-							<mat-card-title> {{descs.Models.title}} </mat-card-title>
-							<mat-card-content> {{descs.Models.content}} </mat-card-content>
-						
-							<div class='{{nestedCardClass}}' #MobileNet>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.MobileNet.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.MobileNet.content}} </mat-card-content>
-								</mat-card> 
-							</div>
+							<mat-card-title> 1. Model Loading </mat-card-title>
 
-							<div class='{{nestedCardClass}}' #MobileNetV2>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.MobileNetV2.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.MobileNetV2.content}} </mat-card-content>
-								</mat-card> 
-							</div>
+							<mat-card-content>
 
-							<div class='{{nestedCardClass}}' #ResNet50>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.ResNet50.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.ResNet50.content}} </mat-card-content>
-								</mat-card> 
-							</div>
+								<p> InteractiveAdversarialExamples provides access to six different models, all of which can be used to make predictions or generate adversarial examples (with the exception of the InceptionV3 model, which can only be used for predictions) </p>
 
-							<div class='{{nestedCardClass}}' #Xception>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.Xception.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.Xception.content}} </mat-card-content>
-								</mat-card> 
-							</div>	
+								<p>All models have been trained upon <a href="http://www.image-net.org/" target="_blank"> ImageNet. </a> </p>
+								
+								<small> Note: it is recommended to have a maximum of 2-3 models loaded at any one time, due to the demanding memory requirements of the models.</small>
 
-							<div class='{{nestedCardClass}}' #InceptionV3>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.InceptionV3.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.InceptionV3.content}} </mat-card-content>
-								</mat-card> 
-							</div>
+							</mat-card-content>
+
+							<img id = "ModelLoading" width=80% src="./assets/about_images/model_loading.png">	
+
+							<mat-card-content>
+
+							<ul style="margin-top:25px;">
+							  <li> <a href="https://keras.io/applications/#mobilenet" target="_blank"> MobileNet & MobileNetV2 </a> </li>
+							  <li> <a href="https://keras.io/applications/#nasnet" target="_blank"> NASNetMobile </a> </li>
+							  <li> <a href="https://keras.io/applications/#resnet" target="_blank"> ResNet50 </a> </li>
+							  <li> <a href="https://keras.io/applications/#xception" target="_blank"> Xception </a> </li>
+							  <li> <a href="https://keras.io/applications/#inceptionV3" target="_blank"> InceptionV3 </a> </li>
+							</ul>	
+							</mat-card-content>
+
 						</mat-card> 
 					</div>
 
 
-					<!-- Nested Image Selection -->
 					<div class='card' #ImageSelection>	
 						<mat-card>
-							<mat-card-title> {{descs.ImageSelection.title}} </mat-card-title>
-							<mat-card-content> {{descs.ImageSelection.content}} </mat-card-content>
-			
-							<div class='{{nestedCardClass}}' #Upload>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.Upload.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.Upload.content}} </mat-card-content>
-								</mat-card> 
-							</div>
+							<mat-card-title> 2. Image Selection </mat-card-title>
+							<mat-card-content>
+								<p> Here you select the image you would like to test. </p>
+								<ul>
+								  <li>Upload an image from your device. (for best results choose an image from one of the 1000 classes of 
 
-							<div class='{{nestedCardClass}}' #Select>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.Select.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.Select.content}} </mat-card-content>
-								</mat-card> 
-							</div>			
-
-							<div class='{{nestedCardClass}}' #RandomOption>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.RandomOption.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.RandomOption.content}} </mat-card-content>
-								</mat-card> 
-							</div>	
+								  	<a href="https://github.com/BenMcFadyen/InteractiveAdversarialExamples/blob/master/src/app/classes/ImageNetClasses.js" target="_blank"> ImageNet</a>, upon which these models were trained)</li>
+								  <li>Select from a range of pre-selected images. </li>
+								  <li>Select a random image from the pre-selected images</li>
+								</ul>
+							</mat-card-content>
+							<img id = "ImageSelection" width=75% src="./assets/about_images/image_selection.png">	
 						</mat-card> 
 					</div>
 
@@ -168,93 +157,154 @@
 					<!-- Nested Image Selection -->
 					<div class='card' #ModelSelection>	
 						<mat-card>
-							<mat-card-title> {{descs.ModelSelection.title}} </mat-card-title>
-							<mat-card-content> {{descs.ModelSelection.content}} </mat-card-content>
-				
-							<<div class='{{nestedCardClass}}' #AdversarialModel>	
+							<mat-card-title> 3. Model Selection </mat-card-title>
+							<mat-card-content> </mat-card-content>
+							<img id = "modelSelection" width=50% src="./assets/about_images/model_selection.png">
+
+							<div class='{{nestedCardClass}}' #AdversarialModel>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.AdversarialModel.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.AdversarialModel.content}} </mat-card-content>
+									<mat-card-title class='nestedCardTitle'> Adversarial Model </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> 
+
+									<p>
+										Here you can select the model that will be used to generate the adversarial example.
+									</p>
+
+								</mat-card-content>
 								</mat-card> 
 							</div>
 
 							<div class='{{nestedCardClass}}' #PredictionModels>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.PredictionModels.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.PredictionModels.content}} </mat-card-content>
+									<mat-card-title class='nestedCardTitle'> Prediction Model </mat-card-title>
+									<mat-card-content class='nestedCardHeading'> 
+
+									<p>
+										Here you can select a model (or multiple) that will be used to predict both the original image and the generated adversarial example. 
+									</p>
+
+									</mat-card-content>
 								</mat-card> 
 							</div>
 						</mat-card> 
 					</div>
 
-
-					<!-- Nested Attack Model -->
 					<div class='card' #AttackMethods>	
 						<mat-card>
-							<mat-card-title> {{descs.AttackMethods.title}} </mat-card-title>
-							<mat-card-content> {{descs.AttackMethods.content}} </mat-card-content>
+							<mat-card-title> 4. Attack Methods </mat-card-title>
+							<mat-card-content> </mat-card-content>
 									
 							<div class='{{nestedCardClass}}' #FGSM>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.FGSM.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.FGSM.content}} </mat-card-content>
+									<mat-card-title class='nestedCardTitle'> Fast Gradient Sign Method </mat-card-title>
+									<mat-card-content class='nestedCardHeading'>
+
+									<p> 
+									<a href="https://arxiv.org/pdf/1412.6572.pdf" target="_blank"> FGSM </a> 
+									</p>
+
+									</mat-card-content>
 								</mat-card> 
 							</div>		
 
 							<div class='{{nestedCardClass}}' #T_FGSM>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.T_FGSM.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.T_FGSM.content}} </mat-card-content>
+									<mat-card-title class='nestedCardTitle'> Targeted-Fast Gradient Sign Method </mat-card-title>
+									<mat-card-content class='nestedCardHeading'>
+
+									<p> 
+									<a href="https://arxiv.org/pdf/1611.01236.pdf" target="_blank"> T-FGSM </a> 
+									</p>
+
+									</mat-card-content>								
 								</mat-card> 
 							</div>	
 
-							<<div class='{{nestedCardClass}}' #DeepFool>	
+							<div class='{{nestedCardClass}}' #DeepFool>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.DeepFool.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.DeepFool.content}} </mat-card-content>
+									<mat-card-title class='nestedCardTitle'> DeepFool </mat-card-title>
+									<mat-card-content class='nestedCardHeading'>
+
+									<p> 
+									<a href="https://arxiv.org/pdf/1511.04599.pdf" target="_blank"> DeepFool </a> 
+									</p>
+									
+									<p> 
+									<a href="https://github.com/bethgelab/foolbox/blob/master/foolbox/attacks/deepfool.py" target="_blank"> Derived From </a> 
+									</p>									
+
+									</mat-card-content>								
 								</mat-card> 
 							</div>	
 						</mat-card> 
 					</div>	
 
 
-					<!-- Nested Image Display -->
-					<div class='card' #ImageDisplay>	
-						<mat-card>
-							<mat-card-title> {{descs.ImageDisplay.title}} </mat-card-title>
-							<mat-card-content> {{descs.ImageDisplay.content}} </mat-card-content>
-			
-							<div class='{{nestedCardClass}}' #Perturbation>	
-							<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.Perturbation.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.Perturbation.content}} </mat-card-content>
-								</mat-card> 
-							</div>		
-						</mat-card> 
-					</div>	
+					<div class='card' #Perturbation>	
+					<mat-card>
+							<mat-card-title> Perturbation </mat-card-title>
+							<mat-card-content> 
 
-																			
-					<!-- Nested About -->
+								<p>
+									Perturbation is term used to describe the output of an attack method. This is combined with the original image to form an adversarial example.
+							 	</p>
+
+								<p>
+									One of the desirable characteristics of adversarial examples is imperceptibility to the human eye, as such the perturbation displayed by this site is amplified significantly to allow for it to be seen.
+								</p>
+
+								<p> This amplification can be adjusted using the slider shown at the bottom of the image below.<p>
+
+								</mat-card-content>
+							<img id = "Perturbation" width=30% src="./assets/about_images/perturbation.png">
+						</mat-card> 
+					</div>		
+
+					<div class='card' #Epsilon>	
+					<mat-card>
+							<mat-card-title> Epsilon (ϵ) </mat-card-title>
+							<mat-card-content>
+
+							<p>
+								Epsilon (ϵ) is the term given to the parameter used by attack methods such as FGSM and T-FGSM to control the size of the perturbation that is generated.
+							</p>
+							<p> 
+								A lower epsilon value will result in a smaller and therefore less visible perturbation, although this may also lower the chance of a successful attack.
+							</p>
+
+							</mat-card-content>
+							<img id = "Epsilon" width=40% src="./assets/about_images/epsilon.png">							
+						</mat-card> 
+					</div>		
+
+
+
+
+									
 					<div class='card' #AboutThisProject>	
 						<mat-card>
-							<mat-card-title> {{descs.AboutThisProject.title}} </mat-card-title>
-							<mat-card-content> {{descs.AboutThisProject.content}} </mat-card-content>
-				
+							<mat-card-title> About this project </mat-card-title>
+							<mat-card-content> 
 
-							<div class='{{nestedCardClass}}' #Related>	
-								<mat-card>
-									<mat-card-title class='nestedCardTitle'> {{descs.Related.title}} </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> {{descs.Related.content}} </mat-card-content>
-								</mat-card> 
-							</div>		
+							<p> 
+							This project was built with <a href="https://angular.io/" target="_blank"> Angular </a> 
+							using <a href="https://www.tensorflow.org/js" arget="_blank"> TensorFlow.js</a>
+							</p>
+
+							<p> 
+							Source code is available <a href="https://github.com/BenMcFadyen/InteractiveAdversarialExamples" target="_blank">here</a>
+							</p>				
+
+							<p> 
+							Developed By: Ben McFadyen (undergraduate project)
+							</p>
+
+							</mat-card-content>
 						</mat-card> 
 					</div>																					
 
 				<!-- End mainContentContainer-->
 				</div>																			
-
-
-
 
 			</div>
 		</mat-sidenav-content>
