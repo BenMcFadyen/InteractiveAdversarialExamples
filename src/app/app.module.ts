@@ -23,6 +23,7 @@ import { ModelSelectDialogComponent } from './dialogs/model-select-dialog/model-
 import { ModelsLoadedDialogComponent } from './dialogs/models-loaded-dialog/models-loaded-dialog.component';
 import { ModelSelectDisclaimerDialogComponent } from './dialogs/model-select-disclaimer-dialog/model-select-disclaimer-dialog.component';
 import { LandingDialogComponent } from './dialogs/landing-dialog/landing-dialog.component';
+import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { LandingDialogComponent } from './dialogs/landing-dialog/landing-dialog.
     ModelSelectDisclaimerDialogComponent,
     ImageSelectDialogComponent,
     LandingDialogComponent,
+    LoadingDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,7 @@ import { LandingDialogComponent } from './dialogs/landing-dialog/landing-dialog.
     ImageSelectDialogComponent,
     ModelSelectDisclaimerDialogComponent,
     LandingDialogComponent,
+    LoadingDialogComponent
    ],
 })
 export class AppModule { }
