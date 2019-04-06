@@ -33,7 +33,7 @@
 
 .mat-card-content
 {
-	font-size: 1.5em;
+	font-size: 1.4em;
 }
 
 
@@ -58,6 +58,11 @@
 			display: flex;
 			flex-direction: column;
 			justify-content:center;		
+
+			li
+			{
+				margin: 10px 0;
+			}
 
 			img
 			{
@@ -101,7 +106,7 @@
 
 	}
 
-	margin-top:50px;
+	margin-top:20px;
 	margin-left:50px;
-	margin-right:200px;
+	margin-right:50px;
 }

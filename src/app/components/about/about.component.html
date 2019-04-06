@@ -4,46 +4,49 @@
 
 		<mat-nav-list>
 
-				<mat-list-item matSubheader (click)="scroll(WhatAreAdversarialExamples)"> What are adversarial examples? </mat-list-item>
-				<mat-list-item matSubheader (click)="scroll(HowDoesItWork)"> How does it work? </mat-list-item>
+				<mat-list-item (click)="scroll(WhatAreAdversarialExamples)"> What are adversarial examples? </mat-list-item>
+				<mat-list-item (click)="scroll(HowDoesItWork)"> How does it work? </mat-list-item>
 
-					<mat-nav-list dense style="margin-left:15px;">
+					<mat-nav-list dense style="margin-left:20px;">
 						<mat-list-item (click)="scroll(Models)" > Model Loading </mat-list-item>
 					</mat-nav-list>
 
-					<mat-nav-list dense style="margin-left:15px;">
+					<mat-nav-list dense style="margin-left:20px;">
 						<mat-list-item (click)="scroll(ImageSelection)" > Image Selection </mat-list-item>
 					</mat-nav-list>			
 
-					<mat-nav-list dense style="margin-left:15px;">
+					<mat-nav-list dense style="margin-left:20px;">
 						<mat-list-item (click)="scroll(ModelSelection)" > Model Selection </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
+							<mat-nav-list dense style="margin-left:20px;">
 								 <mat-list-item (click)="scroll(AdversarialModel)"> Adversarial Model </mat-list-item>
 								 <mat-list-item (click)="scroll(PredictionModels)"> Prediction Model(s) </mat-list-item>
 							</mat-nav-list>
 					</mat-nav-list>	
 
-					<mat-nav-list dense style="margin-left:15px;">
+					<mat-nav-list dense style="margin-left:20px;">
 						<mat-list-item (click)="scroll(AttackMethods)" > Attack Method Selection </mat-list-item>
-							<mat-nav-list dense style="margin-left:15px;">
+							<mat-nav-list dense style="margin-left:20px;">
 								 <mat-list-item (click)="scroll(FGSM)"> Fast Gradient Sign Method </mat-list-item>
 								 <mat-list-item (click)="scroll(T_FGSM)"> Targeted Fast Gradient Sign Method </mat-list-item>
 								 <mat-list-item (click)="scroll(DeepFool)"> DeepFool </mat-list-item>
+								 <mat-list-item (click)="scroll(Epsilon)"> Epsilon (ϵ)  </mat-list-item>								 
 							</mat-nav-list>
-					</mat-nav-list>	
-
-					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(Perturbation)" > Perturbation </mat-list-item>
 					</mat-nav-list>			
 
-					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(Epsilon)" > Epsilon </mat-list-item>
-					</mat-nav-list>													
+
+					<mat-nav-list dense style="margin-left:20px;">
+						 <mat-list-item (click)="scroll(Perturbation)"> Perturbation </mat-list-item>
+					</mat-nav-list>			
 
 
-					<mat-nav-list dense style="margin-left:15px;">
-						<mat-list-item (click)="scroll(AboutThisProject)" > About this project </mat-list-item>
-					</mat-nav-list>						
+
+
+				<mat-list-item (click)="scroll(AboutThisProject)" > About this project </mat-list-item>
+				<mat-nav-list dense style="margin-left:20px;">
+					 <mat-list-item (click)="scroll(RelatedProjects)"> Related Projects </mat-list-item>						 
+				</mat-nav-list>						
+
+
 			</mat-nav-list>
 		</mat-sidenav>
 
@@ -61,47 +64,52 @@
 
 
 							<p> 
-								An Adversarial example is an input to a machine learning model that has been maliciously crafted to cause the model to make an incorrect prediction.  
+								An adversarial example is an input to a machine learning model that has been maliciously crafted to cause the model to make an incorrect prediction.  
 							</p>
 
 							<p>
-								The image below shows a successfull attack using the 
-								<a style="cursor: pointer; color:purple;" (click)="scroll(DeepFool)"> DeepFool</a> attack method agaisnt the 
+								The image below shows a successful attack using the 
+								<a style="cursor: pointer; color:purple;" (click)="scroll(DeepFool)"> DeepFool</a> attack method against the 
 								<a style="cursor: pointer; color:purple;" (click)="scroll(Xception)"> Xception</a> Model.
 							</p>
 
 							<p> 
-									 The left image shows the original image, which the model correctly predicts as being a lion. 
-							<br> The middle image shows the adversarial perturbation, which is applied to the image to form the adversarial example. 
-							<br> The right image shows the adversarial example, which the model now incorrectly classifies as a 'chow chow', a breed of dog. 
+									 The left image shows the original image, which the model correctly predicts as: 'lion'. 
+							<br> The middle image shows the adversarial perturbation, which is combined with the original image to form the adversarial example. 
+							<br> The right image shows the adversarial example, which the model now incorrectly predicts as: 'chow chow', a breed of dog. 
 							</p>
 
 
+
 						</mat-card-content>
-							<img id = "WhatAreAdversarialExamplesImage" width=80% src="./assets/about_images/what_are_adversarial_examples.png">
+							<img id = "WhatAreAdversarialExamplesImage" width=70% src="./assets/about_images/what_are_adversarial_examples.png">
+
+							<mat-card-content> 
+							</mat-card-content> 
+
+
 						</mat-card> 
 					</div>
 
 					<div class='card' #HowDoesItWork>	
 						<mat-card>
-							<mat-card-title> How does InteractiveAdversarialExamples work? </mat-card-title>
+							<mat-card-title> How does Interactive Adversarial Examples work? </mat-card-title>
 							<mat-card-content> 
 
 								<p>
-									InteractiveAdversarialExamples allows for the exploration of adversarial examples through real-time generation and classification. </p>
+									Interactive Adversarial Examples allows for the real time generation of adversarial examples using a variety of different images, models and attack methods. </p>
 
 								<p> A step by step guide to using the site: </p>
 							
-								<ol>
-									<li> Model Loading: Load the model (or models) you would like to use. </li> 
-									<li> Image Selection: Upload or select the  image you would like to turn into an adversarial example. </li> 
-									<li> Model Selection: Select the adversarial and prediction models you would like to use. </li> 
-									<li> Attack Method: Select the method that will be used to generate the adversarial example </li> 
-									<li> Observe the perturbation and the adversarial example. </li> 
-									<li> Observe the predictions for both the original and adversarial image. </li> 
-								</ol>
+								<ul>
+									<li> Step 1: Load a model: Select the model (or models) you would like to use from the pop-up window and wait for them to load. </li> 
+									<li> Step 2: Choose an image: Upload your own image or select one of the available options. </li> 
+									<li> Step 3: Select your models: Select the model that will be used to generate and predict your adversarial example. </li> 
+									<li> Step 4: Select an attack method: Choose which attack method will be used to generate your adversarial example. </li> 
+									<li> Step 5 & 6: Observe your adversarial example and how it impacted the prediction accuracy of the model! </li> 
+								</ul>
 								</mat-card-content>
-							<img id = "HowDoesItWork" width=100% src="./assets/about_images/how_does_it_work.png">						
+							<img id = "HowDoesItWork" style="margin-top:0px;" width=100% src="./assets/about_images/how_does_it_work.png">						
 						</mat-card> 
 					</div>
 
@@ -111,25 +119,31 @@
 
 							<mat-card-content>
 
-								<p> InteractiveAdversarialExamples provides access to six different models, all of which can be used to make predictions or generate adversarial examples (with the exception of the InceptionV3 model, which can only be used for predictions) </p>
+								<p> 
+									Interactive Adversarial Examples provides access to six different models, all of which can be used to make predictions or generate adversarial examples (with the exception of the InceptionV3 model, which can only be used for predictions)
+								 </p>
 
-								<p>All models have been trained upon <a href="http://www.image-net.org/" target="_blank"> ImageNet. </a> </p>
-								
-								<small> Note: it is recommended to have a maximum of 2-3 models loaded at any one time, due to the demanding memory requirements of the models.</small>
+								 <p>
+								 	Simply select the models you would like to load and select the 'Load' button.
+								 </p>	
 
 							</mat-card-content>
-
 							<img id = "ModelLoading" width=80% src="./assets/about_images/model_loading.png">	
-
 							<mat-card-content>
 
-							<ul style="margin-top:25px;">
+							<p style="margin-top:25px;"> For more information: </p> 
+							<ul>
 							  <li> <a href="https://keras.io/applications/#mobilenet" target="_blank"> MobileNet & MobileNetV2 </a> </li>
 							  <li> <a href="https://keras.io/applications/#nasnet" target="_blank"> NASNetMobile </a> </li>
 							  <li> <a href="https://keras.io/applications/#resnet" target="_blank"> ResNet50 </a> </li>
 							  <li> <a href="https://keras.io/applications/#xception" target="_blank"> Xception </a> </li>
 							  <li> <a href="https://keras.io/applications/#inceptionV3" target="_blank"> InceptionV3 </a> </li>
 							</ul>	
+
+							<p> 
+								Note: it is recommended to have a maximum of 2-3 models loaded at any one time, due to the demanding memory requirements of the models.
+							</p>
+
 							</mat-card-content>
 
 						</mat-card> 
@@ -140,13 +154,20 @@
 						<mat-card>
 							<mat-card-title> 2. Image Selection </mat-card-title>
 							<mat-card-content>
-								<p> Here you select the image you would like to test. </p>
+								<p> Interactive Adversarial Examples provides 3 methods of image selection:</p>
 								<ul>
-								  <li>Upload an image from your device. (for best results choose an image from one of the 1000 classes of 
 
-								  	<a href="https://github.com/BenMcFadyen/InteractiveAdversarialExamples/blob/master/src/app/classes/ImageNetClasses.js" target="_blank"> ImageNet</a>, upon which these models were trained)</li>
-								  <li>Select from a range of pre-selected images. </li>
-								  <li>Select a random image from the pre-selected images</li>
+								  <li>
+								  	Upload an image from your device. 
+								  	<br>
+
+								  	<small> (for optimal results please choose an image from the list of
+								  		<a href="https://github.com/BenMcFadyen/InteractiveAdversarialExamples/blob/master/src/app/classes/ImageNetClasses.js" target="_blank"> 1000 classes of ImageNet</a>, upon which these models were trained) 
+								  	</small>
+								  </li>
+
+								  <li> Select an image from one of the 3 categories provided by the site; Animals, Objects or Food.  </li>
+								  <li> Select a random image from the provided images. </li>
 								</ul>
 							</mat-card-content>
 							<img id = "ImageSelection" width=75% src="./assets/about_images/image_selection.png">	
@@ -158,16 +179,20 @@
 					<div class='card' #ModelSelection>	
 						<mat-card>
 							<mat-card-title> 3. Model Selection </mat-card-title>
-							<mat-card-content> </mat-card-content>
+							<mat-card-content> 
+
+								Models that have been loaded are available here for selection.
+
+							</mat-card-content>
 							<img id = "modelSelection" width=50% src="./assets/about_images/model_selection.png">
 
 							<div class='{{nestedCardClass}}' #AdversarialModel>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> Adversarial Model </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> 
+									<mat-card-content class='nestedCardContent'> 
 
 									<p>
-										Here you can select the model that will be used to generate the adversarial example.
+										Select the model that will be used to generate the adversarial example.
 									</p>
 
 								</mat-card-content>
@@ -177,10 +202,10 @@
 							<div class='{{nestedCardClass}}' #PredictionModels>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> Prediction Model </mat-card-title>
-									<mat-card-content class='nestedCardHeading'> 
+									<mat-card-content class='nestedCardContent'> 
 
 									<p>
-										Here you can select a model (or multiple) that will be used to predict both the original image and the generated adversarial example. 
+										Select a model (or multiple) that will be used to predict both the original image and the generated adversarial example. 
 									</p>
 
 									</mat-card-content>
@@ -189,19 +214,40 @@
 						</mat-card> 
 					</div>
 
+
+
 					<div class='card' #AttackMethods>	
 						<mat-card>
-							<mat-card-title> 4. Attack Methods </mat-card-title>
-							<mat-card-content> </mat-card-content>
-									
+							<mat-card-title> 4. Attack Method Selection </mat-card-title>
+							<mat-card-content> 
+
+							Interactive Adversarial Examples provides 3 methods of attack:
+
+
+							</mat-card-content>
+							<!-- <img id = "attackMethodSelection" width=40% src="./assets/about_images/attack_method_selection.png">							 -->
+
 							<div class='{{nestedCardClass}}' #FGSM>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> Fast Gradient Sign Method </mat-card-title>
-									<mat-card-content class='nestedCardHeading'>
+									<mat-card-title class='nestedCardTitle'> Fast Gradient Sign Method (FGSM)</mat-card-title>
+									<mat-card-content class='nestedCardContent'>
+
 
 									<p> 
-									<a href="https://arxiv.org/pdf/1412.6572.pdf" target="_blank"> FGSM </a> 
+
+									FGSM is a type of gradient based, non-targeted attack where the aim is to alter (perturb) the image such that the model no longer predicts the original class.
+
+									This perturbation is generated in a single single step and  results in an adversarial example that is generated quickly and inexpensively, but less efficiently than other attack methods such as DeepFool, which generates the perturbation iteratively.
+
+									<p> More information about FGSM is
+									<a href="https://arxiv.org/abs/1412.6572" target="_blank"> available here. </a> 
 									</p>
+
+									<p> The FGSM algorithm used by this site was derived
+									<a href="https://github.com/jaxball/advis.js/blob/master/src/tools/model.js" target="_blank"> from here. </a> 
+									</p>
+
+
 
 									</mat-card-content>
 								</mat-card> 
@@ -209,11 +255,24 @@
 
 							<div class='{{nestedCardClass}}' #T_FGSM>	
 								<mat-card>
-									<mat-card-title class='nestedCardTitle'> Targeted-Fast Gradient Sign Method </mat-card-title>
-									<mat-card-content class='nestedCardHeading'>
+									<mat-card-title class='nestedCardTitle'> Targeted-Fast Gradient Sign Method (T-FGSM) </mat-card-title>
+									<mat-card-content class='nestedCardContent'>
 
 									<p> 
-									<a href="https://arxiv.org/pdf/1611.01236.pdf" target="_blank"> T-FGSM </a> 
+										T-FGSM is almost identical to its sibling FGSM, although it has one key difference; rather than perturbing the image such that the original class is no longer predicted, the image is perturbed so that a specific target class is predicted. T-FGSM is therefore known as a type of targeted attack method.
+									</p>
+
+									<p>
+										When generating your adversarial example using T-FGSM, the target class can be selected using the input field as shown in the image below.
+									<br>
+										Alternatively a random class can be selected by using the 🎲 button.
+									</p>
+
+
+									<img id = "targetClass" width=40% src="./assets/about_images/target_class.png">							
+
+									<p> More information about T-FGSM is
+									<a href="https://arxiv.org/abs/1611.01236" target="_blank"> available here. </a> 
 									</p>
 
 									</mat-card-content>								
@@ -223,19 +282,56 @@
 							<div class='{{nestedCardClass}}' #DeepFool>	
 								<mat-card>
 									<mat-card-title class='nestedCardTitle'> DeepFool </mat-card-title>
-									<mat-card-content class='nestedCardHeading'>
+									<mat-card-content class='nestedCardContent'>
 
 									<p> 
-									<a href="https://arxiv.org/pdf/1511.04599.pdf" target="_blank"> DeepFool </a> 
-									</p>
-									
-									<p> 
-									<a href="https://github.com/bethgelab/foolbox/blob/master/foolbox/attacks/deepfool.py" target="_blank"> Derived From </a> 
-									</p>									
+										 DeepFool is an iterative, non-targeted method of generating an adversarial example. This means that rather than generating the perturbation in a single step, the process is spread out over a series of steps. This has the advantage of generating smaller more efficient perturbations but at the cost of increasing computation time. 
+
+									<p> More information about DeepFool is
+										<a href="https://arxiv.org/abs/1511.04599" target="_blank"> available here. </a> 
+									</p>	
+
+									<p> The DeepFool algorithm used by this site was derived
+										<a href="https://github.com/bethgelab/foolbox/blob/master/foolbox/attacks/deepfool.py" target="_blank"> from here. </a> 
+									</p>	
 
 									</mat-card-content>								
 								</mat-card> 
 							</div>	
+
+							<div class='card' #Epsilon>	
+							<mat-card>
+									<mat-card-title class='nestedCardTitle'> Epsilon (ϵ) </mat-card-title>
+									<mat-card-content class='nestedCardContent'>
+
+									<p>
+										Epsilon (ϵ) is the term given to the parameter used by attack methods such as FGSM and T-FGSM to control the size of the perturbation that is generated.
+									</p>
+									<p> 
+										A lower epsilon value will result in a smaller and therefore less visible perturbation, although this often also lowers the chance of a successful attack.
+									</p>
+
+									</mat-card-content>
+
+									<img id = "LowHighEpsilon" width=75% src="./assets/about_images/low_high_epsilon.png">	
+
+									<mat-card-content class='nestedCardContent'>
+
+									<p style="margin-top:25px;"> 
+										When supported by the selected attack method, the epsilon value can be adjusted using the slider as shown in the image below.
+									<br>
+										The maximum slider value will automatically adjust up/down to allow for more precision when adjusting the epsilon value.
+									</p>	
+
+									</mat-card-content>
+
+									<img id = "Epsilon" width=40% src="./assets/about_images/epsilon.png">							
+								</mat-card> 
+							</div>									
+
+
+
+							<!-- End nested card -->
 						</mat-card> 
 					</div>	
 
@@ -246,11 +342,11 @@
 							<mat-card-content> 
 
 								<p>
-									Perturbation is term used to describe the output of an attack method. This is combined with the original image to form an adversarial example.
+									Perturbation is the term used to describe the output of an attack method. This is combined with the original image to form an adversarial example.
 							 	</p>
 
 								<p>
-									One of the desirable characteristics of adversarial examples is imperceptibility to the human eye, as such the perturbation displayed by this site is amplified significantly to allow for it to be seen.
+									One of the desirable characteristics of adversarial examples is imperceptibility to the human eye, as such the perturbation displayed by this site is amplified significantly to allow for it to be visible.
 								</p>
 
 								<p> This amplification can be adjusted using the slider shown at the bottom of the image below.<p>
@@ -260,22 +356,6 @@
 						</mat-card> 
 					</div>		
 
-					<div class='card' #Epsilon>	
-					<mat-card>
-							<mat-card-title> Epsilon (ϵ) </mat-card-title>
-							<mat-card-content>
-
-							<p>
-								Epsilon (ϵ) is the term given to the parameter used by attack methods such as FGSM and T-FGSM to control the size of the perturbation that is generated.
-							</p>
-							<p> 
-								A lower epsilon value will result in a smaller and therefore less visible perturbation, although this may also lower the chance of a successful attack.
-							</p>
-
-							</mat-card-content>
-							<img id = "Epsilon" width=40% src="./assets/about_images/epsilon.png">							
-						</mat-card> 
-					</div>		
 
 
 
@@ -296,10 +376,22 @@
 							</p>				
 
 							<p> 
-							Developed By: Ben McFadyen (undergraduate project)
+							Developed by: Ben McFadyen (undergraduate project)
 							</p>
 
 							</mat-card-content>
+
+							<div class='{{nestedCardClass}}' #RelatedProjects>	
+							<mat-card>
+								<mat-card-title class='nestedCardTitle'> Related Projects </mat-card-title>
+								<mat-card-content class='nestedCardContent'>
+
+							 	<a href="http://jlin.xyz/advis/" arget="_blank"> AdVis.js </a>
+
+								</mat-card-content>								
+							</mat-card> 
+						</div>	
+
 						</mat-card> 
 					</div>																					
 
