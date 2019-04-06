@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material";
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+import { LoadingDialogComponent } from '../../dialogs/loading-dialog/loading-dialog.component';
 import { ImageSelectDialogComponent } from '../../dialogs/image-select-dialog/image-select-dialog.component';
 import { ModelSelectDialogComponent } from '../../dialogs/model-select-dialog/model-select-dialog.component';
 import { TransferService } from '../../services/transfer.service';
@@ -116,14 +117,15 @@ export class SelectionComponent implements OnInit
 
 		this.transferService.currentLandingPageDismissedSource.subscribe(landingPageDismissed => this.landingPageDismissedValueChange(landingPageDismissed))
 
-		// //* Loads/Warms MobileNet on launch -> speed up debugging */
+		//* Loads/Warms MobileNet on launch -> for debugging */
 		// this.modelService.loadModel('MobileNet').then(()=>
 		// {
 		// 	let mnet = this.modelService.getModelDataObjectFromName('MobileNet')
 		// 	this.predictionModels.setValue(['MobileNet'])
 		// 	this.adversarialModel.setValue('MobileNet')
 		// 	this.attackMethod.setValue('DeepFool')
-		// 	this.onGenerateButtonClick()
+		// 	this.landingPageDismissedValueChange(true)	
+		// 	//this.onGenerateButtonClick()
 		// })
 	}
 
@@ -354,8 +356,13 @@ export class SelectionComponent implements OnInit
 		this.resetCanvasAndClearPredictions()
 
 		this.generationInProgress = true
+		let loadingDialogRef = this.openLoadingDialog()
+		await this.utils.delay(0.5) //add a delay to give time for the loading spinner to load
+
 		await this.executeAttackMethod()
 		this.generationInProgress = false
+
+		loadingDialogRef.close()
 
 
 		// if possible, also predict after generation
@@ -476,6 +483,17 @@ export class SelectionComponent implements OnInit
     			this.imgURL = selectedImgUrl
     		}
     	});  	
+	} 		
+
+	openLoadingDialog()
+	{
+		const dialogConfig = new MatDialogConfig()
+        dialogConfig.disableClose = true
+        dialogConfig.autoFocus = true
+        dialogConfig.hasBackdrop = false
+		dialogConfig.panelClass = 'loadingDialogPanel'
+  		const dialogRef = this.dialog.open(LoadingDialogComponent, dialogConfig)
+  		return dialogRef
 	} 		
 
 	onPredictionModelsChange()
