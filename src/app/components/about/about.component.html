@@ -69,8 +69,7 @@
 
 							<p>
 								The image below shows a successful attack using the 
-								<a style="cursor: pointer; color:purple;" (click)="scroll(DeepFool)"> DeepFool</a> attack method against the 
-								<a style="cursor: pointer; color:purple;" (click)="scroll(Xception)"> Xception</a> Model.
+								<a style="cursor: pointer; color:purple;" (click)="scroll(DeepFool)"> DeepFool</a> attack method against the Xception model.
 							</p>
 
 							<p> 
@@ -154,7 +153,7 @@
 						<mat-card>
 							<mat-card-title> 2. Image Selection </mat-card-title>
 							<mat-card-content>
-								<p> Interactive Adversarial Examples provides 3 methods of image selection:</p>
+								<p> Interactive Adversarial Examples supports 3 methods of image selection:</p>
 								<ul>
 
 								  <li>
@@ -184,7 +183,7 @@
 								Models that have been loaded are available here for selection.
 
 							</mat-card-content>
-							<img id = "modelSelection" width=50% src="./assets/about_images/model_selection.png">
+							<img id = "modelSelection" width=30% src="./assets/about_images/model_selection.png">
 
 							<div class='{{nestedCardClass}}' #AdversarialModel>	
 								<mat-card>
@@ -237,7 +236,7 @@
 
 									FGSM is a type of gradient based, non-targeted attack where the aim is to alter (perturb) the image such that the model no longer predicts the original class.
 
-									This perturbation is generated in a single single step and  results in an adversarial example that is generated quickly and inexpensively, but less efficiently than other attack methods such as DeepFool, which generates the perturbation iteratively.
+									This perturbation is generated in a single step and  results in an adversarial example that is generated quickly and inexpensively, but less efficiently than other attack methods such as DeepFool, which generates the perturbation iteratively.
 
 									<p> More information about FGSM is
 									<a href="https://arxiv.org/abs/1412.6572" target="_blank"> available here. </a> 
@@ -308,12 +307,12 @@
 										Epsilon (ϵ) is the term given to the parameter used by attack methods such as FGSM and T-FGSM to control the size of the perturbation that is generated.
 									</p>
 									<p> 
-										A lower epsilon value will result in a smaller and therefore less visible perturbation, although this often also lowers the chance of a successful attack.
+										A lower epsilon value will result in a smaller and therefore less visible perturbation, although this will also lower the chance of a successful attack.
 									</p>
 
 									</mat-card-content>
 
-									<img id = "LowHighEpsilon" width=75% src="./assets/about_images/low_high_epsilon.png">	
+									<img id = "LowHighEpsilon" width=60% src="./assets/about_images/low_high_epsilon.png">	
 
 									<mat-card-content class='nestedCardContent'>
 

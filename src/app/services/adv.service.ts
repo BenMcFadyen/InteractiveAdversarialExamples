@@ -260,7 +260,7 @@ export class AdvService
 			// update the perturbation at the transfer service, so the perturbation can be re-drawn if the user changes the amplification (the above only updates when generated)
 			this.transferService.setPerturbation(perturbation)
 
-			// For FGSM ADD the perturbation to the img (move AWAY from the gradient)			
+			// For FGSM ADD the perturbation to the img 
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Add).then(perturbedImgTensor => 
 			{
 				img3.dispose()
@@ -281,7 +281,7 @@ export class AdvService
 			// update the perturbation at the transfer service, so the perturbation can be re-drawn if the user changes the amplification (the above only updates when generated)
 			this.transferService.setPerturbation(perturbation)
 
-			// For Targeted-FGSM SUBTRACT the perturbation from the img (move TOWARDS the gradient)
+			// For Targeted-FGSM SUBTRACT the perturbation from the img
 			return this.combineImgAndPerturbation(img4, perturbation, CombineMethod.Subtract).then(perturbedImgTensor => 
 			{
 				img3.dispose()
