@@ -4,9 +4,11 @@ An interactive site for exploring adversarial attacks on deep neural networks in
 
 This site is live at: https://benmcfadyen.github.io/InteractiveAdversarialExamples/
 
+
 ## Prerequisites
 
 [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.
+
 
 ## Local Installation 
 
@@ -28,12 +30,14 @@ npm i
 ng serve --open
 ```
 
+
 ## Built With
 
 * [Angular](https://angular.io/) - The web framework used
 * [TensorFlow.js](https://www.tensorflow.org/js) - Machine Learning framework used
 
+
 ## Acknowledgments
 
-* [AdVis.Js](https://github.com/jaxball/advis.js) - 
+* [AdVis.Js](https://github.com/jaxball/advis.js) - For providing the FGSM algorithm 
 
