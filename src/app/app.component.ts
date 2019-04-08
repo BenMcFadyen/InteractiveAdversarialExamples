@@ -13,7 +13,7 @@ export class AppComponent
 {
 
 	constructor(private dialog: MatDialog, private transferService:TransferService)
-	{
+	{	
 		this.openLandingDialog()
 	}
 
@@ -37,4 +37,5 @@ export class AppComponent
 			this.transferService.setLandingPageDismissed(true)
     	});  	
 	} 	
+	
 }
