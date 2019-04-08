@@ -119,7 +119,7 @@
 							<mat-card-content>
 
 								<p> 
-									Interactive Adversarial Examples provides access to six different models, all of which can be used to make predictions or generate adversarial examples (with the exception of the InceptionV3 model, which can only be used for predictions)
+									Interactive Adversarial Examples provides access to five different models, all of which can be used to make predictions or generate adversarial examples (with the exception of the InceptionV3 model, which can only be used for predictions)
 								 </p>
 
 								 <p>
@@ -133,15 +133,22 @@
 							<p style="margin-top:25px;"> For more information: </p> 
 							<ul>
 							  <li> <a href="https://keras.io/applications/#mobilenet" target="_blank"> MobileNet & MobileNetV2 </a> </li>
-							  <li> <a href="https://keras.io/applications/#nasnet" target="_blank"> NASNetMobile </a> </li>
+							  <!-- <li> <a href="https://keras.io/applications/#nasnet" target="_blank"> NASNetMobile </a> </li> -->
 							  <li> <a href="https://keras.io/applications/#resnet" target="_blank"> ResNet50 </a> </li>
 							  <li> <a href="https://keras.io/applications/#xception" target="_blank"> Xception </a> </li>
 							  <li> <a href="https://keras.io/applications/#inceptionV3" target="_blank"> InceptionV3 </a> </li>
 							</ul>	
 
 							<p> 
-								Note: it is recommended to have a maximum of 2-3 models loaded at any one time, due to the demanding memory requirements of the models.
+								Please note that generating adversarial examples is a resource intensive task.
+								<br>
+								For optimal performance (especially on older or less powerful devices such as laptops):
 							</p>
+								<ul>
+							  		<li> Load a maximum of 2-3 models at any one time </li>
+							  		<li> Refrain from using the larger models (ResNet50/Xception/InceptionV3) </li>
+								</ul>
+ 						
 
 							</mat-card-content>
 
