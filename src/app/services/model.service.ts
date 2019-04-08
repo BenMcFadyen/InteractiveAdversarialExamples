@@ -42,7 +42,7 @@ export class ModelService
 	[
 		this.MobileNet, 
 		this.MobileNetV2, 
-		this.NASNetMobile,	 
+		//this.NASNetMobile,	 
 		this.ResNet50,
 		// this.DenseNet121,		
 		// this.DenseNet169,	
@@ -54,7 +54,7 @@ export class ModelService
 	[
 		this.MOBILETNET_STATS,
 		this.MOBILENETV2_STATS,
-		this.NASNETMOBILE_STATS,	
+	//	this.NASNETMOBILE_STATS,	
 		this.RESNET50_STATS,	
 		// this.DENSENET121_STATS,			
 		// this.DENSENET169_STATS,	
