@@ -2,8 +2,9 @@
 
 An interactive site for exploring adversarial attacks on deep neural networks in real-time.
 
-This site is live at: https://benmcfadyen.github.io/InteractiveAdversarialExamples/
+![explore](https://github.com/BenMcFadyen/InteractiveAdversarialExamples/blob/master/src/assets/about_images/explore.png)
 
+This site is available at: https://benmcfadyen.github.io/InteractiveAdversarialExamples/
 
 ## Prerequisites
 
